@@ -533,6 +533,29 @@ For bug reports/feature requests, please open an issue.
 
 ---
 
+## Quick Start (Landing Page)
+
+A static, responsive landing page is included at the repository root.
+
+- Entry file: `index.html` (uses `styles.css`, `script.js`, and assets under `assets/`)
+- Open directly in a browser, or serve locally for best results.
+
+Serve locally with Python:
+
+```bash
+python3 -m http.server 5173
+```
+
+Then open:
+
+```bash
+http://localhost:5173
+```
+
+Alternatively, use the VS Code Live Server extension and choose “Open with Live Server”.
+
+---
+
 ## Appendix: Full Feature Index
 
 This README integrates the consolidated feature specification. For a complete serial listing across Core, Career, Analytics, Collaboration, Gamification, Security, UX, Integration, Plan, and Demo …
