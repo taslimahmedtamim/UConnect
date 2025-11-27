@@ -7,5 +7,7 @@ export default defineConfig({
   base: '/Uconnect/',
   build: {
     outDir: 'dist',
+    assetsDir: 'assets',
   },
+  publicDir: 'public',
 })
