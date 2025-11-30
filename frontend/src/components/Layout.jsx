@@ -43,23 +43,23 @@ export function Layout({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0c141f] flex relative">
+    <div className="min-h-screen bg-gray-50 flex relative">
       {/* Sidebar */}
       <aside className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 bg-[#0f1520] border-r border-white/10 transition-transform duration-300 lg:translate-x-0",
+        "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 shadow-soft transition-transform duration-300 lg:translate-x-0",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-4 border-b border-white/10">
-            <Link to="/app/dashboard" className="flex items-center gap-2 text-xl font-semibold text-white hover:opacity-80 transition-opacity">
-              <div className="w-8 h-8 bg-gradient-to-br from-brand-strong to-accent rounded-lg flex items-center justify-center">
+          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+            <Link to="/app/dashboard" className="flex items-center gap-2 text-xl font-bold hover:opacity-80 transition-opacity">
+              <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center shadow-soft">
                 <span className="text-white font-bold text-sm">U</span>
               </div>
-              <span>UConnect</span>
+              <span className="bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">UConnect</span>
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-2 hover:bg-white/10 rounded-lg"
+              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg text-gray-600"
             >
               <X className="w-5 h-5" />
             </button>
@@ -74,10 +74,10 @@ export function Layout({ children }) {
                   to={item.href}
                   onClick={() => setSidebarOpen(false)}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                    "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
                     isActive
-                      ? "bg-white/10 text-white"
-                      : "text-gray-400 hover:bg-white/5 hover:text-white"
+                      ? "bg-primary-50 text-primary-600 shadow-soft"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                   )}
                 >
                   <item.icon className="w-5 h-5" />
@@ -87,19 +87,19 @@ export function Layout({ children }) {
             })}
           </nav>
 
-          <div className="p-4 border-t border-white/10">
+          <div className="p-4 border-t border-gray-200">
             <div className="flex items-center gap-3 mb-3 px-3 py-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-brand to-accent rounded-full flex items-center justify-center text-white font-semibold">
+              <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center text-white font-semibold shadow-soft">
                 {user?.name?.charAt(0) || 'U'}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">{user?.name || 'User'}</p>
-                <p className="text-xs text-gray-400 truncate">{user?.email || 'user@example.com'}</p>
+                <p className="text-sm font-medium text-gray-900 truncate">{user?.name || 'User'}</p>
+                <p className="text-xs text-gray-500 truncate">{user?.email || 'user@example.com'}</p>
               </div>
             </div>
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors"
             >
               <LogOut className="w-5 h-5" />
               Logout
@@ -119,19 +119,19 @@ export function Layout({ children }) {
       {/* Main content */}
       <div className="flex-1 flex flex-col lg:ml-64">
         {/* Top bar */}
-        <header className="sticky top-0 z-40 bg-[#0f1520]/95 backdrop-blur-sm border-b border-white/10">
+        <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-lg border-b border-gray-200 shadow-soft">
           <div className="flex items-center justify-between px-4 py-3">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 hover:bg-white/10 rounded-lg"
+              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg text-gray-600"
             >
               <Menu className="w-5 h-5" />
             </button>
             <div className="flex-1" />
             <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg text-sm">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                <span className="text-gray-300">Online</span>
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 rounded-lg text-sm border border-emerald-200">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                <span className="text-emerald-700 font-medium">Online</span>
               </div>
             </div>
           </div>

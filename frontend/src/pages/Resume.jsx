@@ -1,17 +1,68 @@
 import { useState } from 'react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/Card'
 import { Button } from '../components/Button'
-import { FileText, Download, Sparkles, Eye, RefreshCw } from 'lucide-react'
+import { Badge } from '../components/Badge'
+import { SkillTag } from '../components/SkillTag'
+import { FileText, Download, Sparkles, Eye, RefreshCw, Check, Linkedin, Copy, FileDown } from 'lucide-react'
 
 const templates = [
-  { id: 1, name: 'Modern', preview: 'bg-gradient-to-br from-blue-500 to-cyan-500' },
-  { id: 2, name: 'Classic', preview: 'bg-gradient-to-br from-purple-500 to-pink-500' },
-  { id: 3, name: 'Creative', preview: 'bg-gradient-to-br from-green-500 to-emerald-500' },
+  { id: 'modern', name: 'Modern', preview: '🎨', color: 'primary' },
+  { id: 'classic', name: 'Classic', preview: '📄', color: 'purple' },
+  { id: 'creative', name: 'Creative', preview: '✨', color: 'emerald' },
 ]
 
+const resumeData = {
+  name: 'Tamim Ahmed',
+  title: 'Computer Science Student',
+  email: 'tamim@buet.ac.bd',
+  phone: '+880 1234-567890',
+  location: 'Dhaka, Bangladesh',
+  summary: 'Passionate CS student with expertise in full-stack development and machine learning. Love building products that solve real-world problems.',
+  skills: ['React', 'Node.js', 'Python', 'TensorFlow', 'PostgreSQL', 'Docker', 'TypeScript', 'MongoDB'],
+  experience: [
+    {
+      title: 'Software Engineering Intern',
+      company: 'TechCorp Bangladesh',
+      period: 'Jun 2024 - Aug 2024',
+      points: [
+        'Developed RESTful APIs serving 10,000+ daily users using Node.js and Express',
+        'Improved application performance by 40% through database optimization',
+        'Collaborated with cross-functional team of 8 members using Agile methodology',
+      ]
+    }
+  ],
+  projects: [
+    {
+      name: 'AI Campus Assistant',
+      description: 'NLP-powered chatbot for campus queries',
+      points: [
+        'Built NLP model with 92% accuracy using Python and TensorFlow',
+        'Reduced response time by 60% through optimized query processing',
+        'Deployed on AWS serving 500+ daily active users',
+      ]
+    },
+    {
+      name: 'Smart Waste Classification',
+      description: 'Computer vision for waste sorting',
+      points: [
+        'Developed CNN model achieving 88% classification accuracy',
+        'Integrated IoT sensors for real-time waste detection',
+        'Won 1st place at National Hackathon 2024',
+      ]
+    }
+  ],
+  education: {
+    degree: 'B.Sc. in Computer Science & Engineering',
+    university: 'Bangladesh University of Engineering & Technology (BUET)',
+    period: '2021 - 2025',
+    gpa: '3.8/4.0',
+  }
+}
+
 export function Resume() {
-  const [selectedTemplate, setSelectedTemplate] = useState(1)
+  const [selectedTemplate, setSelectedTemplate] = useState('modern')
   const [generating, setGenerating] = useState(false)
+  const [showAISuggestions, setShowAISuggestions] = useState(false)
 
   const handleGenerate = async () => {
     setGenerating(true)
@@ -19,11 +70,36 @@ export function Resume() {
     setGenerating(false)
   }
 
+  const aiSuggestions = [
+    {
+      original: 'Developed APIs using Node.js',
+      improved: 'Developed RESTful APIs serving 10,000+ daily users using Node.js and Express',
+      impact: '+45% impact',
+    },
+    {
+      original: 'Made the application faster',
+      improved: 'Improved application performance by 40% through database query optimization',
+      impact: '+60% impact',
+    },
+  ]
+
   return (
     <div className="space-y-6 relative z-10">
-      <div>
-        <h1 className="text-3xl font-semibold text-white mb-2">U-Resume</h1>
-        <p className="text-gray-400">Generate your AI-powered resume from your profile</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">U-Resume Builder</h1>
+          <p className="text-gray-600">Create your professional resume with AI-powered suggestions</p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline">
+            <Eye className="w-4 h-4 mr-2" />
+            Preview
+          </Button>
+          <Button>
+            <Download className="w-4 h-4 mr-2" />
+            Export PDF
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
