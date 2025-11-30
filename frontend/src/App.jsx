@@ -14,6 +14,7 @@ import { Roadmaps } from './pages/Roadmaps'
 import { Showcase } from './pages/Showcase'
 import { HelpBoard } from './pages/HelpBoard'
 import { Chat } from './pages/Chat'
+import { Onboarding } from './pages/Onboarding'
 import { useAuth } from './hooks/useAuth'
 
 function PrivateRoute({ children }) {
@@ -44,6 +45,7 @@ function App() {
                 <Route path="showcase" element={<Showcase />} />
                 <Route path="help" element={<HelpBoard />} />
                 <Route path="chat" element={<Chat />} />
+                <Route path="onboarding" element={<Onboarding />} />
                 <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
               </Routes>
             </Layout>
