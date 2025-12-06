@@ -18,7 +18,7 @@ const opportunities = [
     role: 'Software Engineering Intern',
     type: 'Internship',
     location: 'Bangalore, India',
-    salary: '₹80,000/month',
+    salary: '$80,000/month',
     posted: '2 days ago',
     matchScore: 94,
     skillsMatch: ['Python', 'Machine Learning', 'TensorFlow'],

@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { 
   MapPin, Calendar, Award, TrendingUp, ExternalLink, 
-  Github, Linkedin, Mail, Edit, CheckCircle, Star, Users, Code
+  Github, Linkedin, Mail, Edit, CheckCircle, Star, Users, Code, Save
 } from 'lucide-react';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
+import Toast from './Toast';
 
 interface ProfilePageProps {
   onOpenAIMentor: () => void;
@@ -62,6 +63,40 @@ const certificates = [
 export default function ProfilePage({ onOpenAIMentor }: ProfilePageProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('projects');
+  const [isEditing, setIsEditing] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [profileData, setProfileData] = useState({
+    name: 'Aarav Sharma',
+    title: 'Computer Science • IIT Delhi • Class of 2025',
+    location: 'New Delhi, India',
+    bio: 'Passionate about AI/ML and full-stack development. Love building products that solve real problems. Currently working on deep learning projects and exploring computer vision applications.',
+    github: '',
+    linkedin: '',
+    email: '',
+    portfolio: ''
+  });
+
+  const handleSaveProfile = () => {
+    setIsEditing(false);
+    setToastMessage('Profile updated successfully!');
+    setShowToast(true);
+    // In a real app, you would save to a backend here
+    localStorage.setItem('uconnect_profile', JSON.stringify(profileData));
+  };
+
+  // Load saved profile data on mount
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('uconnect_profile');
+    if (savedProfile) {
+      try {
+        const parsed = JSON.parse(savedProfile);
+        setProfileData(prev => ({ ...prev, ...parsed }));
+      } catch (e) {
+        console.error('Failed to parse saved profile', e);
+      }
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 flex">
@@ -79,12 +114,39 @@ export default function ProfilePage({ onOpenAIMentor }: ProfilePageProps) {
               <div className="flex-1">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h1 className="text-slate-900 mb-2">Aarav Sharma</h1>
-                    <p className="text-slate-600 mb-2">Computer Science • IIT Delhi • Class of 2025</p>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={profileData.name}
+                        onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                        className="text-2xl font-semibold text-slate-900 mb-2 bg-slate-50 border border-slate-300 rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      />
+                    ) : (
+                      <h1 className="text-slate-900 mb-2">{profileData.name}</h1>
+                    )}
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={profileData.title}
+                        onChange={(e) => setProfileData({ ...profileData, title: e.target.value })}
+                        className="text-slate-600 mb-2 bg-slate-50 border border-slate-300 rounded-lg px-3 py-1 w-full focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      />
+                    ) : (
+                      <p className="text-slate-600 mb-2">{profileData.title}</p>
+                    )}
                     <div className="flex items-center gap-4 text-slate-600">
                       <div className="flex items-center gap-1">
                         <MapPin className="w-4 h-4" />
-                        <span>New Delhi, India</span>
+                        {isEditing ? (
+                          <input
+                            type="text"
+                            value={profileData.location}
+                            onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
+                            className="text-slate-600 bg-slate-50 border border-slate-300 rounded-lg px-2 py-0.5 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                          />
+                        ) : (
+                          <span>{profileData.location}</span>
+                        )}
                       </div>
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
@@ -92,16 +154,31 @@ export default function ProfilePage({ onOpenAIMentor }: ProfilePageProps) {
                       </div>
                     </div>
                   </div>
-                  <button className="px-4 py-2 border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-2">
-                    <Edit className="w-4 h-4" />
-                    Edit Profile
+                  <button 
+                    onClick={() => isEditing ? handleSaveProfile() : setIsEditing(true)}
+                    className={`px-4 py-2 border rounded-xl transition-colors flex items-center gap-2 ${
+                      isEditing 
+                        ? 'bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700' 
+                        : 'border-slate-300 hover:bg-slate-50'
+                    }`}
+                  >
+                    {isEditing ? <Save className="w-4 h-4" /> : <Edit className="w-4 h-4" />}
+                    {isEditing ? 'Save Profile' : 'Edit Profile'}
                   </button>
                 </div>
 
-                <p className="text-slate-700 mb-6 max-w-3xl">
-                  Passionate about AI/ML and full-stack development. Love building products that solve real problems. 
-                  Currently working on deep learning projects and exploring computer vision applications.
-                </p>
+                {isEditing ? (
+                  <textarea
+                    value={profileData.bio}
+                    onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
+                    className="text-slate-700 mb-6 max-w-3xl w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600 resize-none"
+                    rows={3}
+                  />
+                ) : (
+                  <p className="text-slate-700 mb-6 max-w-3xl">
+                    {profileData.bio}
+                  </p>
+                )}
 
                 <div className="flex items-center gap-4">
                   <div className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl text-white">
@@ -382,6 +459,14 @@ export default function ProfilePage({ onOpenAIMentor }: ProfilePageProps) {
           </div>
         </div>
       </div>
+      
+      {/* Toast Notification */}
+      <Toast
+        message={toastMessage}
+        type="success"
+        visible={showToast}
+        onClose={() => setShowToast(false)}
+      />
     </div>
   );
 }

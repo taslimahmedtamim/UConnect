@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Bell, Search, MessageCircle, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -7,8 +8,16 @@ interface TopBarProps {
 }
 
 export default function TopBar({ onOpenAIMentor }: TopBarProps) {
+  const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+
+  const handleSignOut = () => {
+    localStorage.removeItem('uconnect_auth');
+    localStorage.removeItem('uconnect_onboarding');
+    localStorage.removeItem('uconnect_role');
+    window.location.href = '/';
+  };
 
   const notifications = [
     { id: 1, text: 'New team invitation for ML Project', time: '5m ago', unread: true },
@@ -116,17 +125,32 @@ export default function TopBar({ onOpenAIMentor }: TopBarProps) {
                     </div>
                   </div>
                   <div className="space-y-1">
-                    <button className="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-lg transition-colors text-slate-700">
+                    <button 
+                      onClick={() => {
+                        setShowProfile(false);
+                        navigate('/profile');
+                      }}
+                      className="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-lg transition-colors text-slate-700"
+                    >
                       View Profile
                     </button>
-                    <button className="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-lg transition-colors text-slate-700">
+                    <button 
+                      onClick={() => {
+                        setShowProfile(false);
+                        navigate('/settings');
+                      }}
+                      className="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-lg transition-colors text-slate-700"
+                    >
                       Settings
                     </button>
                     <button className="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-lg transition-colors text-slate-700">
                       Help & Support
                     </button>
                     <hr className="my-2" />
-                    <button className="w-full text-left px-3 py-2 hover:bg-red-50 rounded-lg transition-colors text-red-600">
+                    <button 
+                      onClick={handleSignOut}
+                      className="w-full text-left px-3 py-2 hover:bg-red-50 rounded-lg transition-colors text-red-600"
+                    >
                       Sign Out
                     </button>
                   </div>
