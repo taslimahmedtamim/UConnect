@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Users, Briefcase, TrendingUp, Github, Mail, ArrowRight, CheckCircle, Star, Flame, Zap, Moon, Sun, Globe } from 'lucide-react';
+import { Sparkles, Users, Briefcase, TrendingUp, Github, Mail, ArrowRight, CheckCircle, Star, Flame, Zap, Moon, Sun, Globe, Target, Award, MessageCircle, Shield, Rocket, BookOpen, Heart, Linkedin, Twitter, Instagram } from 'lucide-react';
 import AnimatedBackground from './AnimatedBackground';
 import GlassCard from './GlassCard';
 
@@ -13,9 +13,14 @@ interface LandingPageProps {
 export default function LandingPage({ onLogin, darkMode, onToggleDarkMode }: LandingPageProps) {
   const [studentCount, setStudentCount] = useState(12547);
   const [liveActivities, setLiveActivities] = useState([
-    { user: 'Rafid', action: 'joined', project: 'Smart Traffic System', college: 'BUET', time: '2s ago' },
-    { user: 'Nusrat', action: 'completed', project: 'Green Campus Initiative', college: 'DU', time: '5s ago' },
-    { user: 'Tanvir', action: 'placed at', project: 'Google Singapore', college: 'NSU', time: '12s ago' },
+    { user: 'Rafid', action: 'joined', project: 'Smart Traffic System', college: 'BUET', time: '2m ago' },
+    { user: 'Nusrat', action: 'completed', project: 'Green Campus Initiative', college: 'DU', time: '4m ago' },
+    { user: 'Tanvir', action: 'placed at', project: 'Google Singapore', college: 'NSU', time: '6m ago' },
+    { user: 'Fahim', action: 'earned', project: '100-Day Streak Badge', college: 'BRAC University', time: '8m ago' },
+    { user: 'Sadia', action: 'joined', project: 'AI Mental Health Assistant', college: 'IUB', time: '10m ago' },
+    { user: 'Anika', action: 'placed at', project: 'Microsoft Dublin', college: 'UIU', time: '12m ago' },
+    { user: 'Arif', action: 'completed', project: 'E-Commerce Platform', college: 'AIUB', time: '14m ago' },
+    { user: 'Mim', action: 'joined', project: 'Healthcare App', college: 'EWU', time: '16m ago' },
   ]);
 
   // Animate student counter
@@ -29,18 +34,23 @@ export default function LandingPage({ onLogin, darkMode, onToggleDarkMode }: Lan
   // Rotate live activities
   useEffect(() => {
     const activities = [
-      { user: 'Rafid', action: 'joined', project: 'Smart Traffic System', college: 'BUET', time: '2s ago' },
-      { user: 'Nusrat', action: 'completed', project: 'Green Campus Initiative', college: 'DU', time: '5s ago' },
-      { user: 'Tanvir', action: 'placed at', project: 'Google Singapore', college: 'NSU', time: '12s ago' },
-      { user: 'Fahim', action: 'earned', project: '100-Day Streak Badge', college: 'BRAC University', time: '18s ago' },
-      { user: 'Sadia', action: 'joined', project: 'AI Mental Health Assistant', college: 'IUB', time: '25s ago' },
-      { user: 'Anika', action: 'placed at', project: 'Microsoft Dublin', college: 'UIU', time: '30s ago' },
+      { user: 'Rafid', action: 'joined', project: 'Smart Traffic System', college: 'BUET' },
+      { user: 'Nusrat', action: 'completed', project: 'Green Campus Initiative', college: 'DU' },
+      { user: 'Tanvir', action: 'placed at', project: 'Google Singapore', college: 'NSU' },
+      { user: 'Fahim', action: 'earned', project: '100-Day Streak Badge', college: 'BRAC University' },
+      { user: 'Sadia', action: 'joined', project: 'AI Mental Health Assistant', college: 'IUB' },
+      { user: 'Anika', action: 'placed at', project: 'Microsoft Dublin', college: 'UIU' },
+      { user: 'Arif', action: 'completed', project: 'E-Commerce Platform', college: 'AIUB' },
+      { user: 'Mim', action: 'joined', project: 'Healthcare App', college: 'EWU' },
+      { user: 'Kabir', action: 'earned', project: 'Top Contributor Badge', college: 'CUET' },
+      { user: 'Rima', action: 'placed at', project: 'Amazon Seattle', college: 'RUET' },
     ];
 
     const interval = setInterval(() => {
       const newActivity = activities[Math.floor(Math.random() * activities.length)];
-      setLiveActivities(prev => [{ ...newActivity, time: 'just now' }, ...prev.slice(0, 2)]);
-    }, 5000);
+      setLiveActivities(prev => [{ ...newActivity, time: 'just now' }, ...prev.slice(0, 7)]);
+    }, 300000); // 5 minutes = 300000ms
+
 
     return () => clearInterval(interval);
   }, []);
@@ -302,8 +312,38 @@ export default function LandingPage({ onLogin, darkMode, onToggleDarkMode }: Lan
         </div>
       </section>
 
+            {/* CTA Section */}
+      <section className="pt-32 pb-20 px-6 relative">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <GlassCard className="p-12" glowColor="#6366F1">
+              <h2 className={`text-4xl font-black ${darkMode ? 'text-white' : 'text-slate-900'} mb-4`}>
+                Ready to transform your academic journey?
+              </h2>
+              <p className={`${darkMode ? 'text-slate-400' : 'text-slate-600'} text-lg mb-8 max-w-2xl mx-auto`}>
+                Join thousands of students who are already building their future with UConnect.
+              </p>
+              <motion.button
+                onClick={onLogin}
+                whileHover={{ scale: 1.05, boxShadow: '0 0 50px rgba(99, 102, 241, 0.5)' }}
+                whileTap={{ scale: 0.95 }}
+                className="px-10 py-5 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-2xl font-black text-lg flex items-center gap-3 mx-auto"
+              >
+                Get Started for Free
+                <ArrowRight className="w-6 h-6" />
+              </motion.button>
+            </GlassCard>
+          </motion.div>
+        </div>
+      </section>
+
+
       {/* Live Activity Feed */}
-      <section className="py-12 px-6 relative">
+      <section className="pt-32 pb-20 px-6 relative">
         <div className="max-w-7xl mx-auto">
           <h2 className={`text-center ${darkMode ? 'text-white' : 'text-slate-900'} mb-8 font-black flex items-center justify-center gap-2`}>
             <Flame className="w-6 h-6 text-orange-500" /> Live Activity
@@ -343,7 +383,318 @@ export default function LandingPage({ onLogin, darkMode, onToggleDarkMode }: Lan
         </div>
       </section>
 
-      {/* Rest of sections would continue with similar glass morphism styling... */}
+      {/* Features Section */}
+      <section className="pt-32 pb-20 px-6 relative">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className={`text-4xl font-black ${darkMode ? 'text-white' : 'text-slate-900'} mb-4`}>
+              Everything you need to <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">succeed</span>
+            </h2>
+            <p className={`${darkMode ? 'text-slate-400' : 'text-slate-600'} text-lg max-w-2xl mx-auto`}>
+              Powerful features designed to help you collaborate, learn, and land your dream opportunities.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                icon: Users,
+                title: 'Smart Team Matching',
+                description: 'AI-powered algorithm matches you with the perfect teammates based on skills, interests, and working style.',
+                gradient: 'from-blue-500 to-cyan-500',
+              },
+              {
+                icon: Target,
+                title: 'Verified Projects',
+                description: 'Get your projects verified by mentors and showcase them as credible portfolio pieces to recruiters.',
+                gradient: 'from-emerald-500 to-teal-500',
+              },
+              {
+                icon: Award,
+                title: 'U-Score & Leaderboard',
+                description: 'Build your reputation through project contributions, skill endorsements, and community engagement.',
+                gradient: 'from-amber-500 to-orange-500',
+              },
+              {
+                icon: MessageCircle,
+                title: 'AI Mentor',
+                description: '24/7 AI assistant to help with project ideas, career guidance, and campus information.',
+                gradient: 'from-purple-500 to-pink-500',
+              },
+              {
+                icon: Briefcase,
+                title: 'Opportunity Hub',
+                description: 'Curated internships and job opportunities matched to your skills and verified project portfolio.',
+                gradient: 'from-indigo-500 to-purple-500',
+              },
+              {
+                icon: Rocket,
+                title: 'Skill Growth Tracking',
+                description: 'Visual skill graphs, learning roadmaps, and streak tracking to keep you motivated.',
+                gradient: 'from-rose-500 to-pink-500',
+              },
+            ].map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <GlassCard className="p-6 h-full hover:scale-105 transition-transform cursor-pointer" glowColor="#6366F1">
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-4 shadow-lg`}>
+                    <feature.icon className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className={`text-xl font-black ${darkMode ? 'text-white' : 'text-slate-900'} mb-2`}>
+                    {feature.title}
+                  </h3>
+                  <p className={darkMode ? 'text-slate-400' : 'text-slate-600'}>
+                    {feature.description}
+                  </p>
+                </GlassCard>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+     <section className="pt-32 pb-20 px-6 relative">
+        <div className="max-w-7xl mx-auto">
+          <GlassCard className="p-12" glowColor="#8B5CF6">
+            <div className="grid md:grid-cols-4 gap-8 text-center">
+              {[
+                { value: '50,000+', label: 'Active Students', icon: Users },
+                { value: '10,000+', label: 'Projects Completed', icon: CheckCircle },
+                { value: '500+', label: 'Partner Companies', icon: Briefcase },
+                { value: '95%', label: 'Placement Rate', icon: TrendingUp },
+              ].map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <stat.icon className={`w-8 h-8 mx-auto mb-3 ${darkMode ? 'text-indigo-400' : 'text-indigo-600'}`} />
+                  <div className="text-4xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+                    {stat.value}
+                  </div>
+                  <div className={darkMode ? 'text-slate-400' : 'text-slate-600'}>
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </GlassCard>
+        </div>
+      </section>
+
+      {/* Developer Section */}
+      <section className="pt-32 pb-20 px-6 relative">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className={`text-4xl font-black ${darkMode ? 'text-white' : 'text-slate-900'} mb-4`}>
+              Meet the <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Developers</span>
+            </h2>
+            <p className={`${darkMode ? 'text-slate-400' : 'text-slate-600'} text-lg`}>
+              Built with passion for the student community
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {[
+              {
+                name: 'Md. Majharul Islam',
+                initial: 'M',
+                role: 'Full Stack Developer',
+                github: 'https://github.com/MrMajharul',
+                gradient: 'from-blue-500 via-cyan-500 to-teal-500',
+                description: 'Passionate about creating scalable web applications and innovative solutions.',
+                photo: 'https://avatars.githubusercontent.com/MrMajharul',
+              },
+              {
+                name: 'Taslim Ahmed Tamim',
+                initial: 'T',
+                role: 'Full Stack Developer & UI/UX Designer',
+                github: 'https://github.com/taslimahmedtamim',
+                gradient: 'from-indigo-500 via-purple-500 to-pink-500',
+                description: 'Building products that connect people and create opportunities.',
+                photo: 'https://avatars.githubusercontent.com/taslimahmedtamim',
+              },
+              {
+                name: 'Salman Kabir Sany',
+                initial: 'S',
+                role: 'Backend Developer',
+                github: 'https://github.com/salmankabirsany',
+                gradient: 'from-emerald-500 via-green-500 to-teal-500',
+                description: 'Focused on building robust backend systems and APIs.',
+                photo: 'https://avatars.githubusercontent.com/salmankabirsany',
+              },
+            ].map((developer, index) => (
+              <motion.div
+                key={developer.name}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.15 }}
+              >
+                <GlassCard className="p-6 text-center h-full" glowColor="#8B5CF6">
+                  <motion.div
+                    whileHover={{ scale: 1.05, rotate: 5 }}
+                    className={`w-24 h-24 rounded-full bg-gradient-to-br ${developer.gradient} mx-auto mb-4 flex items-center justify-center shadow-2xl overflow-hidden`}
+                  >
+                    <img 
+                      src={developer.photo} 
+                      alt={developer.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                      }}
+                    />
+                    <span className="text-3xl font-black text-white hidden">{developer.initial}</span>
+                  </motion.div>
+                  <h3 className={`text-xl font-black ${darkMode ? 'text-white' : 'text-slate-900'} mb-1`}>
+                    {developer.name}
+                  </h3>
+                  <p className={`${darkMode ? 'text-indigo-400' : 'text-indigo-600'} font-semibold text-sm mb-3`}>
+                    {developer.role}
+                  </p>
+                  <p className={`${darkMode ? 'text-slate-400' : 'text-slate-600'} text-sm mb-4`}>
+                    {developer.description}
+                  </p>
+                  <motion.a
+                    href={developer.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl ${darkMode ? 'bg-slate-800 hover:bg-slate-700 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'} transition-colors font-medium`}
+                  >
+                    <Github className="w-5 h-5" />
+                    GitHub
+                  </motion.a>
+                </GlassCard>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+      {/* Footer */}
+      <section className="pt-32 pb-20 px-6 relative"></section>
+      <footer className={`py-16 px-6 ${darkMode ? 'bg-slate-900/50' : 'bg-slate-50'} border-t ${darkMode ? 'border-slate-800' : 'border-slate-200'}`}>
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
+            {/* Brand */}
+            <div className="md:col-span-1">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-white" />
+                </div>
+                <span className={`font-black text-xl ${darkMode ? 'text-white' : 'text-slate-900'}`}>
+                  UConnect
+                </span>
+              </div>
+              <p className={`${darkMode ? 'text-slate-400' : 'text-slate-600'} mb-4`}>
+                Connecting students, building futures. The AI-native collaboration platform for the next generation.
+              </p>
+              <div className="flex gap-3">
+                <motion.a
+                  href="#"
+                  whileHover={{ scale: 1.1 }}
+                  className={`w-10 h-10 rounded-lg ${darkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-slate-200 hover:bg-slate-300'} flex items-center justify-center transition-colors`}
+                >
+                  <Twitter className={`w-5 h-5 ${darkMode ? 'text-slate-400' : 'text-slate-600'}`} />
+                </motion.a>
+                <motion.a
+                  href="#"
+                  whileHover={{ scale: 1.1 }}
+                  className={`w-10 h-10 rounded-lg ${darkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-slate-200 hover:bg-slate-300'} flex items-center justify-center transition-colors`}
+                >
+                  <Instagram className={`w-5 h-5 ${darkMode ? 'text-slate-400' : 'text-slate-600'}`} />
+                </motion.a>
+                <motion.a
+                  href="#"
+                  whileHover={{ scale: 1.1 }}
+                  className={`w-10 h-10 rounded-lg ${darkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-slate-200 hover:bg-slate-300'} flex items-center justify-center transition-colors`}
+                >
+                  <Linkedin className={`w-5 h-5 ${darkMode ? 'text-slate-400' : 'text-slate-600'}`} />
+                </motion.a>
+                <motion.a
+                  href="#"
+                  whileHover={{ scale: 1.1 }}
+                  className={`w-10 h-10 rounded-lg ${darkMode ? 'bg-slate-800 hover:bg-slate-700' : 'bg-slate-200 hover:bg-slate-300'} flex items-center justify-center transition-colors`}
+                >
+                  <Github className={`w-5 h-5 ${darkMode ? 'text-slate-400' : 'text-slate-600'}`} />
+                </motion.a>
+              </div>
+            </div>
+
+            {/* Links */}
+            <div>
+              <h4 className={`font-black ${darkMode ? 'text-white' : 'text-slate-900'} mb-4`}>Platform</h4>
+              <ul className="space-y-3">
+                {['Features', 'Pricing', 'Universities', 'Enterprise'].map((item) => (
+                  <li key={item}>
+                    <a href="#" className={`${darkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'} transition-colors`}>
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className={`font-black ${darkMode ? 'text-white' : 'text-slate-900'} mb-4`}>Resources</h4>
+              <ul className="space-y-3">
+                {['Blog', 'Documentation', 'Help Center', 'Community'].map((item) => (
+                  <li key={item}>
+                    <a href="#" className={`${darkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'} transition-colors`}>
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className={`font-black ${darkMode ? 'text-white' : 'text-slate-900'} mb-4`}>Company</h4>
+              <ul className="space-y-3">
+                {['About Us', 'Careers', 'Privacy Policy', 'Terms of Service'].map((item) => (
+                  <li key={item}>
+                    <a href="#" className={`${darkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'} transition-colors`}>
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className={`pt-8 border-t ${darkMode ? 'border-slate-800' : 'border-slate-200'} flex flex-col md:flex-row items-center justify-between gap-4`}>
+            <p className={`${darkMode ? 'text-slate-500' : 'text-slate-500'} text-sm`}>
+              © {new Date().getFullYear()} UConnect. All rights reserved.
+            </p>
+            <p className={`${darkMode ? 'text-slate-500' : 'text-slate-500'} text-sm flex items-center gap-1`}>
+              Made with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> in Bangladesh
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

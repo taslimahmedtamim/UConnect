@@ -4,13 +4,15 @@ import { motion } from 'motion/react';
 import { 
   LayoutDashboard, User, Briefcase, FolderOpen, MessageCircle, Bell, 
   ChevronRight, TrendingUp, Clock, CheckCircle, Award, Users, 
-  Target, Calendar, Zap, Sparkles, Hand
+  Target, Calendar, Zap, Sparkles, Hand, Flame, BookOpen, Trophy
 } from 'lucide-react';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
 
 interface StudentDashboardProps {
   onOpenAIMentor: () => void;
+  darkMode?: boolean;
+  onToggleDarkMode?: () => void;
 }
 
 const suggestedTeams = [
@@ -56,8 +58,32 @@ const upcomingDeadlines = [
   { project: 'Database Assignment', task: 'Final submission', date: 'Dec 2', urgent: false }
 ];
 
+const dailyGoals = [
+  { id: 1, text: 'Complete 2 coding challenges', completed: true, xp: 50 },
+  { id: 2, text: 'Review pull requests', completed: true, xp: 30 },
+  { id: 3, text: 'Update project documentation', completed: false, xp: 40 },
+  { id: 4, text: 'Attend team standup', completed: false, xp: 20 },
+];
+
+const studyStreakData = {
+  current: 12,
+  best: 28,
+  weekProgress: [true, true, true, true, true, false, false],
+};
+
 export default function StudentDashboard({ onOpenAIMentor }: StudentDashboardProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [goals, setGoals] = useState(dailyGoals);
+  const [streak, setStreak] = useState(studyStreakData);
+
+  const toggleGoal = (id: number) => {
+    setGoals(prev => prev.map(goal => 
+      goal.id === id ? { ...goal, completed: !goal.completed } : goal
+    ));
+  };
+
+  const completedGoals = goals.filter(g => g.completed).length;
+  const totalXP = goals.filter(g => g.completed).reduce((sum, g) => sum + g.xp, 0);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 flex">
@@ -74,7 +100,7 @@ export default function StudentDashboard({ onOpenAIMentor }: StudentDashboardPro
           </div>
 
           {/* U-Score & Streak */}
-          <div className="grid md:grid-cols-4 gap-6 mb-8">
+          <div className="grid md:grid-cols-5 gap-6 mb-8">
             <motion.div
               whileHover={{ scale: 1.02 }}
               className="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl p-6 text-white"
@@ -90,6 +116,31 @@ export default function StudentDashboard({ onOpenAIMentor }: StudentDashboardPro
               <div className="flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-emerald-300" />
                 <span className="text-emerald-300">+23 this week</span>
+              </div>
+            </motion.div>
+
+            {/* Study Streak Card */}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className="bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl p-6 text-white"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
+                  <Flame className="w-6 h-6" />
+                </div>
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                >
+                  <Trophy className="w-5 h-5 text-orange-200" />
+                </motion.div>
+              </div>
+              <p className="text-orange-100 mb-1">Study Streak</p>
+              <p className="mb-1">{streak.current} days</p>
+              <div className="flex gap-1 mt-2">
+                {streak.weekProgress.map((done, i) => (
+                  <div key={i} className={`flex-1 h-1.5 rounded-full ${done ? 'bg-white' : 'bg-white/30'}`} />
+                ))}
               </div>
             </motion.div>
 
@@ -252,6 +303,54 @@ export default function StudentDashboard({ onOpenAIMentor }: StudentDashboardPro
                         <p className="text-slate-400">{activity.time}</p>
                       </div>
                     </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Daily Goals */}
+              <div className="bg-white rounded-2xl p-6 border border-slate-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-indigo-600" />
+                    <h3 className="text-slate-900">Daily Goals</h3>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-emerald-600 font-medium">+{totalXP} XP</span>
+                    <span className="text-sm text-slate-500">{completedGoals}/{goals.length}</span>
+                  </div>
+                </div>
+                <div className="w-full h-2 bg-slate-100 rounded-full mb-4">
+                  <motion.div 
+                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(completedGoals / goals.length) * 100}%` }}
+                    transition={{ duration: 0.5 }}
+                  />
+                </div>
+                <div className="space-y-2">
+                  {goals.map((goal) => (
+                    <motion.div 
+                      key={goal.id}
+                      whileHover={{ scale: 1.01 }}
+                      className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors ${
+                        goal.completed ? 'bg-emerald-50' : 'bg-slate-50 hover:bg-slate-100'
+                      }`}
+                      onClick={() => toggleGoal(goal.id)}
+                    >
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                        goal.completed 
+                          ? 'bg-emerald-500 border-emerald-500' 
+                          : 'border-slate-300'
+                      }`}>
+                        {goal.completed && <CheckCircle className="w-4 h-4 text-white" />}
+                      </div>
+                      <span className={`flex-1 ${goal.completed ? 'text-slate-500 line-through' : 'text-slate-700'}`}>
+                        {goal.text}
+                      </span>
+                      <span className={`text-sm font-medium ${goal.completed ? 'text-emerald-600' : 'text-slate-400'}`}>
+                        +{goal.xp} XP
+                      </span>
+                    </motion.div>
                   ))}
                 </div>
               </div>

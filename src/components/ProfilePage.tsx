@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { 
   MapPin, Calendar, Award, TrendingUp, ExternalLink, 
   Github, Linkedin, Mail, Edit, CheckCircle, Star, Users, Code, Save,
-  Trophy, Target, Rocket
+  Trophy, Target, Rocket, ThumbsUp, Flame, Zap
 } from 'lucide-react';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
@@ -11,6 +11,8 @@ import Toast from './Toast';
 
 interface ProfilePageProps {
   onOpenAIMentor: () => void;
+  darkMode?: boolean;
+  onToggleDarkMode?: () => void;
 }
 
 const skillsData = [
@@ -20,6 +22,12 @@ const skillsData = [
   { name: 'Machine Learning', level: 3, endorsements: 6, color: 'from-purple-400 to-indigo-500' },
   { name: 'Node.js', level: 3, endorsements: 5, color: 'from-green-400 to-emerald-500' },
   { name: 'UI/UX Design', level: 2, endorsements: 4, color: 'from-pink-400 to-rose-500' },
+];
+
+const suggestedConnections = [
+  { id: 1, name: 'Nadia Rahman', role: 'ML Engineer', avatar: 'from-pink-400 to-rose-500', mutualSkills: 4 },
+  { id: 2, name: 'Rafid Hasan', role: 'Full Stack Dev', avatar: 'from-blue-400 to-cyan-500', mutualSkills: 3 },
+  { id: 3, name: 'Tasnim Akter', role: 'UI/UX Designer', avatar: 'from-purple-400 to-indigo-500', mutualSkills: 2 },
 ];
 
 const projects = [
@@ -67,6 +75,9 @@ export default function ProfilePage({ onOpenAIMentor }: ProfilePageProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [skills, setSkills] = useState(skillsData);
+  const [endorsedSkills, setEndorsedSkills] = useState<string[]>([]);
+  const [studyStreak, setStudyStreak] = useState({ current: 12, best: 28, todayComplete: true });
   const [profileData, setProfileData] = useState({
     name: 'Aarav Sharma',
     title: 'Computer Science • IIT Delhi • Class of 2025',
@@ -84,6 +95,23 @@ export default function ProfilePage({ onOpenAIMentor }: ProfilePageProps) {
     setShowToast(true);
     // In a real app, you would save to a backend here
     localStorage.setItem('uconnect_profile', JSON.stringify(profileData));
+  };
+
+  const endorseSkill = (skillName: string) => {
+    if (endorsedSkills.includes(skillName)) {
+      setToastMessage('You already endorsed this skill!');
+      setShowToast(true);
+      return;
+    }
+    
+    setSkills(prev => prev.map(skill => 
+      skill.name === skillName 
+        ? { ...skill, endorsements: skill.endorsements + 1 }
+        : skill
+    ));
+    setEndorsedSkills(prev => [...prev, skillName]);
+    setToastMessage(`You endorsed ${skillName}!`);
+    setShowToast(true);
   };
 
   // Load saved profile data on mount
@@ -291,17 +319,36 @@ export default function ProfilePage({ onOpenAIMentor }: ProfilePageProps) {
                 </div>
 
                 <div className="mt-6 grid grid-cols-3 gap-4">
-                  {skillsData.map((skill) => (
-                    <div key={skill.name} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                  {skills.map((skill) => (
+                    <motion.div 
+                      key={skill.name} 
+                      className="flex items-center justify-between p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors group"
+                      whileHover={{ scale: 1.02 }}
+                    >
                       <div>
                         <p className="text-slate-900">{skill.name}</p>
                         <p className="text-slate-500">Level {skill.level}/5</p>
                       </div>
-                      <div className="flex items-center gap-1 text-amber-600">
-                        <Star className="w-4 h-4 fill-amber-400" />
-                        <span>{skill.endorsements}</span>
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1 text-amber-600">
+                          <Star className="w-4 h-4 fill-amber-400" />
+                          <span>{skill.endorsements}</span>
+                        </div>
+                        <motion.button
+                          onClick={() => endorseSkill(skill.name)}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          className={`p-1.5 rounded-lg transition-colors ${
+                            endorsedSkills.includes(skill.name)
+                              ? 'bg-indigo-100 text-indigo-600'
+                              : 'bg-slate-200 text-slate-500 hover:bg-indigo-100 hover:text-indigo-600'
+                          }`}
+                          title={endorsedSkills.includes(skill.name) ? 'Endorsed!' : 'Endorse this skill'}
+                        >
+                          <ThumbsUp className="w-4 h-4" />
+                        </motion.button>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
@@ -411,6 +458,74 @@ export default function ProfilePage({ onOpenAIMentor }: ProfilePageProps) {
 
             {/* Right Sidebar */}
             <div className="space-y-6">
+              {/* Study Streak */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl p-6 text-white"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                    <Flame className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3>Study Streak</h3>
+                    <p className="text-orange-100">Keep learning every day!</p>
+                  </div>
+                </div>
+                <div className="flex items-end gap-4 mb-4">
+                  <div>
+                    <p className="text-orange-100">Current</p>
+                    <p className="text-4xl font-bold">{studyStreak.current}</p>
+                    <p className="text-orange-100">days</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-orange-100">Best: {studyStreak.best} days</p>
+                  </div>
+                </div>
+                <div className="flex gap-1">
+                  {[...Array(7)].map((_, i) => (
+                    <div 
+                      key={i} 
+                      className={`flex-1 h-2 rounded-full ${
+                        i < studyStreak.current % 7 + 1 ? 'bg-white' : 'bg-white/30'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <p className="text-orange-100 mt-2 text-sm text-center">This week's progress</p>
+              </motion.div>
+
+              {/* Quick Connections */}
+              <div className="bg-white rounded-2xl p-6 border border-slate-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-slate-900">People You May Know</h3>
+                  <button className="text-indigo-600 text-sm hover:text-indigo-700">See all</button>
+                </div>
+                <div className="space-y-3">
+                  {suggestedConnections.map((person) => (
+                    <motion.div 
+                      key={person.id}
+                      whileHover={{ scale: 1.02 }}
+                      className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors"
+                    >
+                      <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${person.avatar}`} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-slate-900 truncate">{person.name}</p>
+                        <p className="text-slate-500 text-sm">{person.role}</p>
+                      </div>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="px-3 py-1 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors"
+                      >
+                        Connect
+                      </motion.button>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+
               {/* Achievements */}
               <div className="bg-white rounded-2xl p-6 border border-slate-200">
                 <h3 className="text-slate-900 mb-4">Achievements</h3>

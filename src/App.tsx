@@ -13,6 +13,7 @@ import AIMentorChat from './components/AIMentorChat';
 import Leaderboard from './components/Leaderboard';
 import AchievementsVault from './components/AchievementsVault';
 import EventsCalendar from './components/EventsCalendar';
+import SettingsPage from './components/SettingsPage';
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -203,6 +204,17 @@ export default function App() {
             element={
               isAuthenticated && hasCompletedOnboarding ? (
                 <EventsCalendar onOpenAIMentor={() => setShowAIMentor(true)} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(!darkMode)} />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            } 
+          />
+          
+          <Route 
+            path="/settings" 
+            element={
+              isAuthenticated && hasCompletedOnboarding ? (
+                <SettingsPage onOpenAIMentor={() => setShowAIMentor(true)} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(!darkMode)} />
               ) : (
                 <Navigate to="/" replace />
               )
