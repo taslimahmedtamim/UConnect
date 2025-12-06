@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Users, Briefcase, TrendingUp, Github, Mail, ArrowRight, CheckCircle, Star, Flame, Zap, Moon, Sun } from 'lucide-react';
+import { Sparkles, Users, Briefcase, TrendingUp, Github, Mail, ArrowRight, CheckCircle, Star, Flame, Zap, Moon, Sun, Globe } from 'lucide-react';
 import AnimatedBackground from './AnimatedBackground';
 import GlassCard from './GlassCard';
 
@@ -87,11 +87,19 @@ export default function LandingPage({ onLogin, darkMode, onToggleDarkMode }: Lan
             </motion.button>
             <motion.button 
               onClick={onLogin}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`px-6 py-2 ${darkMode ? 'text-slate-300 hover:text-white border-slate-700' : 'text-slate-700 hover:text-slate-900 border-slate-300'} border rounded-xl transition-colors`}
+            >
+              Login
+            </motion.button>
+            <motion.button 
+              onClick={onLogin}
               whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(99, 102, 241, 0.5)' }}
               whileTap={{ scale: 0.95 }}
               className="px-6 py-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-xl transition-all relative overflow-hidden group"
             >
-              <span className="relative z-10">Sign In</span>
+              <span className="relative z-10">Sign Up</span>
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600"
                 initial={{ x: '100%' }}
@@ -129,7 +137,7 @@ export default function LandingPage({ onLogin, darkMode, onToggleDarkMode }: Lan
                   >
                     {studentCount.toLocaleString()}
                   </motion.span>
-                  students from <span className="font-black text-indigo-600">50+</span> Bangladeshi universities • Going Global 🌏
+                  students from <span className="font-black text-indigo-600">50+</span> Bangladeshi universities • Going Global <Globe className="w-4 h-4 inline text-indigo-500" />
                 </span>
               </div>
             </GlassCard>
@@ -297,8 +305,8 @@ export default function LandingPage({ onLogin, darkMode, onToggleDarkMode }: Lan
       {/* Live Activity Feed */}
       <section className="py-12 px-6 relative">
         <div className="max-w-7xl mx-auto">
-          <h2 className={`text-center ${darkMode ? 'text-white' : 'text-slate-900'} mb-8 font-black`}>
-            🔥 Live Activity
+          <h2 className={`text-center ${darkMode ? 'text-white' : 'text-slate-900'} mb-8 font-black flex items-center justify-center gap-2`}>
+            <Flame className="w-6 h-6 text-orange-500" /> Live Activity
           </h2>
           <div className="grid md:grid-cols-3 gap-4">
             <AnimatePresence mode="popLayout">

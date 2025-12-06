@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ChevronRight, ChevronLeft, GraduationCap, Briefcase, Users, 
   Code, Palette, Brain, Database, Globe, Smartphone, Shield, Zap, 
-  CheckCircle, Trophy, Sparkles, Moon, Sun
+  CheckCircle, Trophy, Sparkles, Moon, Sun, Search, Plus, X
 } from 'lucide-react';
 import AnimatedBackground from './AnimatedBackground';
 import GlassCard from './GlassCard';
@@ -11,6 +11,7 @@ import Confetti from './Confetti';
 
 interface OnboardingFlowProps {
   onComplete: (role: 'student' | 'teacher' | 'recruiter') => void;
+  onBackToHome?: () => void;
   darkMode: boolean;
   onToggleDarkMode: () => void;
 }
@@ -24,6 +25,34 @@ const skillOptions = [
   { id: 'ui', label: 'UI/UX Design', icon: Palette, gradient: 'from-pink-400 to-rose-500' },
   { id: 'mobile', label: 'Mobile Dev', icon: Smartphone, gradient: 'from-indigo-400 to-purple-500' },
   { id: 'cloud', label: 'Cloud/DevOps', icon: Shield, gradient: 'from-slate-400 to-slate-600' },
+  { id: 'java', label: 'Java', icon: Code, gradient: 'from-red-400 to-orange-500' },
+  { id: 'csharp', label: 'C#', icon: Code, gradient: 'from-violet-400 to-purple-500' },
+  { id: 'cpp', label: 'C++', icon: Code, gradient: 'from-blue-500 to-indigo-600' },
+  { id: 'typescript', label: 'TypeScript', icon: Code, gradient: 'from-blue-400 to-blue-600' },
+  { id: 'sql', label: 'SQL/Database', icon: Database, gradient: 'from-orange-400 to-red-500' },
+  { id: 'php', label: 'PHP', icon: Code, gradient: 'from-indigo-400 to-blue-500' },
+  { id: 'swift', label: 'Swift', icon: Smartphone, gradient: 'from-orange-400 to-red-400' },
+  { id: 'kotlin', label: 'Kotlin', icon: Smartphone, gradient: 'from-purple-400 to-indigo-500' },
+  { id: 'flutter', label: 'Flutter', icon: Smartphone, gradient: 'from-cyan-400 to-blue-400' },
+  { id: 'angular', label: 'Angular', icon: Globe, gradient: 'from-red-400 to-pink-500' },
+  { id: 'vue', label: 'Vue.js', icon: Globe, gradient: 'from-emerald-400 to-teal-500' },
+  { id: 'django', label: 'Django', icon: Globe, gradient: 'from-green-500 to-emerald-600' },
+  { id: 'spring', label: 'Spring Boot', icon: Database, gradient: 'from-green-400 to-lime-500' },
+  { id: 'aws', label: 'AWS', icon: Shield, gradient: 'from-orange-400 to-amber-500' },
+  { id: 'docker', label: 'Docker', icon: Shield, gradient: 'from-blue-400 to-cyan-400' },
+  { id: 'kubernetes', label: 'Kubernetes', icon: Shield, gradient: 'from-blue-500 to-indigo-500' },
+  { id: 'git', label: 'Git/GitHub', icon: Code, gradient: 'from-gray-500 to-slate-600' },
+  { id: 'figma', label: 'Figma', icon: Palette, gradient: 'from-purple-400 to-pink-400' },
+  { id: 'photoshop', label: 'Photoshop', icon: Palette, gradient: 'from-blue-500 to-indigo-600' },
+  { id: 'ai', label: 'AI/Deep Learning', icon: Brain, gradient: 'from-violet-400 to-purple-600' },
+  { id: 'datascience', label: 'Data Science', icon: Brain, gradient: 'from-teal-400 to-cyan-500' },
+  { id: 'blockchain', label: 'Blockchain', icon: Database, gradient: 'from-yellow-400 to-orange-500' },
+  { id: 'cybersecurity', label: 'Cybersecurity', icon: Shield, gradient: 'from-red-500 to-rose-600' },
+  { id: 'linux', label: 'Linux', icon: Code, gradient: 'from-yellow-500 to-amber-600' },
+  { id: 'testing', label: 'Testing/QA', icon: CheckCircle, gradient: 'from-green-400 to-emerald-500' },
+  { id: 'agile', label: 'Agile/Scrum', icon: Users, gradient: 'from-blue-400 to-indigo-400' },
+  { id: 'communication', label: 'Communication', icon: Users, gradient: 'from-pink-400 to-rose-400' },
+  { id: 'leadership', label: 'Leadership', icon: Trophy, gradient: 'from-amber-400 to-yellow-500' },
 ];
 
 const interestOptions = [
@@ -35,15 +64,17 @@ const interestOptions = [
   { id: 'security', label: 'Cybersecurity', icon: Shield },
 ];
 
-export default function OnboardingFlow({ onComplete, darkMode, onToggleDarkMode }: OnboardingFlowProps) {
+export default function OnboardingFlow({ onComplete, onBackToHome, darkMode, onToggleDarkMode }: OnboardingFlowProps) {
   const [step, setStep] = useState(1);
   const [selectedRole, setSelectedRole] = useState<'student' | 'teacher' | 'recruiter' | null>(null);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [skillSearch, setSkillSearch] = useState('');
+  const [customSkills, setCustomSkills] = useState<Array<{ id: string; label: string }>>([]);
   const [profileData, setProfileData] = useState({
     name: '',
     college: '',
-    branch: '',
+    department: '',
     year: '',
   });
   const [showProjection, setShowProjection] = useState(false);
@@ -51,6 +82,40 @@ export default function OnboardingFlow({ onComplete, darkMode, onToggleDarkMode 
 
   const totalSteps = 5;
   const progress = (step / totalSteps) * 100;
+
+  // Filter skills based on search
+  const filteredSkills = useMemo(() => {
+    if (!skillSearch.trim()) return skillOptions;
+    return skillOptions.filter(skill => 
+      skill.label.toLowerCase().includes(skillSearch.toLowerCase())
+    );
+  }, [skillSearch]);
+
+  // Check if search term can be added as custom skill
+  const canAddCustomSkill = useMemo(() => {
+    if (!skillSearch.trim()) return false;
+    const searchLower = skillSearch.toLowerCase().trim();
+    const existsInOptions = skillOptions.some(s => s.label.toLowerCase() === searchLower);
+    const existsInCustom = customSkills.some(s => s.label.toLowerCase() === searchLower);
+    return !existsInOptions && !existsInCustom && skillSearch.trim().length >= 2;
+  }, [skillSearch, customSkills]);
+
+  const addCustomSkill = () => {
+    if (canAddCustomSkill) {
+      const newSkill = {
+        id: `custom-${skillSearch.toLowerCase().replace(/\s+/g, '-')}`,
+        label: skillSearch.trim()
+      };
+      setCustomSkills([...customSkills, newSkill]);
+      setSelectedSkills([...selectedSkills, newSkill.id]);
+      setSkillSearch('');
+    }
+  };
+
+  const removeCustomSkill = (skillId: string) => {
+    setCustomSkills(customSkills.filter(s => s.id !== skillId));
+    setSelectedSkills(selectedSkills.filter(id => id !== skillId));
+  };
 
   const handleNext = () => {
     if (step === 2 && selectedSkills.length >= 3) {
@@ -70,7 +135,11 @@ export default function OnboardingFlow({ onComplete, darkMode, onToggleDarkMode 
   };
 
   const handleBack = () => {
-    if (step > 1) setStep(step - 1);
+    if (step > 1) {
+      setStep(step - 1);
+    } else if (step === 1 && onBackToHome) {
+      onBackToHome();
+    }
   };
 
   const toggleSkill = (skillId: string) => {
@@ -90,7 +159,7 @@ export default function OnboardingFlow({ onComplete, darkMode, onToggleDarkMode 
       case 1: return selectedRole !== null;
       case 2: return selectedSkills.length >= 3;
       case 3: return selectedInterests.length >= 2;
-      case 4: return profileData.name && profileData.college && profileData.branch;
+      case 4: return profileData.name && profileData.college && profileData.department;
       case 5: return true;
       default: return false;
     }
@@ -302,12 +371,68 @@ export default function OnboardingFlow({ onComplete, darkMode, onToggleDarkMode 
                   <h2 className={`${darkMode ? 'text-white' : 'text-slate-900'} font-black text-3xl mb-2`}>
                     What are your skills?
                   </h2>
-                  <p className={`${darkMode ? 'text-slate-400' : 'text-slate-600'} mb-8`}>
+                  <p className={`${darkMode ? 'text-slate-400' : 'text-slate-600'} mb-4`}>
                     Select at least 3 skills • {selectedSkills.length} selected
                   </p>
 
-                  <div className="grid md:grid-cols-4 gap-3">
-                    {skillOptions.map((skill) => (
+                  {/* Search Bar */}
+                  <div className="relative mb-6">
+                    <input
+                      type="text"
+                      value={skillSearch}
+                      onChange={(e) => setSkillSearch(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && canAddCustomSkill) {
+                          addCustomSkill();
+                        }
+                      }}
+                      placeholder="Search skills or type to add your own..."
+                      className={`w-full px-4 pr-24 py-3 rounded-xl ${
+                        darkMode ? 'bg-slate-800 text-white placeholder-slate-500' : 'bg-slate-100 text-slate-900 placeholder-slate-400'
+                      } border-2 border-transparent focus:border-indigo-500 outline-none transition-colors`}
+                    />
+                    {canAddCustomSkill && (
+                      <div className="absolute right-2 top-0 bottom-0 flex items-center">
+                        <button
+                          onClick={addCustomSkill}
+                          className="px-3 py-1.5 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg text-sm font-semibold flex items-center gap-1 hover:shadow-lg transition-all"
+                        >
+                          <Plus className="w-4 h-4" />
+                          Add
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Selected Custom Skills */}
+                  {customSkills.length > 0 && (
+                    <div className="mb-4">
+                      <p className={`${darkMode ? 'text-slate-400' : 'text-slate-600'} text-sm mb-2`}>Your custom skills:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {customSkills.map((skill) => (
+                          <motion.div
+                            key={skill.id}
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl"
+                          >
+                            <Sparkles className="w-4 h-4" />
+                            <span className="font-semibold text-sm">{skill.label}</span>
+                            <button
+                              onClick={() => removeCustomSkill(skill.id)}
+                              className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Skills Grid */}
+                  <div className="grid md:grid-cols-4 gap-3 max-h-80 overflow-y-auto pr-2">
+                    {filteredSkills.map((skill) => (
                       <motion.button
                         key={skill.id}
                         onClick={() => toggleSkill(skill.id)}
@@ -324,6 +449,26 @@ export default function OnboardingFlow({ onComplete, darkMode, onToggleDarkMode 
                       </motion.button>
                     ))}
                   </div>
+
+                  {filteredSkills.length === 0 && !canAddCustomSkill && (
+                    <div className={`text-center py-8 ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                      <p>No skills found matching "{skillSearch}"</p>
+                      <p className="text-sm mt-1">Type at least 2 characters to add as a custom skill</p>
+                    </div>
+                  )}
+
+                  {filteredSkills.length === 0 && canAddCustomSkill && (
+                    <div className={`text-center py-8 ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                      <p>No existing skill matches "{skillSearch}"</p>
+                      <button
+                        onClick={addCustomSkill}
+                        className="mt-3 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-semibold flex items-center gap-2 mx-auto hover:shadow-lg transition-all"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Add "{skillSearch}" as a skill
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -389,7 +534,7 @@ export default function OnboardingFlow({ onComplete, darkMode, onToggleDarkMode 
                         className={`w-full px-4 py-3 rounded-xl ${
                           darkMode ? 'bg-slate-800 text-white' : 'bg-slate-50 text-slate-900'
                         } border-2 border-transparent focus:border-indigo-500 outline-none transition-colors`}
-                        placeholder="Aarav Sharma"
+                        placeholder="Enter Your Name"
                       />
                     </div>
                     <div>
@@ -403,18 +548,18 @@ export default function OnboardingFlow({ onComplete, darkMode, onToggleDarkMode 
                         className={`w-full px-4 py-3 rounded-xl ${
                           darkMode ? 'bg-slate-800 text-white' : 'bg-slate-50 text-slate-900'
                         } border-2 border-transparent focus:border-indigo-500 outline-none transition-colors`}
-                        placeholder="NIT Trichy"
+                        placeholder="Enter Your College/University"
                       />
                     </div>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <label className={`block ${darkMode ? 'text-slate-300' : 'text-slate-700'} font-black mb-2`}>
-                          Branch
+                          Department
                         </label>
                         <input
                           type="text"
-                          value={profileData.branch}
-                          onChange={(e) => setProfileData({ ...profileData, branch: e.target.value })}
+                          value={profileData.department}
+                          onChange={(e) => setProfileData({ ...profileData, department: e.target.value })}
                           className={`w-full px-4 py-3 rounded-xl ${
                             darkMode ? 'bg-slate-800 text-white' : 'bg-slate-50 text-slate-900'
                           } border-2 border-transparent focus:border-indigo-500 outline-none transition-colors`}
@@ -500,11 +645,11 @@ export default function OnboardingFlow({ onComplete, darkMode, onToggleDarkMode 
         <div className="flex justify-between mt-6">
           <motion.button
             onClick={handleBack}
-            disabled={step === 1}
-            whileHover={{ scale: step === 1 ? 1 : 1.05 }}
-            whileTap={{ scale: step === 1 ? 1 : 0.95 }}
+            disabled={step === 1 && !onBackToHome}
+            whileHover={{ scale: (step === 1 && !onBackToHome) ? 1 : 1.05 }}
+            whileTap={{ scale: (step === 1 && !onBackToHome) ? 1 : 0.95 }}
             className={`px-6 py-3 rounded-xl font-black flex items-center gap-2 transition-all ${
-              step === 1
+              step === 1 && !onBackToHome
                 ? 'opacity-0 pointer-events-none'
                 : darkMode
                 ? 'bg-slate-800 text-white hover:bg-slate-700'
@@ -512,7 +657,7 @@ export default function OnboardingFlow({ onComplete, darkMode, onToggleDarkMode 
             } shadow-lg`}
           >
             <ChevronLeft className="w-5 h-5" />
-            Back
+            {step === 1 ? 'Back to Home' : 'Back'}
           </motion.button>
 
           <motion.button

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Trophy, Medal, Crown, TrendingUp, Flame, Zap, Award, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trophy, Medal, Crown, TrendingUp, Flame, Zap, Award, ChevronUp, ChevronDown, Globe, Building2, GraduationCap } from 'lucide-react';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
 import GlassCard from './GlassCard';
@@ -69,7 +69,7 @@ export default function Leaderboard({ onOpenAIMentor, darkMode, onToggleDarkMode
                   Leaderboard
                 </h1>
                 <p className={`${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-                  Top builders across Bangladesh • Going Global 🌏
+                  Top builders across Bangladesh • Going Global
                 </p>
               </div>
             </div>
@@ -80,9 +80,9 @@ export default function Leaderboard({ onOpenAIMentor, darkMode, onToggleDarkMode
             <GlassCard className="p-6">
               <div className="flex gap-3">
                 {[
-                  { key: 'national', label: '🌍 National', icon: Trophy },
-                  { key: 'college', label: '🏛️ Your College', icon: Medal },
-                  { key: 'branch', label: '🎓 Your Branch', icon: Award },
+                  { key: 'national', label: 'National', icon: Globe },
+                  { key: 'college', label: 'Your College', icon: Building2 },
+                  { key: 'branch', label: 'Your Branch', icon: GraduationCap },
                 ].map((filter) => (
                   <motion.button
                     key={filter.key}

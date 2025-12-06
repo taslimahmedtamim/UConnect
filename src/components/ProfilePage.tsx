@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { 
   MapPin, Calendar, Award, TrendingUp, ExternalLink, 
-  Github, Linkedin, Mail, Edit, CheckCircle, Star, Users, Code, Save
+  Github, Linkedin, Mail, Edit, CheckCircle, Star, Users, Code, Save,
+  Trophy, Target, Rocket
 } from 'lucide-react';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
@@ -415,13 +416,13 @@ export default function ProfilePage({ onOpenAIMentor }: ProfilePageProps) {
                 <h3 className="text-slate-900 mb-4">Achievements</h3>
                 <div className="space-y-3">
                   {[
-                    { icon: '🏆', title: 'Top Contributor', desc: 'Completed 10+ projects' },
-                    { icon: '⭐', title: 'Skill Master', desc: '5 skills at level 4+' },
-                    { icon: '🎯', title: 'Perfect Match', desc: '90%+ team compatibility' },
-                    { icon: '🚀', title: 'Fast Learner', desc: 'Gained 200 U-Score in a month' },
+                    { icon: Trophy, title: 'Top Contributor', desc: 'Completed 10+ projects', color: 'text-amber-500' },
+                    { icon: Star, title: 'Skill Master', desc: '5 skills at level 4+', color: 'text-yellow-500' },
+                    { icon: Target, title: 'Perfect Match', desc: '90%+ team compatibility', color: 'text-indigo-500' },
+                    { icon: Rocket, title: 'Fast Learner', desc: 'Gained 200 U-Score in a month', color: 'text-purple-500' },
                   ].map((achievement) => (
                     <div key={achievement.title} className="flex items-start gap-3 p-3 bg-slate-50 rounded-xl">
-                      <div className="text-2xl">{achievement.icon}</div>
+                      <div className={`w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center ${achievement.color}`}><achievement.icon className="w-5 h-5" /></div>
                       <div>
                         <p className="text-slate-900">{achievement.title}</p>
                         <p className="text-slate-500">{achievement.desc}</p>

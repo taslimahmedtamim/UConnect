@@ -64,6 +64,11 @@ export default function App() {
     localStorage.setItem('uconnect_auth', 'true');
   };
 
+  const handleBackToHome = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('uconnect_auth');
+  };
+
   const handleOnboardingComplete = (role: 'student' | 'teacher' | 'recruiter') => {
     setHasCompletedOnboarding(true);
     setUserRole(role);
@@ -97,7 +102,7 @@ export default function App() {
                 hasCompletedOnboarding ? (
                   <Navigate to="/dashboard" replace />
                 ) : (
-                  <OnboardingFlow onComplete={handleOnboardingComplete} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(!darkMode)} />
+                  <OnboardingFlow onComplete={handleOnboardingComplete} onBackToHome={handleBackToHome} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(!darkMode)} />
                 )
               ) : (
                 <Navigate to="/" replace />

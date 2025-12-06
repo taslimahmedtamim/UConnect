@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 import { 
   LayoutDashboard, User, Briefcase, FolderOpen, MessageCircle, Bell, 
   ChevronRight, TrendingUp, Clock, CheckCircle, Award, Users, 
-  Target, Calendar, Zap, Sparkles
+  Target, Calendar, Zap, Sparkles, Hand
 } from 'lucide-react';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
@@ -69,7 +69,7 @@ export default function StudentDashboard({ onOpenAIMentor }: StudentDashboardPro
         <div className="p-8">
           {/* Welcome Section */}
           <div className="mb-8">
-            <h1 className="text-slate-900 mb-2">Welcome back, Aarav! 👋</h1>
+            <h1 className="text-slate-900 mb-2 flex items-center gap-2">Welcome back, Aarav! <Hand className="w-6 h-6 text-amber-500" /></h1>
             <p className="text-slate-600">Here's what's happening with your projects today</p>
           </div>
 
