@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronRight, ChevronLeft, Sparkles, Users, Clock, Target, Zap, CheckCircle } from 'lucide-react';
 import Sidebar from './Sidebar';
@@ -57,6 +57,14 @@ export default function ProjectCreation({ onOpenAIMentor }: ProjectCreationProps
   const [requireTeacherApproval, setRequireTeacherApproval] = useState(true);
   const [generatingTeams, setGeneratingTeams] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<number | null>(null);
+  const generateTeamsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timeout on unmount to prevent memory leak
+  useEffect(() => {
+    return () => {
+      if (generateTeamsTimeoutRef.current) clearTimeout(generateTeamsTimeoutRef.current);
+    };
+  }, []);
 
   const availableSkills = [
     'Python', 'TensorFlow', 'PyTorch', 'Computer Vision', 'OpenCV',
@@ -67,7 +75,7 @@ export default function ProjectCreation({ onOpenAIMentor }: ProjectCreationProps
 
   const handleGenerateTeams = () => {
     setGeneratingTeams(true);
-    setTimeout(() => {
+    generateTeamsTimeoutRef.current = setTimeout(() => {
       setGeneratingTeams(false);
       setStep(3);
     }, 2000);

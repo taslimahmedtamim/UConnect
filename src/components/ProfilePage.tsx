@@ -79,10 +79,10 @@ export default function ProfilePage({ onOpenAIMentor }: ProfilePageProps) {
   const [endorsedSkills, setEndorsedSkills] = useState<string[]>([]);
   const [studyStreak, setStudyStreak] = useState({ current: 12, best: 28, todayComplete: true });
   const [profileData, setProfileData] = useState({
-    name: 'Aarav Sharma',
-    title: 'Computer Science • IIT Delhi • Class of 2025',
-    location: 'New Delhi, India',
-    bio: 'Passionate about AI/ML and full-stack development. Love building products that solve real problems. Currently working on deep learning projects and exploring computer vision applications.',
+    name: '',
+    title: '',
+    location: 'Bangladesh',
+    bio: '',
     github: '',
     linkedin: '',
     email: '',

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { motion } from 'motion/react';
 
 interface ConfettiProps {
@@ -6,7 +6,26 @@ interface ConfettiProps {
   onComplete?: () => void;
 }
 
+const CONFETTI_COLORS = [
+  '#6366F1', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B',
+  '#EF4444', '#3B82F6', '#14B8A6', '#F97316', '#A855F7'
+];
+
 export default function Confetti({ active, onComplete }: ConfettiProps) {
+  // Memoize confetti pieces to prevent regeneration on every render
+  const confettiPieces = useMemo(() => 
+    Array.from({ length: 50 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      delay: Math.random() * 0.5,
+      duration: 2 + Math.random() * 2,
+      color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+      rotation: Math.random() * 360,
+      scale: 0.3 + Math.random() * 0.7,
+      xOffset: Math.sin(i) * 100,
+    }))
+  , []);
+
   useEffect(() => {
     if (active && onComplete) {
       const timer = setTimeout(onComplete, 3000);
@@ -16,25 +35,12 @@ export default function Confetti({ active, onComplete }: ConfettiProps) {
 
   if (!active) return null;
 
-  const confettiPieces = Array.from({ length: 100 }, (_, i) => ({
-    id: i,
-    left: Math.random() * 100,
-    delay: Math.random() * 0.5,
-    duration: 2 + Math.random() * 2,
-    color: [
-      '#6366F1', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B',
-      '#EF4444', '#3B82F6', '#14B8A6', '#F97316', '#A855F7'
-    ][Math.floor(Math.random() * 10)],
-    rotation: Math.random() * 360,
-    scale: 0.3 + Math.random() * 0.7,
-  }));
-
   return (
-    <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-[9998] overflow-hidden">
       {confettiPieces.map((piece) => (
         <motion.div
           key={piece.id}
-          className="absolute w-3 h-3 rounded-full"
+          className="absolute w-3 h-3 rounded-full will-change-transform"
           style={{
             left: `${piece.left}%`,
             top: '-5%',
@@ -46,7 +52,7 @@ export default function Confetti({ active, onComplete }: ConfettiProps) {
             y: window.innerHeight + 100,
             opacity: [1, 1, 0],
             rotate: [piece.rotation, piece.rotation + 720],
-            x: [0, Math.sin(piece.id) * 100],
+            x: [0, piece.xOffset],
           }}
           transition={{
             duration: piece.duration,

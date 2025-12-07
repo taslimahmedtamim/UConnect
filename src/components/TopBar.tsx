@@ -16,6 +16,7 @@ export default function TopBar({ onOpenAIMentor, darkMode = false, onToggleDarkM
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [notificationFilter, setNotificationFilter] = useState<'all' | 'unread'>('all');
+  const [userProfile, setUserProfile] = useState({ name: 'User', uScore: 500 });
   const [notifications, setNotifications] = useState([
     { id: 1, text: 'New team invitation for ML Project', time: '5m ago', unread: true, type: 'team', icon: Users },
     { id: 2, text: 'Your resume was viewed by Grameenphone', time: '1h ago', unread: true, type: 'opportunity', icon: Briefcase },
@@ -36,6 +37,22 @@ export default function TopBar({ onOpenAIMentor, darkMode = false, onToggleDarkM
     : [];
 
   const unreadCount = notifications.filter(n => n.unread).length;
+
+  // Load user profile from localStorage
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('uconnect_profile');
+    if (savedProfile) {
+      try {
+        const parsed = JSON.parse(savedProfile);
+        setUserProfile({
+          name: parsed.name || 'User',
+          uScore: parsed.uScore || 500 + (parsed.skills?.length || 0) * 50,
+        });
+      } catch (e) {
+        console.error('Failed to parse saved profile', e);
+      }
+    }
+  }, []);
 
   const markAsRead = (id: number) => {
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, unread: false } : n));
@@ -292,8 +309,8 @@ export default function TopBar({ onOpenAIMentor, darkMode = false, onToggleDarkM
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400" />
                     <div>
-                      <p className="text-slate-900">Aarav Sharma</p>
-                      <p className="text-slate-500">U-Score: 847</p>
+                      <p className="text-slate-900">{userProfile.name}</p>
+                      <p className="text-slate-500">U-Score: {userProfile.uScore}</p>
                     </div>
                   </div>
                   <div className="space-y-1">

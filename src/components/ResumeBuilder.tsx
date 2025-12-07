@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Download, FileText, Sparkles, Wand2, Copy, Check } from 'lucide-react';
 import Sidebar from './Sidebar';
@@ -18,10 +18,18 @@ export default function ResumeBuilder({ onOpenAIMentor }: ResumeBuilderProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState('modern');
   const [generatingBullets, setGeneratingBullets] = useState(false);
+  const bulletTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timeout on unmount to prevent memory leak
+  useEffect(() => {
+    return () => {
+      if (bulletTimeoutRef.current) clearTimeout(bulletTimeoutRef.current);
+    };
+  }, []);
 
   const handleGenerateBullets = () => {
     setGeneratingBullets(true);
-    setTimeout(() => setGeneratingBullets(false), 2000);
+    bulletTimeoutRef.current = setTimeout(() => setGeneratingBullets(false), 2000);
   };
 
   return (

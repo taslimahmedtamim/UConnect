@@ -30,6 +30,7 @@ export default function AIMentorChat({ isOpen, onClose, onOpen }: AIMentorChatPr
   const [isTyping, setIsTyping] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const aiResponseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -38,6 +39,13 @@ export default function AIMentorChat({ isOpen, onClose, onOpen }: AIMentorChatPr
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Cleanup timeout on unmount to prevent memory leak
+  useEffect(() => {
+    return () => {
+      if (aiResponseTimeoutRef.current) clearTimeout(aiResponseTimeoutRef.current);
+    };
+  }, []);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -54,7 +62,7 @@ export default function AIMentorChat({ isOpen, onClose, onOpen }: AIMentorChatPr
     setIsTyping(true);
 
     // Simulate AI response
-    setTimeout(() => {
+    aiResponseTimeoutRef.current = setTimeout(() => {
       const aiResponse = generateAIResponse(inputMessage);
       const aiMessage = {
         id: messages.length + 2,

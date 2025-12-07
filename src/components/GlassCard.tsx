@@ -6,9 +6,10 @@ interface GlassCardProps {
   className?: string;
   glowColor?: string;
   hover3D?: boolean;
+  onClick?: () => void;
 }
 
-export default function GlassCard({ children, className = '', glowColor = '#6366F1', hover3D = true }: GlassCardProps) {
+export default function GlassCard({ children, className = '', glowColor = '#6366F1', hover3D = true, onClick }: GlassCardProps) {
   return (
     <motion.div
       whileHover={hover3D ? { 
@@ -17,6 +18,7 @@ export default function GlassCard({ children, className = '', glowColor = '#6366
         rotateY: 2,
         transition: { type: 'spring', stiffness: 300 }
       } : {}}
+      onClick={onClick}
       className={`relative backdrop-blur-xl bg-white/70 dark:bg-slate-900/70 border border-white/20 dark:border-slate-700/30 rounded-2xl shadow-xl ${className}`}
       style={{
         boxShadow: `0 8px 32px 0 rgba(31, 38, 135, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.18), 0 0 20px ${glowColor}15`,

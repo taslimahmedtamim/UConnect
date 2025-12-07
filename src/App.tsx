@@ -14,6 +14,14 @@ import Leaderboard from './components/Leaderboard';
 import AchievementsVault from './components/AchievementsVault';
 import EventsCalendar from './components/EventsCalendar';
 import SettingsPage from './components/SettingsPage';
+import SkillGraph from './components/SkillGraph';
+import TeacherDashboard from './components/TeacherDashboard';
+import CareerRoadmap from './components/CareerRoadmap';
+import InterviewCoach from './components/InterviewCoach';
+import HelpBoard from './components/HelpBoard';
+import MentorshipHub from './components/MentorshipHub';
+import ChallengesHub from './components/ChallengesHub';
+import ProjectShowcase from './components/ProjectShowcase';
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -86,7 +94,7 @@ export default function App() {
             element={
               isAuthenticated ? (
                 hasCompletedOnboarding ? (
-                  <Navigate to={userRole === 'recruiter' ? '/recruiter' : '/dashboard'} replace />
+                  <Navigate to={userRole === 'recruiter' ? '/recruiter' : userRole === 'teacher' ? '/teacher' : '/dashboard'} replace />
                 ) : (
                   <Navigate to="/onboarding" replace />
                 )
@@ -215,6 +223,94 @@ export default function App() {
             element={
               isAuthenticated && hasCompletedOnboarding ? (
                 <SettingsPage onOpenAIMentor={() => setShowAIMentor(true)} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(!darkMode)} />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            } 
+          />
+          
+          <Route 
+            path="/skills" 
+            element={
+              isAuthenticated && hasCompletedOnboarding ? (
+                <SkillGraph onOpenAIMentor={() => setShowAIMentor(true)} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(!darkMode)} />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            } 
+          />
+          
+          <Route 
+            path="/teacher" 
+            element={
+              isAuthenticated && hasCompletedOnboarding && userRole === 'teacher' ? (
+                <TeacherDashboard onOpenAIMentor={() => setShowAIMentor(true)} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(!darkMode)} />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            } 
+          />
+          
+          <Route 
+            path="/career" 
+            element={
+              isAuthenticated && hasCompletedOnboarding ? (
+                <CareerRoadmap onOpenAIMentor={() => setShowAIMentor(true)} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(!darkMode)} />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            } 
+          />
+          
+          <Route 
+            path="/interview" 
+            element={
+              isAuthenticated && hasCompletedOnboarding ? (
+                <InterviewCoach onOpenAIMentor={() => setShowAIMentor(true)} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(!darkMode)} />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            } 
+          />
+          
+          <Route 
+            path="/help" 
+            element={
+              isAuthenticated && hasCompletedOnboarding ? (
+                <HelpBoard onOpenAIMentor={() => setShowAIMentor(true)} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(!darkMode)} />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            } 
+          />
+          
+          <Route 
+            path="/mentorship" 
+            element={
+              isAuthenticated && hasCompletedOnboarding ? (
+                <MentorshipHub onOpenAIMentor={() => setShowAIMentor(true)} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(!darkMode)} />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            } 
+          />
+          
+          <Route 
+            path="/challenges" 
+            element={
+              isAuthenticated && hasCompletedOnboarding ? (
+                <ChallengesHub onOpenAIMentor={() => setShowAIMentor(true)} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(!darkMode)} />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            } 
+          />
+          
+          <Route 
+            path="/showcase" 
+            element={
+              isAuthenticated && hasCompletedOnboarding ? (
+                <ProjectShowcase onOpenAIMentor={() => setShowAIMentor(true)} darkMode={darkMode} onToggleDarkMode={() => setDarkMode(!darkMode)} />
               ) : (
                 <Navigate to="/" replace />
               )

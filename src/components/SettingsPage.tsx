@@ -23,14 +23,34 @@ export default function SettingsPage({ onOpenAIMentor, darkMode, onToggleDarkMod
   
   // Profile Settings
   const [profileSettings, setProfileSettings] = useState({
-    fullName: 'Aarav Sharma',
-    email: 'aarav.sharma@iitd.ac.in',
-    phone: '+880 1712-345678',
-    university: 'BUET',
-    department: 'Computer Science & Engineering',
-    graduationYear: '2025',
-    bio: 'Passionate about AI/ML and full-stack development.',
+    fullName: '',
+    email: '',
+    phone: '',
+    university: '',
+    department: '',
+    graduationYear: '',
+    bio: '',
   });
+
+  // Load user profile from localStorage on mount
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('uconnect_profile');
+    if (savedProfile) {
+      try {
+        const parsed = JSON.parse(savedProfile);
+        setProfileSettings(prev => ({
+          ...prev,
+          fullName: parsed.name || prev.fullName,
+          university: parsed.college || prev.university,
+          department: parsed.department || prev.department,
+          graduationYear: parsed.year || prev.graduationYear,
+          bio: parsed.bio || prev.bio,
+        }));
+      } catch (e) {
+        console.error('Failed to parse saved profile', e);
+      }
+    }
+  }, []);
 
   // Notification Settings
   const [notificationSettings, setNotificationSettings] = useState({

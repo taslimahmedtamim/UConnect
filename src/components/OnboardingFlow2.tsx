@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ChevronRight, ChevronLeft, GraduationCap, Briefcase, Users, 
@@ -117,18 +117,44 @@ export default function OnboardingFlow({ onComplete, onBackToHome, darkMode, onT
     setSelectedSkills(selectedSkills.filter(id => id !== skillId));
   };
 
+  // Refs for cleanup of animation timeouts
+  const projectionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const confettiTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timeouts on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (projectionTimeoutRef.current) clearTimeout(projectionTimeoutRef.current);
+      if (confettiTimeoutRef.current) clearTimeout(confettiTimeoutRef.current);
+    };
+  }, []);
+
   const handleNext = () => {
     if (step === 2 && selectedSkills.length >= 3) {
       setShowProjection(true);
-      setTimeout(() => {
+      projectionTimeoutRef.current = setTimeout(() => {
         setShowProjection(false);
         setStep(step + 1);
       }, 3000);
     } else if (step < totalSteps) {
       setStep(step + 1);
     } else if (step === totalSteps && selectedRole) {
+      // Save profile data to localStorage before completing onboarding
+      const userProfile = {
+        name: profileData.name,
+        title: `${profileData.department} • ${profileData.college} • Class of ${profileData.year}`,
+        college: profileData.college,
+        department: profileData.department,
+        year: profileData.year,
+        location: 'Bangladesh',
+        bio: `Passionate student at ${profileData.college}. Skilled in ${selectedSkills.slice(0, 3).map(id => skillOptions.find(s => s.id === id)?.label || id).join(', ')}.`,
+        skills: selectedSkills,
+        interests: selectedInterests,
+      };
+      localStorage.setItem('uconnect_profile', JSON.stringify(userProfile));
+      
       setShowConfetti(true);
-      setTimeout(() => {
+      confettiTimeoutRef.current = setTimeout(() => {
         onComplete(selectedRole);
       }, 2000);
     }

@@ -1,25 +1,48 @@
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, User, FolderOpen, Briefcase, 
-  FileText, Settings, ChevronLeft, ChevronRight, Sparkles 
+  FileText, Settings, ChevronLeft, ChevronRight, Sparkles,
+  Trophy, Calendar, Award, Users, MessageCircle, Target,
+  Map, Mic, HelpCircle, GraduationCap, FolderKanban
 } from 'lucide-react';
 
 interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
+  userRole?: 'student' | 'teacher' | 'recruiter' | null;
 }
 
-const menuItems = [
+const studentMenuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
   { icon: User, label: 'Profile', path: '/profile' },
-  { icon: FolderOpen, label: 'Projects', path: '/projects/new' },
+  { icon: FolderOpen, label: 'My Projects', path: '/projects/new' },
+  { icon: FolderKanban, label: 'Showcase', path: '/showcase' },
   { icon: Briefcase, label: 'Opportunities', path: '/opportunities' },
   { icon: FileText, label: 'Resume', path: '/resume' },
+  { icon: Users, label: 'Mentorship', path: '/mentorship' },
+  { icon: Trophy, label: 'Challenges', path: '/challenges' },
+  { icon: Map, label: 'Career Path', path: '/career' },
+  { icon: Mic, label: 'Interview Prep', path: '/interview' },
+  { icon: Target, label: 'Skills', path: '/skills' },
+  { icon: HelpCircle, label: 'Help Board', path: '/help' },
+  { icon: Award, label: 'Leaderboard', path: '/leaderboard' },
+  { icon: Calendar, label: 'Events', path: '/events' },
   { icon: Settings, label: 'Settings', path: '/settings' },
 ];
 
-export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
+const teacherMenuItems = [
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/teacher' },
+  { icon: User, label: 'Profile', path: '/profile' },
+  { icon: FolderOpen, label: 'Projects', path: '/projects/new' },
+  { icon: FolderKanban, label: 'Showcase', path: '/showcase' },
+  { icon: Users, label: 'Students', path: '/teacher' },
+  { icon: Calendar, label: 'Events', path: '/events' },
+  { icon: Settings, label: 'Settings', path: '/settings' },
+];
+
+export default function Sidebar({ collapsed, onToggle, userRole }: SidebarProps) {
   const location = useLocation();
+  const menuItems = userRole === 'teacher' ? teacherMenuItems : studentMenuItems;
 
   return (
     <div 
