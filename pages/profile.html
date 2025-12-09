@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - UConnect</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">U</span>
+                <span class="logo-text">Connect</span>
+            </a>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="dashboard.html">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"/>
+                                <rect x="14" y="3" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html" class="active">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="projects.html">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            Projects
+                        </a>
+                    </li>
+                    <li>
+                        <a href="teams.html">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            Teams
+                        </a>
+                    </li>
+                    <li>
+                        <a href="opportunities.html">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                            </svg>
+                            Opportunities
+                        </a>
+                    </li>
+                    <li>
+                        <a href="resume.html">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10 9 9 9 8 9"/>
+                            </svg>
+                            U-Resume
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" style="margin: 0.75rem;">
+                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                </button>
+                <a href="#" class="logout-btn" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; color: var(--gray-400); font-size: 0.875rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="container">
+                    <div class="profile-header-content">
+                        <div class="avatar profile-avatar" id="profileAvatar">TT</div>
+                        <div class="profile-info">
+                            <h1 class="profile-name" id="profileName">Taslim Ahmed Tamim</h1>
+                            <p id="profileTitle">Computer Science Student • University of Dhaka</p>
+                            <div style="display: flex; gap: 1rem; margin-top: 0.75rem; flex-wrap: wrap;">
+                                <span style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.875rem;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                    Dhaka, Bangladesh
+                                </span>
+                                <span style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.875rem;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                    </svg>
+                                    U-Score: <span id="totalScore">850</span>
+                                </span>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline" onclick="openEditProfileModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                            Edit Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-body">
+                <div class="container">
+                    <div class="profile-grid">
+                        <!-- Sidebar -->
+                        <div class="profile-sidebar">
+                            <!-- About Card -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 style="font-size: 1rem;">About</h3>
+                                </div>
+                                <div class="card-body">
+                                    <p style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.7;" id="profileBio">
+                                        Passionate full-stack developer with a keen interest in AI/ML and building products that make a difference. Competitive programmer with a love for algorithmic problem-solving.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Coding Platforms Card -->
+                            <div class="card">
+                                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                    <h3 style="font-size: 1rem;">Linked Platforms</h3>
+                                    <button class="btn btn-sm btn-ghost" onclick="syncAllPlatforms()">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="23 4 23 10 17 10"/>
+                                            <polyline points="1 20 1 14 7 14"/>
+                                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                                        </svg>
+                                        Sync
+                                    </button>
+                                </div>
+                                <div class="card-body" style="padding: 0;">
+                                    <div id="platformsList"></div>
+                                </div>
+                            </div>
+
+                            <!-- Contact Card -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 style="font-size: 1rem;">Contact & Links</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.875rem;" id="contactLinks"></div>
+                                </div>
+                            </div>
+
+                            <!-- Education Card -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 style="font-size: 1rem;">Education</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div style="display: flex; gap: 0.75rem;">
+                                        <div style="width: 40px; height: 40px; background: var(--gray-100); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">🎓</div>
+                                        <div>
+                                            <div style="font-weight: 500; font-size: 0.875rem;">University of Dhaka</div>
+                                            <div style="font-size: 0.75rem; color: var(--gray-500);">B.Sc. in Computer Science</div>
+                                            <div style="font-size: 0.75rem; color: var(--gray-500);">2021 - 2025</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Content -->
+                        <div class="profile-main">
+                            <!-- Coding Stats Overview -->
+                            <div class="card coding-stats-card">
+                                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                    <h3 style="font-size: 1rem;">🏆 Competitive Programming Stats</h3>
+                                    <span class="badge badge-primary" id="overallRank">Top 10%</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="stats-grid" id="codingStatsGrid"></div>
+                                </div>
+                            </div>
+
+                            <!-- Skills Visualization -->
+                            <div class="card" style="margin-top: 1.5rem;">
+                                <div class="card-header">
+                                    <h3 style="font-size: 1rem;">⚡ Skill Showcase</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="skills-showcase" id="skillsShowcase"></div>
+                                </div>
+                            </div>
+
+                            <!-- Problem Solving Progress -->
+                            <div class="card" style="margin-top: 1.5rem;">
+                                <div class="card-header">
+                                    <h3 style="font-size: 1rem;">📊 Problem Solving Progress</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="problem-stats" id="problemStats"></div>
+                                </div>
+                            </div>
+
+                            <!-- Activity Heatmap -->
+                            <div class="card" style="margin-top: 1.5rem;">
+                                <div class="card-header">
+                                    <h3 style="font-size: 1rem;">🔥 Activity Heatmap</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="heatmap-container" id="activityHeatmap"></div>
+                                    <div style="display: flex; justify-content: flex-end; align-items: center; gap: 0.5rem; margin-top: 0.75rem; font-size: 0.75rem; color: var(--gray-500);">
+                                        <span>Less</span>
+                                        <div style="display: flex; gap: 2px;">
+                                            <div style="width: 12px; height: 12px; background: var(--gray-100); border-radius: 2px;"></div>
+                                            <div style="width: 12px; height: 12px; background: #c6e48b; border-radius: 2px;"></div>
+                                            <div style="width: 12px; height: 12px; background: #7bc96f; border-radius: 2px;"></div>
+                                            <div style="width: 12px; height: 12px; background: #449945; border-radius: 2px;"></div>
+                                            <div style="width: 12px; height: 12px; background: #196127; border-radius: 2px;"></div>
+                                        </div>
+                                        <span>More</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Projects -->
+                            <div class="card" style="margin-top: 1.5rem;">
+                                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                    <h3 style="font-size: 1rem;">📂 Projects</h3>
+                                    <a href="projects.html" style="font-size: 0.875rem; color: var(--primary);">View All</a>
+                                </div>
+                                <div class="card-body" id="projectsList"></div>
+                            </div>
+
+                            <!-- Achievements -->
+                            <div class="card" style="margin-top: 1.5rem;">
+                                <div class="card-header">
+                                    <h3 style="font-size: 1rem;">🎖️ Achievements & Badges</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="achievements-grid" id="achievementsGrid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal-overlay" id="editProfileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit Profile</h3>
+                <button class="btn btn-ghost btn-sm" onclick="closeEditProfileModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editProfileForm">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" id="editName" value="Taslim Ahmed Tamim">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Bio</label>
+                        <textarea class="form-input" id="editBio" rows="3">Passionate full-stack developer with a keen interest in AI/ML and building products that make a difference.</textarea>
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="form-section-header">
+                            <span class="form-section-title">Coding Platform Handles</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">GitHub Username</label>
+                            <input type="text" class="form-input" id="editGithub" placeholder="username">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Codeforces Handle</label>
+                            <input type="text" class="form-input" id="editCodeforces" placeholder="handle">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">LeetCode Username</label>
+                            <input type="text" class="form-input" id="editLeetcode" placeholder="username">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">VJudge Username</label>
+                            <input type="text" class="form-input" id="editVjudge" placeholder="username">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeEditProfileModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script src="../profile-integration.js"></script>
+</body>
+</html>

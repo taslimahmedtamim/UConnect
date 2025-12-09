@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teams - UConnect</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">U</span>
+                <span class="logo-text">Connect</span>
+            </a>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="dashboard.html">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"/>
+                                <rect x="14" y="3" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="projects.html">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            Projects
+                        </a>
+                    </li>
+                    <li>
+                        <a href="teams.html" class="active">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            Teams
+                        </a>
+                    </li>
+                    <li>
+                        <a href="opportunities.html">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                            </svg>
+                            Opportunities
+                        </a>
+                    </li>
+                    <li>
+                        <a href="resume.html">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10 9 9 9 8 9"/>
+                            </svg>
+                            U-Resume
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="#" class="logout-btn" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; color: var(--gray-400); font-size: 0.875rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Teams</h1>
+                    <p>Find teammates and collaborate on projects</p>
+                </div>
+                <div class="dashboard-actions">
+                    <button class="btn btn-outline">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/>
+                        </svg>
+                        AI Suggest Team
+                    </button>
+                    <button class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Create Team
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard-body">
+                <!-- My Teams -->
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">My Teams</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+                        <!-- Team 1 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
+                                    <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.25rem;">
+                                        UC
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <h3 style="font-size: 1.125rem; margin-bottom: 0.25rem;">UConnect Core</h3>
+                                        <p style="font-size: 0.875rem; color: var(--gray-500);">Building the future of university collaboration</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                                    <span class="badge badge-primary">Web Dev</span>
+                                    <span class="badge badge-success">Active</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div class="project-members">
+                                        <div class="avatar avatar-sm">TT</div>
+                                        <div class="avatar avatar-sm" style="background: var(--success);">SK</div>
+                                        <div class="avatar avatar-sm" style="background: var(--accent);">MI</div>
+                                    </div>
+                                    <span style="font-size: 0.75rem; color: var(--gray-500);">3 members</span>
+                                </div>
+                            </div>
+                            <div class="card-footer" style="display: flex; gap: 0.5rem;">
+                                <a href="#" class="btn btn-sm btn-primary" style="flex: 1;">View Team</a>
+                                <button class="btn btn-sm btn-outline">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Team 2 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
+                                    <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--success), #059669); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.25rem;">
+                                        AI
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <h3 style="font-size: 1.125rem; margin-bottom: 0.25rem;">AI Research Lab</h3>
+                                        <p style="font-size: 0.875rem; color: var(--gray-500);">Machine learning and NLP projects</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                                    <span class="badge" style="background: rgba(139, 92, 246, 0.1); color: var(--accent);">ML/AI</span>
+                                    <span class="badge badge-success">Active</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div class="project-members">
+                                        <div class="avatar avatar-sm">TT</div>
+                                        <div class="avatar avatar-sm" style="background: var(--accent);">MI</div>
+                                    </div>
+                                    <span style="font-size: 0.75rem; color: var(--gray-500);">2 members</span>
+                                </div>
+                            </div>
+                            <div class="card-footer" style="display: flex; gap: 0.5rem;">
+                                <a href="#" class="btn btn-sm btn-primary" style="flex: 1;">View Team</a>
+                                <button class="btn btn-sm btn-outline">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Find Teammates -->
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style="font-size: 1.25rem;">Find Teammates</h2>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <select class="form-input" style="width: auto; padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                <option value="">All Skills</option>
+                                <option value="react">React</option>
+                                <option value="python">Python</option>
+                                <option value="ml">Machine Learning</option>
+                                <option value="design">UI/UX Design</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+                        <!-- User Card 1 -->
+                        <div class="card">
+                            <div class="card-body" style="text-align: center;">
+                                <div class="avatar avatar-lg" style="margin: 0 auto 1rem;">SK</div>
+                                <h3 style="font-size: 1rem; margin-bottom: 0.25rem;">Salman Kabir Sany</h3>
+                                <p style="font-size: 0.875rem; color: var(--gray-500); margin-bottom: 0.75rem;">Backend Developer</p>
+                                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <span style="font-size: 0.75rem; color: var(--gray-500);">⭐ U-Score: 780</span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-bottom: 1rem;">
+                                    <span class="project-tag">Node.js</span>
+                                    <span class="project-tag">Python</span>
+                                    <span class="project-tag">PostgreSQL</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-sm btn-primary" style="flex: 1;">Invite</button>
+                                    <button class="btn btn-sm btn-outline">Profile</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- User Card 2 -->
+                        <div class="card">
+                            <div class="card-body" style="text-align: center;">
+                                <div class="avatar avatar-lg" style="margin: 0 auto 1rem; background: var(--accent);">MI</div>
+                                <h3 style="font-size: 1rem; margin-bottom: 0.25rem;">Majharul Islam</h3>
+                                <p style="font-size: 0.875rem; color: var(--gray-500); margin-bottom: 0.75rem;">AI/ML Engineer</p>
+                                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <span style="font-size: 0.75rem; color: var(--gray-500);">⭐ U-Score: 820</span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-bottom: 1rem;">
+                                    <span class="project-tag">Python</span>
+                                    <span class="project-tag">TensorFlow</span>
+                                    <span class="project-tag">NLP</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-sm btn-primary" style="flex: 1;">Invite</button>
+                                    <button class="btn btn-sm btn-outline">Profile</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- User Card 3 -->
+                        <div class="card">
+                            <div class="card-body" style="text-align: center;">
+                                <div class="avatar avatar-lg" style="margin: 0 auto 1rem; background: var(--warning);">RK</div>
+                                <h3 style="font-size: 1rem; margin-bottom: 0.25rem;">Rafiq Khan</h3>
+                                <p style="font-size: 0.875rem; color: var(--gray-500); margin-bottom: 0.75rem;">Frontend Developer</p>
+                                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <span style="font-size: 0.75rem; color: var(--gray-500);">⭐ U-Score: 650</span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-bottom: 1rem;">
+                                    <span class="project-tag">React</span>
+                                    <span class="project-tag">Vue.js</span>
+                                    <span class="project-tag">CSS</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-sm btn-primary" style="flex: 1;">Invite</button>
+                                    <button class="btn btn-sm btn-outline">Profile</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- User Card 4 -->
+                        <div class="card">
+                            <div class="card-body" style="text-align: center;">
+                                <div class="avatar avatar-lg" style="margin: 0 auto 1rem; background: var(--error);">NA</div>
+                                <h3 style="font-size: 1rem; margin-bottom: 0.25rem;">Nadia Ahmed</h3>
+                                <p style="font-size: 0.875rem; color: var(--gray-500); margin-bottom: 0.75rem;">UI/UX Designer</p>
+                                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <span style="font-size: 0.75rem; color: var(--gray-500);">⭐ U-Score: 720</span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-bottom: 1rem;">
+                                    <span class="project-tag">Figma</span>
+                                    <span class="project-tag">Adobe XD</span>
+                                    <span class="project-tag">Sketch</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-sm btn-primary" style="flex: 1;">Invite</button>
+                                    <button class="btn btn-sm btn-outline">Profile</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- User Card 5 -->
+                        <div class="card">
+                            <div class="card-body" style="text-align: center;">
+                                <div class="avatar avatar-lg" style="margin: 0 auto 1rem; background: #06b6d4;">AH</div>
+                                <h3 style="font-size: 1rem; margin-bottom: 0.25rem;">Asif Hossain</h3>
+                                <p style="font-size: 0.875rem; color: var(--gray-500); margin-bottom: 0.75rem;">DevOps Engineer</p>
+                                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <span style="font-size: 0.75rem; color: var(--gray-500);">⭐ U-Score: 690</span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-bottom: 1rem;">
+                                    <span class="project-tag">Docker</span>
+                                    <span class="project-tag">AWS</span>
+                                    <span class="project-tag">K8s</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-sm btn-primary" style="flex: 1;">Invite</button>
+                                    <button class="btn btn-sm btn-outline">Profile</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- User Card 6 -->
+                        <div class="card">
+                            <div class="card-body" style="text-align: center;">
+                                <div class="avatar avatar-lg" style="margin: 0 auto 1rem; background: #ec4899;">SF</div>
+                                <h3 style="font-size: 1rem; margin-bottom: 0.25rem;">Sadia Ferdous</h3>
+                                <p style="font-size: 0.875rem; color: var(--gray-500); margin-bottom: 0.75rem;">Data Scientist</p>
+                                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <span style="font-size: 0.75rem; color: var(--gray-500);">⭐ U-Score: 750</span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-bottom: 1rem;">
+                                    <span class="project-tag">Python</span>
+                                    <span class="project-tag">Pandas</span>
+                                    <span class="project-tag">SQL</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-sm btn-primary" style="flex: 1;">Invite</button>
+                                    <button class="btn btn-sm btn-outline">Profile</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+</html>
