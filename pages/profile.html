@@ -10,6 +10,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- SVG Gradient Definition -->
+    <svg style="position: absolute; width: 0; height: 0;">
+        <defs>
+            <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#667eea"/>
+                <stop offset="50%" style="stop-color:#764ba2"/>
+                <stop offset="100%" style="stop-color:#f093fb"/>
+            </linearGradient>
+        </defs>
+    </svg>
+    
     <div class="dashboard-layout">
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -113,37 +124,92 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Profile Header -->
-            <div class="profile-header">
+            <!-- Profile Header with Cover -->
+            <div class="profile-cover">
+                <div class="cover-pattern"></div>
+                <div class="cover-gradient"></div>
+            </div>
+            
+            <div class="profile-header-new">
                 <div class="container">
-                    <div class="profile-header-content">
-                        <div class="avatar profile-avatar" id="profileAvatar">TT</div>
-                        <div class="profile-info">
-                            <h1 class="profile-name" id="profileName">Taslim Ahmed Tamim</h1>
-                            <p id="profileTitle">Computer Science Student • University of Dhaka</p>
-                            <div style="display: flex; gap: 1rem; margin-top: 0.75rem; flex-wrap: wrap;">
-                                <span style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.875rem;">
+                    <div class="profile-header-content-new">
+                        <div class="profile-avatar-wrapper">
+                            <div class="avatar profile-avatar-new" id="profileAvatar">TT</div>
+                            <div class="avatar-badge" title="Verified">✓</div>
+                            <div class="avatar-ring"></div>
+                        </div>
+                        
+                        <div class="profile-info-new">
+                            <div class="profile-name-row">
+                                <h1 class="profile-name-new" id="profileName">Taslim Ahmed Tamim</h1>
+                                <span class="profile-level">Level 12</span>
+                            </div>
+                            <p class="profile-title-new" id="profileTitle">Computer Science Student • Green University Of Bangladesh</p>
+                            
+                            <div class="profile-meta">
+                                <span class="meta-item">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                                         <circle cx="12" cy="10" r="3"/>
                                     </svg>
                                     Dhaka, Bangladesh
                                 </span>
-                                <span style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.875rem;">
+                                <span class="meta-item">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6"/>
+                                        <line x1="8" y1="2" x2="8" y2="6"/>
+                                        <line x1="3" y1="10" x2="21" y2="10"/>
                                     </svg>
-                                    U-Score: <span id="totalScore">850</span>
+                                    Joined Dec 2023
                                 </span>
                             </div>
                         </div>
-                        <button class="btn btn-outline" onclick="openEditProfileModal()">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                            </svg>
-                            Edit Profile
-                        </button>
+                        
+                        <div class="profile-actions">
+                            <div class="u-score-card">
+                                <div class="u-score-ring">
+                                    <svg viewBox="0 0 36 36">
+                                        <path class="score-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                        <path class="score-progress" stroke-dasharray="85, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                    </svg>
+                                    <div class="u-score-value">
+                                        <span id="totalScore">850</span>
+                                        <small>U-Score</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn-edit-profile" onclick="openEditProfileModal()">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                                Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Stats Bar (Dynamic based on domain) -->
+                    <div class="quick-stats-bar" id="quickStatsBar">
+                        <div class="quick-stat" id="primaryStatGroup">
+                            <span class="quick-stat-value" id="totalProblems">921</span>
+                            <span class="quick-stat-label" id="primaryStatLabel">Problems Solved</span>
+                        </div>
+                        <div class="quick-stat-divider"></div>
+                        <div class="quick-stat" id="secondaryStatGroup">
+                            <span class="quick-stat-value" id="totalContests">42</span>
+                            <span class="quick-stat-label" id="secondaryStatLabel">Contests</span>
+                        </div>
+                        <div class="quick-stat-divider"></div>
+                        <div class="quick-stat" id="tertiaryStatGroup">
+                            <span class="quick-stat-value" id="currentStreak">23</span>
+                            <span class="quick-stat-label" id="tertiaryStatLabel">Day Streak 🔥</span>
+                        </div>
+                        <div class="quick-stat-divider"></div>
+                        <div class="quick-stat" id="quaternaryStatGroup">
+                            <span class="quick-stat-value" id="globalRank">Top 5%</span>
+                            <span class="quick-stat-label" id="quaternaryStatLabel">Global Rank</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -156,7 +222,7 @@
                             <!-- About Card -->
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 style="font-size: 1rem;">About</h3>
+                                    <h3 style="font-size: 1rem; font-weight: 600;">About</h3>
                                 </div>
                                 <div class="card-body">
                                     <p style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.7;" id="profileBio">
@@ -168,7 +234,7 @@
                             <!-- Coding Platforms Card -->
                             <div class="card">
                                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                                    <h3 style="font-size: 1rem;">Linked Platforms</h3>
+                                    <h3 style="font-size: 1rem; font-weight: 600;">Linked Platforms</h3>
                                     <button class="btn btn-sm btn-ghost" onclick="syncAllPlatforms()">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <polyline points="23 4 23 10 17 10"/>
@@ -186,7 +252,7 @@
                             <!-- Contact Card -->
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 style="font-size: 1rem;">Contact & Links</h3>
+                                    <h3 style="font-size: 1rem; font-weight: 600;">Contact & Links</h3>
                                 </div>
                                 <div class="card-body">
                                     <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.875rem;" id="contactLinks"></div>
@@ -196,13 +262,13 @@
                             <!-- Education Card -->
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 style="font-size: 1rem;">Education</h3>
+                                    <h3 style="font-size: 1rem; font-weight: 600;">Education</h3>
                                 </div>
                                 <div class="card-body">
                                     <div style="display: flex; gap: 0.75rem;">
                                         <div style="width: 40px; height: 40px; background: var(--gray-100); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">🎓</div>
                                         <div>
-                                            <div style="font-weight: 500; font-size: 0.875rem;">University of Dhaka</div>
+                                            <div style="font-weight: 500; font-size: 0.875rem;">Green University Of Bangladesh</div>
                                             <div style="font-size: 0.75rem; color: var(--gray-500);">B.Sc. in Computer Science</div>
                                             <div style="font-size: 0.75rem; color: var(--gray-500);">2021 - 2025</div>
                                         </div>
@@ -215,9 +281,8 @@
                         <div class="profile-main">
                             <!-- Coding Stats Overview -->
                             <div class="card coding-stats-card">
-                                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                                    <h3 style="font-size: 1rem;">🏆 Competitive Programming Stats</h3>
-                                    <span class="badge badge-primary" id="overallRank">Top 10%</span>
+                                <div class="card-header">
+                                    <h3 class="section-title"><span class="section-icon">📊</span> Platform Stats</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="stats-grid" id="codingStatsGrid"></div>
@@ -227,40 +292,80 @@
                             <!-- Skills Visualization -->
                             <div class="card" style="margin-top: 1.5rem;">
                                 <div class="card-header">
-                                    <h3 style="font-size: 1rem;">⚡ Skill Showcase</h3>
+                                    <h3 class="section-title"><span class="section-icon">⚡</span> Skill Showcase</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="skills-showcase" id="skillsShowcase"></div>
                                 </div>
                             </div>
 
-                            <!-- Problem Solving Progress -->
-                            <div class="card" style="margin-top: 1.5rem;">
+                            <!-- Problem Solving Progress (Conditional - only for CP domain) -->
+                            <div class="card domain-section" data-domains="competitive-programming" id="problemSolvingSection" style="margin-top: 1.5rem;">
                                 <div class="card-header">
-                                    <h3 style="font-size: 1rem;">📊 Problem Solving Progress</h3>
+                                    <h3 class="section-title"><span class="section-icon">🎯</span> Problem Solving</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="problem-stats" id="problemStats"></div>
                                 </div>
                             </div>
 
-                            <!-- Activity Heatmap -->
-                            <div class="card" style="margin-top: 1.5rem;">
-                                <div class="card-header">
-                                    <h3 style="font-size: 1rem;">🔥 Activity Heatmap</h3>
+                            <!-- Dynamic Platform Heatmaps Container (Conditional - mainly for CP) -->
+                            <div id="platformHeatmapsContainer" class="domain-section" data-domains="competitive-programming,software-engineering,web-development"></div>
+                            
+                            <!-- AI/ML Projects Section (Conditional - only for AI/ML domain) -->
+                            <div class="card domain-section" data-domains="ai-ml,data-science" id="mlProjectsSection" style="margin-top: 1.5rem; display: none;">
+                                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                    <h3 class="section-title"><span class="section-icon">🤖</span> ML Models & Research</h3>
+                                    <a href="#" class="view-all-link">View All →</a>
                                 </div>
-                                <div class="card-body">
-                                    <div class="heatmap-container" id="activityHeatmap"></div>
-                                    <div style="display: flex; justify-content: flex-end; align-items: center; gap: 0.5rem; margin-top: 0.75rem; font-size: 0.75rem; color: var(--gray-500);">
-                                        <span>Less</span>
-                                        <div style="display: flex; gap: 2px;">
-                                            <div style="width: 12px; height: 12px; background: var(--gray-100); border-radius: 2px;"></div>
-                                            <div style="width: 12px; height: 12px; background: #c6e48b; border-radius: 2px;"></div>
-                                            <div style="width: 12px; height: 12px; background: #7bc96f; border-radius: 2px;"></div>
-                                            <div style="width: 12px; height: 12px; background: #449945; border-radius: 2px;"></div>
-                                            <div style="width: 12px; height: 12px; background: #196127; border-radius: 2px;"></div>
+                                <div class="card-body" id="mlProjectsList">
+                                    <div class="ml-projects-grid">
+                                        <div class="ml-project-card">
+                                            <div class="ml-project-icon">🧠</div>
+                                            <div class="ml-project-info">
+                                                <h4>Image Classifier CNN</h4>
+                                                <p>TensorFlow, Keras • 95.2% accuracy</p>
+                                                <div class="ml-project-tags">
+                                                    <span class="tag">Deep Learning</span>
+                                                    <span class="tag">Computer Vision</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <span>More</span>
+                                        <div class="ml-project-card">
+                                            <div class="ml-project-icon">📝</div>
+                                            <div class="ml-project-info">
+                                                <h4>Sentiment Analysis NLP</h4>
+                                                <p>PyTorch, BERT • 89.7% F1 Score</p>
+                                                <div class="ml-project-tags">
+                                                    <span class="tag">NLP</span>
+                                                    <span class="tag">Transformers</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cybersecurity Section (Conditional - only for Cyber domain) -->
+                            <div class="card domain-section" data-domains="cybersecurity" id="cyberSection" style="margin-top: 1.5rem; display: none;">
+                                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                    <h3 class="section-title"><span class="section-icon">🔐</span> CTF & Security</h3>
+                                    <a href="#" class="view-all-link">View All →</a>
+                                </div>
+                                <div class="card-body" id="ctfStatsList">
+                                    <div class="ctf-stats-grid">
+                                        <div class="ctf-stat-card">
+                                            <span class="ctf-stat-value">42</span>
+                                            <span class="ctf-stat-label">CTFs Participated</span>
+                                        </div>
+                                        <div class="ctf-stat-card">
+                                            <span class="ctf-stat-value">156</span>
+                                            <span class="ctf-stat-label">Challenges Solved</span>
+                                        </div>
+                                        <div class="ctf-stat-card">
+                                            <span class="ctf-stat-value">Top 10%</span>
+                                            <span class="ctf-stat-label">CTFtime Rank</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -268,8 +373,8 @@
                             <!-- Projects -->
                             <div class="card" style="margin-top: 1.5rem;">
                                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                                    <h3 style="font-size: 1rem;">📂 Projects</h3>
-                                    <a href="projects.html" style="font-size: 0.875rem; color: var(--primary);">View All</a>
+                                    <h3 class="section-title"><span class="section-icon">📁</span> Projects</h3>
+                                    <a href="projects.html" class="view-all-link">View All →</a>
                                 </div>
                                 <div class="card-body" id="projectsList"></div>
                             </div>
@@ -277,7 +382,7 @@
                             <!-- Achievements -->
                             <div class="card" style="margin-top: 1.5rem;">
                                 <div class="card-header">
-                                    <h3 style="font-size: 1rem;">🎖️ Achievements & Badges</h3>
+                                    <h3 class="section-title"><span class="section-icon">🏆</span> Achievements & Badges</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="achievements-grid" id="achievementsGrid"></div>
@@ -313,25 +418,202 @@
                         <textarea class="form-input" id="editBio" rows="3">Passionate full-stack developer with a keen interest in AI/ML and building products that make a difference.</textarea>
                     </div>
                     
+                    <!-- Domain/Interest Selection -->
                     <div class="form-section">
                         <div class="form-section-header">
-                            <span class="form-section-title">Coding Platform Handles</span>
+                            <span class="form-section-title">🎯 Your Domains & Interests</span>
+                            <span style="font-size: 0.75rem; color: var(--gray-500);">Select what you work on • Profile adapts to your selection</span>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">GitHub Username</label>
-                            <input type="text" class="form-input" id="editGithub" placeholder="username">
+                        <div class="domain-selection-grid" id="domainSelectionGrid">
+                            <label class="domain-option" data-domain="competitive-programming">
+                                <input type="checkbox" name="domains" value="competitive-programming" id="domainCP">
+                                <span class="domain-option-content">
+                                    <span class="domain-icon">🏆</span>
+                                    <span class="domain-name">Competitive Programming</span>
+                                </span>
+                            </label>
+                            <label class="domain-option" data-domain="ai-ml">
+                                <input type="checkbox" name="domains" value="ai-ml" id="domainAI">
+                                <span class="domain-option-content">
+                                    <span class="domain-icon">🤖</span>
+                                    <span class="domain-name">AI & Machine Learning</span>
+                                </span>
+                            </label>
+                            <label class="domain-option" data-domain="web-development">
+                                <input type="checkbox" name="domains" value="web-development" id="domainWeb">
+                                <span class="domain-option-content">
+                                    <span class="domain-icon">🌐</span>
+                                    <span class="domain-name">Web Development</span>
+                                </span>
+                            </label>
+                            <label class="domain-option" data-domain="cybersecurity">
+                                <input type="checkbox" name="domains" value="cybersecurity" id="domainCyber">
+                                <span class="domain-option-content">
+                                    <span class="domain-icon">🔐</span>
+                                    <span class="domain-name">Cybersecurity</span>
+                                </span>
+                            </label>
+                            <label class="domain-option" data-domain="mobile-development">
+                                <input type="checkbox" name="domains" value="mobile-development" id="domainMobile">
+                                <span class="domain-option-content">
+                                    <span class="domain-icon">📱</span>
+                                    <span class="domain-name">Mobile Development</span>
+                                </span>
+                            </label>
+                            <label class="domain-option" data-domain="data-science">
+                                <input type="checkbox" name="domains" value="data-science" id="domainData">
+                                <span class="domain-option-content">
+                                    <span class="domain-icon">📊</span>
+                                    <span class="domain-name">Data Science</span>
+                                </span>
+                            </label>
+                            <label class="domain-option" data-domain="devops">
+                                <input type="checkbox" name="domains" value="devops" id="domainDevOps">
+                                <span class="domain-option-content">
+                                    <span class="domain-icon">☁️</span>
+                                    <span class="domain-name">DevOps & Cloud</span>
+                                </span>
+                            </label>
+                            <label class="domain-option" data-domain="software-engineering">
+                                <input type="checkbox" name="domains" value="software-engineering" id="domainSE">
+                                <span class="domain-option-content">
+                                    <span class="domain-icon">💻</span>
+                                    <span class="domain-name">Software Engineering</span>
+                                </span>
+                            </label>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Codeforces Handle</label>
-                            <input type="text" class="form-input" id="editCodeforces" placeholder="handle">
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="form-section-header">
+                            <span class="form-section-title">🔗 Link Your Coding Platforms</span>
+                            <span style="font-size: 0.75rem; color: var(--gray-500);">Toggle ON to link • Heatmap shows for linked platforms</span>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">LeetCode Username</label>
-                            <input type="text" class="form-input" id="editLeetcode" placeholder="username">
+                        
+                        <!-- GitHub -->
+                        <div class="platform-link-item" id="platformItem_github">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                                <div style="width: 36px; height: 36px; background: #33315; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#333"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; font-size: 0.875rem;">GitHub</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-500);" id="githubStatus">Not linked</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="showGithub" onchange="togglePlatformInput('github')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <input type="text" class="form-input platform-input" id="editGithub" placeholder="Enter your GitHub username" style="display: none;" oninput="updatePlatformStatus('github')">
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">VJudge Username</label>
-                            <input type="text" class="form-input" id="editVjudge" placeholder="username">
+                        
+                        <!-- Codeforces -->
+                        <div class="platform-link-item" id="platformItem_codeforces">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                                <div style="width: 36px; height: 36px; background: #1da09c15; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#1da09c"><path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5h-3C.672 21 0 20.328 0 19.5V9c0-.828.672-1.5 1.5-1.5h3zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5v-15c0-.828.672-1.5 1.5-1.5h3zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5h3z"/></svg>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; font-size: 0.875rem;">Codeforces</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-500);" id="codeforcesStatus">Not linked</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="showCodeforces" onchange="togglePlatformInput('codeforces')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <input type="text" class="form-input platform-input" id="editCodeforces" placeholder="Enter your Codeforces handle" style="display: none;" oninput="updatePlatformStatus('codeforces')">
+                        </div>
+                        
+                        <!-- LeetCode -->
+                        <div class="platform-link-item" id="platformItem_leetcode">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                                <div style="width: 36px; height: 36px; background: #ffa11615; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#ffa116"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; font-size: 0.875rem;">LeetCode</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-500);" id="leetcodeStatus">Not linked</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="showLeetcode" onchange="togglePlatformInput('leetcode')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <input type="text" class="form-input platform-input" id="editLeetcode" placeholder="Enter your LeetCode username" style="display: none;" oninput="updatePlatformStatus('leetcode')">
+                        </div>
+                        
+                        <!-- VJudge -->
+                        <div class="platform-link-item" id="platformItem_vjudge">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                                <div style="width: 36px; height: 36px; background: #4e6ef215; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#4e6ef2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; font-size: 0.875rem;">VJudge</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-500);" id="vjudgeStatus">Not linked</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="showVjudge" onchange="togglePlatformInput('vjudge')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <input type="text" class="form-input platform-input" id="editVjudge" placeholder="Enter your VJudge username" style="display: none;" oninput="updatePlatformStatus('vjudge')">
+                        </div>
+                        
+                        <!-- AtCoder -->
+                        <div class="platform-link-item" id="platformItem_atcoder">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                                <div style="width: 36px; height: 36px; background: #22222215; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#222222"><circle cx="12" cy="12" r="10"/></svg>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; font-size: 0.875rem;">AtCoder</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-500);" id="atcoderStatus">Not linked</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="showAtcoder" onchange="togglePlatformInput('atcoder')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <input type="text" class="form-input platform-input" id="editAtcoder" placeholder="Enter your AtCoder username" style="display: none;" oninput="updatePlatformStatus('atcoder')">
+                        </div>
+                        
+                        <!-- HackerRank -->
+                        <div class="platform-link-item" id="platformItem_hackerrank">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                                <div style="width: 36px; height: 36px; background: #00ea6415; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#00ea64"><path d="M12 0c1.285 0 9.75 4.886 10.392 6 .645 1.115.645 10.885 0 12S13.287 24 12 24s-9.75-4.885-10.395-6c-.641-1.115-.641-10.885 0-12C2.25 4.886 10.715 0 12 0z"/></svg>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; font-size: 0.875rem;">HackerRank</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-500);" id="hackerrankStatus">Not linked</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="showHackerrank" onchange="togglePlatformInput('hackerrank')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <input type="text" class="form-input platform-input" id="editHackerrank" placeholder="Enter your HackerRank username" style="display: none;" oninput="updatePlatformStatus('hackerrank')">
+                        </div>
+                        
+                        <!-- CodeChef -->
+                        <div class="platform-link-item" id="platformItem_codechef">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                                <div style="width: 36px; height: 36px; background: #5B463815; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#5B4638"><path d="M11.257.004c-.092.008-.297.062-.458.12C9.021.758 7.513 2.202 6.945 3.837c-.09.253-.103.996-.103 5.688 0 5.512.003 5.584.163 5.584.09 0 .233-.073.32-.163.142-.147.153-.383.173-3.852l.02-3.696.29-.503c.537-.93 1.3-1.5 2.323-1.733.406-.093.584-.093 5.727-.093h5.303l-.238-.287c-.764-.926-1.943-1.737-3.074-2.116-.733-.247-1.186-.344-2.073-.447-.66-.077-4.285-.15-4.52-.122z"/></svg>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; font-size: 0.875rem;">CodeChef</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-500);" id="codechefStatus">Not linked</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="showCodechef" onchange="togglePlatformInput('codechef')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <input type="text" class="form-input platform-input" id="editCodechef" placeholder="Enter your CodeChef username" style="display: none;" oninput="updatePlatformStatus('codechef')">
                         </div>
                     </div>
                 </form>
