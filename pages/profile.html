@@ -3,24 +3,1492 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Profile - UConnect</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../styles.css?v=2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Redesigned Profile - Clean & Minimal */
+        .profile-page {
+            min-height: 100vh;
+            background: var(--bg-secondary);
+        }
+
+        .profile-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Domain Selection Grid */
+        .domain-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .domain-option {
+            display: block;
+            cursor: pointer;
+        }
+
+        .domain-option input {
+            display: none;
+        }
+
+        .domain-option-content {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] .domain-option-content {
+            background: rgba(51, 65, 85, 0.4);
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        .domain-option input:checked + .domain-option-content {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .domain-icon {
+            font-size: 1.25rem;
+        }
+
+        .domain-name {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .domain-name {
+            color: #e2e8f0;
+        }
+
+        /* Form Section */
+        .form-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .form-section {
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        .form-section-header {
+            margin-bottom: 1rem;
+        }
+
+        .form-section-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        [data-theme="dark"] .form-section-title {
+            color: #f1f5f9;
+        }
+
+        /* Platform Link Items */
+        .platform-link-item {
+            margin-bottom: 0.75rem;
+        }
+
+        .platform-link-item > div:first-child {
+            background: var(--bg-secondary) !important;
+        }
+
+        [data-theme="dark"] .platform-link-item > div:first-child {
+            background: rgba(51, 65, 85, 0.4) !important;
+        }
+
+        .platform-input {
+            margin-top: 0.5rem;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--gray-300);
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Sync Button */
+        .sync-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--primary);
+            background: transparent;
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .sync-btn:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        /* About & Education Row */
+        .about-education-row {
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 1200px) {
+            .about-education-row {
+                display: block;
+            }
+        }
+
+        /* Skills Input in Modal */
+        .skills-input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .skills-selected {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            min-height: 32px;
+        }
+
+        .selected-skill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.625rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: var(--primary);
+            color: white;
+            border-radius: 100px;
+        }
+
+        .selected-skill .remove-skill {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            font-size: 14px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .selected-skill .remove-skill:hover {
+            opacity: 1;
+        }
+
+        .skills-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .skill-suggestion {
+            padding: 0.25rem 0.625rem;
+            font-size: 0.7rem;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .skill-suggestion:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .skill-suggestion.selected {
+            display: none;
+        }
+
+        [data-theme="dark"] .skill-suggestion {
+            background: rgba(51, 65, 85, 0.5);
+            color: #94a3b8;
+            border-color: rgba(71, 85, 105, 0.3);
+        }
+
+        [data-theme="dark"] .skill-suggestion:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Conditional Domain Sections */
+        .domain-section {
+            margin-top: 1rem;
+        }
+
+        .domain-section[style*="display: none"] {
+            display: none !important;
+        }
+
+        /* ML Projects Grid */
+        .ml-projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .ml-project-card {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .ml-project-card {
+            background: rgba(51, 65, 85, 0.4);
+            border-color: rgba(71, 85, 105, 0.3);
+        }
+
+        .ml-project-icon {
+            font-size: 2rem;
+        }
+
+        .ml-project-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 0.25rem;
+        }
+
+        [data-theme="dark"] .ml-project-info h4 {
+            color: #f1f5f9;
+        }
+
+        .ml-project-info p {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin: 0 0 0.5rem;
+        }
+
+        [data-theme="dark"] .ml-project-info p {
+            color: #94a3b8;
+        }
+
+        .ml-project-tags {
+            display: flex;
+            gap: 0.375rem;
+            flex-wrap: wrap;
+        }
+
+        .ml-project-tags .tag {
+            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+            border-radius: 4px;
+        }
+
+        /* CTF Stats Grid */
+        .ctf-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .ctf-stat-card {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .ctf-stat-card {
+            background: rgba(51, 65, 85, 0.4);
+            border-color: rgba(71, 85, 105, 0.3);
+        }
+
+        .ctf-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: block;
+        }
+
+        [data-theme="dark"] .ctf-stat-value {
+            color: #f1f5f9;
+        }
+
+        .ctf-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        [data-theme="dark"] .ctf-stat-label {
+            color: #94a3b8;
+        }
+
+        /* Top Bar */
+        .profile-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Profile Hero Card */
+        .profile-hero {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .profile-hero {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        .hero-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .hero-avatar::after {
+            content: '✓';
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 24px;
+            height: 24px;
+            background: #10b981;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--surface);
+        }
+
+        [data-theme="dark"] .hero-avatar::after {
+            border-color: rgba(30, 41, 59, 0.9);
+        }
+
+        .hero-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .hero-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        [data-theme="dark"] .hero-name {
+            color: #f8fafc;
+        }
+
+        .level-badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #78350f;
+            border-radius: 100px;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0 0 0.75rem 0;
+        }
+
+        [data-theme="dark"] .hero-title {
+            color: #94a3b8;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .meta-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+        }
+
+        [data-theme="dark"] .meta-tag {
+            color: #94a3b8;
+        }
+
+        .meta-tag svg {
+            width: 14px;
+            height: 14px;
+            opacity: 0.7;
+        }
+
+        .hero-score {
+            text-align: center;
+            padding: 0.75rem 1.25rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        [data-theme="dark"] .hero-score {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
+            border-color: rgba(59, 130, 246, 0.25);
+        }
+
+        .score-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 0.65rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        [data-theme="dark"] .score-label {
+            color: #94a3b8;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .stats-row {
+            border-color: rgba(71, 85, 105, 0.3);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .stat-value {
+            color: #f1f5f9;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-top: 0.125rem;
+        }
+
+        [data-theme="dark"] .stat-label {
+            color: #94a3b8;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 220px minmax(0, 1fr);
+            gap: 1.25rem;
+        }
+
+        @media (max-width: 1000px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar Cards */
+        .sidebar-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .sidebar-card {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        .sidebar-card-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        [data-theme="dark"] .sidebar-card-title {
+            color: #cbd5e1;
+        }
+
+        .bio-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        [data-theme="dark"] .bio-text {
+            color: #cbd5e1;
+        }
+
+        /* Platform Links */
+        .platform-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.625rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .platform-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .platform-item:first-child {
+            padding-top: 0;
+        }
+
+        [data-theme="dark"] .platform-item {
+            border-color: rgba(71, 85, 105, 0.3);
+        }
+
+        .platform-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .platform-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .platform-name {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .platform-name {
+            color: #e2e8f0;
+        }
+
+        .platform-handle {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+        }
+
+        [data-theme="dark"] .platform-handle {
+            color: #94a3b8;
+        }
+
+        .platform-badge {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 100px;
+        }
+
+        /* Contact Links */
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 0.375rem 0;
+        }
+
+        [data-theme="dark"] .contact-item {
+            color: #94a3b8;
+        }
+
+        .contact-item svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.6;
+            flex-shrink: 0;
+        }
+
+        .contact-item a {
+            color: var(--primary);
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Education */
+        .edu-title {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .edu-title {
+            color: #e2e8f0;
+        }
+
+        .edu-sub {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin-top: 0.125rem;
+        }
+
+        [data-theme="dark"] .edu-sub {
+            color: #94a3b8;
+        }
+
+        /* Main Content Cards */
+        .main-card {
+            background: var(--surface);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .main-card {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(71, 85, 105, 0.4);
+        }
+
+        .main-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .main-card-header {
+            border-color: rgba(71, 85, 105, 0.3);
+        }
+
+        .main-card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        [data-theme="dark"] .main-card-title {
+            color: #f1f5f9;
+        }
+
+        .main-card-body {
+            padding: 1.25rem;
+        }
+
+        .view-all {
+            font-size: 0.75rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .view-all:hover {
+            text-decoration: underline;
+        }
+
+        /* Platform Stats Grid */
+        .platform-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 700px) {
+            .platform-stats-grid {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                gap: 1rem;
+            }
+            .platform-stat-card {
+                min-width: 180px;
+            }
+        }
+
+        .platform-stat-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            background: var(--surface);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        [data-theme="dark"] .platform-stat-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(71, 85, 105, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .platform-stat-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .platform-stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .platform-stat-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .platform-stat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .platform-stat-info .stat-number {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .platform-stat-info h4 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1;
+        }
+
+        [data-theme="dark"] .platform-stat-info h4 {
+            color: #f1f5f9;
+        }
+
+        .platform-stat-info .stat-badge {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 100px;
+            text-transform: uppercase;
+        }
+
+        .platform-stat-info p {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            margin: 0.25rem 0 0;
+        }
+
+        [data-theme="dark"] .platform-stat-info p {
+            color: #94a3b8;
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .skill-tag {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.375rem 0.75rem;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            border-radius: 100px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        [data-theme="dark"] .skill-tag {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.25);
+        }
+
+        /* Achievements */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.75rem;
+            overflow-x: auto;
+        }
+
+        .achievement-item {
+            text-align: center;
+            padding: 1rem 0.5rem;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s;
+        }
+
+        [data-theme="dark"] .achievement-item {
+            background: rgba(51, 65, 85, 0.4);
+            border-color: rgba(71, 85, 105, 0.3);
+        }
+
+        .achievement-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .achievement-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.375rem;
+        }
+
+        .achievement-name {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            line-height: 1.3;
+        }
+
+        [data-theme="dark"] .achievement-name {
+            color: #cbd5e1;
+        }
+
+        /* Projects */
+        .projects-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            overflow-x: auto;
+        }
+
+        .project-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        [data-theme="dark"] .project-item {
+            background: rgba(51, 65, 85, 0.4);
+            border-color: rgba(71, 85, 105, 0.3);
+        }
+
+        .project-item:hover {
+            border-color: var(--primary);
+        }
+
+        .project-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.125rem;
+            flex-shrink: 0;
+        }
+
+        .project-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .project-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 0.125rem;
+        }
+
+        [data-theme="dark"] .project-name {
+            color: #f1f5f9;
+        }
+
+        .project-desc {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin: 0;
+        }
+
+        [data-theme="dark"] .project-desc {
+            color: #94a3b8;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 0.375rem;
+            flex-shrink: 0;
+        }
+
+        .project-tag {
+            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+            background: var(--surface);
+            color: var(--text-secondary);
+            border-radius: 4px;
+        }
+
+        [data-theme="dark"] .project-tag {
+            background: rgba(30, 41, 59, 0.8);
+            color: #94a3b8;
+        }
+
+        /* Buttons */
+        .btn-edit {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        [data-theme="dark"] .btn-edit {
+            background: rgba(51, 65, 85, 0.6);
+            border-color: rgba(71, 85, 105, 0.5);
+            color: #e2e8f0;
+        }
+
+        .btn-edit:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-theme {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        [data-theme="dark"] .btn-theme {
+            background: rgba(51, 65, 85, 0.6);
+            border-color: rgba(71, 85, 105, 0.5);
+            color: #94a3b8;
+        }
+
+        .btn-theme:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-theme .sun-icon { display: none; }
+        .btn-theme .moon-icon { display: block; }
+        [data-theme="dark"] .btn-theme .sun-icon { display: block; }
+        [data-theme="dark"] .btn-theme .moon-icon { display: none; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-top {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .hero-info {
+                text-align: center;
+            }
+            
+            .hero-name {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .hero-meta {
+                justify-content: center;
+            }
+            
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .profile-container {
+                padding: 1rem;
+            }
+            
+            .profile-hero {
+                padding: 1.5rem;
+            }
+            
+            .hero-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 1.75rem;
+            }
+            
+            .hero-name {
+                font-size: 1.25rem;
+            }
+            
+            .stats-row {
+                gap: 0.75rem;
+            }
+            
+            .stat-value {
+                font-size: 1.1rem;
+            }
+
+            .back-text {
+                display: none;
+            }
+
+            .edit-text {
+                display: none;
+            }
+
+            .btn-edit {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Activity Summary */
+        .activity-summary {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        [data-theme="dark"] .activity-summary {
+            color: #94a3b8;
+        }
+
+        /* Heatmap Styles */
+        .heatmap-container {
+            overflow-x: auto;
+            padding: 0.5rem 0;
+        }
+
+        .heatmap-svg {
+            display: block;
+        }
+
+        .heatmap-month {
+            font-size: 10px;
+            fill: var(--text-tertiary);
+        }
+
+        [data-theme="dark"] .heatmap-month {
+            fill: #94a3b8;
+        }
+
+        .heatmap-day {
+            rx: 2;
+            ry: 2;
+        }
+
+        .heatmap-legend {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+        }
+
+        [data-theme="dark"] .heatmap-legend {
+            color: #94a3b8;
+        }
+
+        .legend-boxes {
+            display: flex;
+            gap: 3px;
+        }
+
+        .legend-box {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .legend-box.level-0 { background: #ebedf0; }
+        .legend-box.level-1 { background: #9be9a8; }
+        .legend-box.level-2 { background: #40c463; }
+        .legend-box.level-3 { background: #30a14e; }
+        .legend-box.level-4 { background: #216e39; }
+
+        [data-theme="dark"] .legend-box.level-0 { background: #161b22; }
+        [data-theme="dark"] .legend-box.level-1 { background: #0e4429; }
+        [data-theme="dark"] .legend-box.level-2 { background: #006d32; }
+        [data-theme="dark"] .legend-box.level-3 { background: #26a641; }
+        [data-theme="dark"] .legend-box.level-4 { background: #39d353; }
+
+        /* Timeline Styles */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary), var(--accent));
+            border-radius: 1px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -2rem;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: var(--surface);
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        [data-theme="dark"] .timeline-marker {
+            background: #1e293b;
+        }
+
+        .timeline-content {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .timeline-content {
+            background: rgba(51, 65, 85, 0.4);
+            border-color: rgba(71, 85, 105, 0.3);
+        }
+
+        .timeline-date {
+            font-size: 0.7rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        [data-theme="dark"] .timeline-title {
+            color: #f1f5f9;
+        }
+
+        .timeline-desc {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+        }
+
+        [data-theme="dark"] .timeline-desc {
+            color: #94a3b8;
+        }
+
+        /* Problem Stats Grid */
+        .problem-stats-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .problem-category {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .category-name {
+            color: #e2e8f0;
+        }
+
+        .category-count {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        [data-theme="dark"] .category-count {
+            color: #94a3b8;
+        }
+
+        .category-bar {
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .category-bar {
+            background: rgba(51, 65, 85, 0.5);
+        }
+
+        .category-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #6366f1);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Mobile hamburger button */
+        .sidebar-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 40px;
+            height: 40px;
+            padding: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        [data-theme="dark"] .sidebar-toggle {
+            background: rgba(51, 65, 85, 0.6);
+            border-color: rgba(71, 85, 105, 0.5);
+        }
+
+        .sidebar-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--text-secondary);
+            border-radius: 1px;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .sidebar-toggle span {
+            background: #94a3b8;
+        }
+
+        .sidebar-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .sidebar-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .sidebar-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-toggle {
+                display: flex;
+            }
+        }
+
+        /* Overlay for mobile sidebar */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <!-- SVG Gradient Definition -->
-    <svg style="position: absolute; width: 0; height: 0;">
-        <defs>
-            <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color:#667eea"/>
-                <stop offset="50%" style="stop-color:#764ba2"/>
-                <stop offset="100%" style="stop-color:#f093fb"/>
-            </linearGradient>
-        </defs>
-    </svg>
-    
     <div class="dashboard-layout">
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -95,7 +1563,7 @@
             </nav>
 
             <div class="sidebar-footer">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" style="margin: 0.75rem;">
+                <button class="theme-toggle" id="sidebarThemeToggle" aria-label="Toggle dark mode" style="margin: 0.75rem;">
                     <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                     </svg>
@@ -122,282 +1590,567 @@
             </div>
         </aside>
 
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Profile Header with Cover -->
-            <div class="profile-cover">
-                <div class="cover-pattern"></div>
-                <div class="cover-gradient"></div>
-            </div>
-            
-            <div class="profile-header-new">
-                <div class="container">
-                    <div class="profile-header-content-new">
-                        <div class="profile-avatar-wrapper">
-                            <div class="avatar profile-avatar-new" id="profileAvatar">TT</div>
-                            <div class="avatar-badge" title="Verified">✓</div>
-                            <div class="avatar-ring"></div>
-                        </div>
-                        
-                        <div class="profile-info-new">
-                            <div class="profile-name-row">
-                                <h1 class="profile-name-new" id="profileName">Taslim Ahmed Tamim</h1>
-                                <span class="profile-level">Level 12</span>
-                            </div>
-                            <p class="profile-title-new" id="profileTitle">Computer Science Student • Green University Of Bangladesh</p>
-                            
-                            <div class="profile-meta">
-                                <span class="meta-item">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                        <circle cx="12" cy="10" r="3"/>
-                                    </svg>
-                                    Dhaka, Bangladesh
-                                </span>
-                                <span class="meta-item">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                                        <line x1="16" y1="2" x2="16" y2="6"/>
-                                        <line x1="8" y1="2" x2="8" y2="6"/>
-                                        <line x1="3" y1="10" x2="21" y2="10"/>
-                                    </svg>
-                                    Joined Dec 2023
-                                </span>
-                            </div>
-                        </div>
-                        
-                        <div class="profile-actions">
-                            <div class="u-score-card">
-                                <div class="u-score-ring">
-                                    <svg viewBox="0 0 36 36">
-                                        <path class="score-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                                        <path class="score-progress" stroke-dasharray="85, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                                    </svg>
-                                    <div class="u-score-value">
-                                        <span id="totalScore">850</span>
-                                        <small>U-Score</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn-edit-profile" onclick="openEditProfileModal()">
+            <div class="profile-page">
+                <div class="profile-container">
+                    <!-- Top Bar -->
+                    <div class="profile-topbar">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </button>
+                            <a href="dashboard.html" class="back-link">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                                </svg>
+                                <span class="back-text">Back to Dashboard</span>
+                            </a>
+                        </div>
+                        <div class="topbar-actions">
+                            <button class="btn-theme" id="themeToggle" aria-label="Toggle dark mode">
+                                <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                                </svg>
+                                <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="5"/>
+                                    <line x1="12" y1="1" x2="12" y2="3"/>
+                                    <line x1="12" y1="21" x2="12" y2="23"/>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                                    <line x1="1" y1="12" x2="3" y2="12"/>
+                                    <line x1="21" y1="12" x2="23" y2="12"/>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                                </svg>
+                            </button>
+                            <button class="btn-edit" onclick="openEditProfileModal()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                                 </svg>
-                                Edit Profile
+                                <span class="edit-text">Edit Profile</span>
                             </button>
                         </div>
                     </div>
-                    
-                    <!-- Quick Stats Bar (Dynamic based on domain) -->
-                    <div class="quick-stats-bar" id="quickStatsBar">
-                        <div class="quick-stat" id="primaryStatGroup">
-                            <span class="quick-stat-value" id="totalProblems">921</span>
-                            <span class="quick-stat-label" id="primaryStatLabel">Problems Solved</span>
+
+            <!-- Profile Hero -->
+            <div class="profile-hero">
+                <div class="hero-top">
+                    <div class="hero-avatar" id="profileAvatar">TT</div>
+                    <div class="hero-info">
+                        <h1 class="hero-name" id="profileName">
+                            Taslim Ahmed Tamim
+                            <span class="level-badge">Level 12</span>
+                        </h1>
+                        <p class="hero-title" id="profileTitle">Computer Science Student • Green University Of Bangladesh</p>
+                        <div class="hero-meta">
+                            <span class="meta-tag">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                Dhaka, Bangladesh
+                            </span>
+                            <span class="meta-tag">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                Joined Dec 2023
+                            </span>
                         </div>
-                        <div class="quick-stat-divider"></div>
-                        <div class="quick-stat" id="secondaryStatGroup">
-                            <span class="quick-stat-value" id="totalContests">42</span>
-                            <span class="quick-stat-label" id="secondaryStatLabel">Contests</span>
-                        </div>
-                        <div class="quick-stat-divider"></div>
-                        <div class="quick-stat" id="tertiaryStatGroup">
-                            <span class="quick-stat-value" id="currentStreak">23</span>
-                            <span class="quick-stat-label" id="tertiaryStatLabel">Day Streak 🔥</span>
-                        </div>
-                        <div class="quick-stat-divider"></div>
-                        <div class="quick-stat" id="quaternaryStatGroup">
-                            <span class="quick-stat-value" id="globalRank">Top 5%</span>
-                            <span class="quick-stat-label" id="quaternaryStatLabel">Global Rank</span>
-                        </div>
+                    </div>
+                    <div class="hero-score">
+                        <div class="score-number" id="totalScore">850</div>
+                        <div class="score-label">U-Score</div>
+                    </div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalProblems">921</div>
+                        <div class="stat-label">Problems Solved</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalContests">42</div>
+                        <div class="stat-label">Contests</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="currentStreak">23 🔥</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="globalRank">Top 5%</div>
+                        <div class="stat-label">Global Rank</div>
                     </div>
                 </div>
             </div>
 
-            <div class="profile-body">
-                <div class="container">
-                    <div class="profile-grid">
-                        <!-- Sidebar -->
-                        <div class="profile-sidebar">
-                            <!-- About Card -->
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 style="font-size: 1rem; font-weight: 600;">About</h3>
+            <!-- Content Grid -->
+            <div class="content-grid">
+                <!-- Sidebar -->
+                <div class="profile-sidebar-col">
+                    <!-- Linked Platforms -->
+                    <div class="sidebar-card">
+                        <div class="sidebar-card-title" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Platforms</span>
+                            <button class="sync-btn" onclick="syncAllPlatforms()" title="Sync All Platforms">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M23 4v6h-6"/>
+                                    <path d="M1 20v-6h6"/>
+                                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/>
+                                    <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="platformsList">
+                            <div class="platform-item">
+                                <div class="platform-icon" style="background: rgba(26, 115, 232, 0.1);">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#1a73e8"><path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5h-3C.672 21 0 20.328 0 19.5V9c0-.828.672-1.5 1.5-1.5h3zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5v-15c0-.828.672-1.5 1.5-1.5h3zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5h3z"/></svg>
                                 </div>
-                                <div class="card-body">
-                                    <p style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.7;" id="profileBio">
-                                        Passionate full-stack developer with a keen interest in AI/ML and building products that make a difference. Competitive programmer with a love for algorithmic problem-solving.
-                                    </p>
+                                <div class="platform-info">
+                                    <div class="platform-name">Codeforces</div>
+                                    <div class="platform-handle">@tamim_cf</div>
+                                </div>
+                                <span class="platform-badge" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">Expert</span>
+                            </div>
+                            <div class="platform-item">
+                                <div class="platform-icon" style="background: rgba(255, 161, 22, 0.1);">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffa116"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg>
+                                </div>
+                                <div class="platform-info">
+                                    <div class="platform-name">LeetCode</div>
+                                    <div class="platform-handle">@tamim_lc</div>
+                                </div>
+                                <span class="platform-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">23 🔥</span>
+                            </div>
+                            <div class="platform-item">
+                                <div class="platform-icon" style="background: rgba(51, 51, 51, 0.1);">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#333"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                                </div>
+                                <div class="platform-info">
+                                    <div class="platform-name">GitHub</div>
+                                    <div class="platform-handle">@taslimahmedtamim</div>
+                                </div>
+                                <span class="platform-badge" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">45 repos</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="sidebar-card">
+                        <div class="sidebar-card-title">Contact</div>
+                        <div id="contactLinks">
+                            <!-- Contact items will be rendered dynamically -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Main Content -->
+                <div class="profile-main-col">
+                    <!-- About Row -->
+                    <div class="about-education-row">
+                        <!-- About -->
+                        <div class="main-card">
+                            <div class="main-card-header">
+                                <div class="main-card-title">👤 About</div>
+                            </div>
+                            <div class="main-card-body">
+                                <p class="bio-text" id="profileBio">
+                                    Passionate full-stack developer with a keen interest in AI/ML and building products that make a difference. Competitive programmer with a love for algorithmic problem-solving.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Platform Stats -->
+                    <div class="main-card">
+                        <div class="main-card-header">
+                            <div class="main-card-title">📊 Platform Stats</div>
+                        </div>
+                        <div class="main-card-body">
+                            <div class="platform-stats-grid" id="codingStatsGrid">
+                                <div class="platform-stat-card">
+                                    <div class="platform-stat-icon" style="background: rgba(26, 115, 232, 0.1);">
+                                        <svg viewBox="0 0 24 24" fill="#1a73e8"><path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5h-3C.672 21 0 20.328 0 19.5V9c0-.828.672-1.5 1.5-1.5h3zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5v-15c0-.828.672-1.5 1.5-1.5h3zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5h3z"/></svg>
+                                    </div>
+                                    <div class="platform-stat-info">
+                                        <div class="stat-number">
+                                            <h4>1650</h4>
+                                            <span class="stat-badge" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">Expert</span>
+                                        </div>
+                                        <p>Codeforces</p>
+                                    </div>
+                                </div>
+                                <div class="platform-stat-card">
+                                    <div class="platform-stat-icon" style="background: rgba(255, 161, 22, 0.1);">
+                                        <svg viewBox="0 0 24 24" fill="#ffa116"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg>
+                                    </div>
+                                    <div class="platform-stat-info">
+                                        <div class="stat-number">
+                                            <h4>387</h4>
+                                            <span class="stat-badge" style="background: rgba(255, 161, 22, 0.15); color: #f59e0b; border-radius: 50%; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; padding: 0;">🔥</span>
+                                        </div>
+                                        <p>LeetCode</p>
+                                    </div>
+                                </div>
+                                <div class="platform-stat-card">
+                                    <div class="platform-stat-icon" style="background: rgba(51, 51, 51, 0.08);">
+                                        <svg viewBox="0 0 24 24" fill="#333"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                                    </div>
+                                    <div class="platform-stat-info">
+                                        <div class="stat-number">
+                                            <h4>1247</h4>
+                                            <span class="stat-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">45 Repos</span>
+                                        </div>
+                                        <p>GitHub</p>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- Coding Platforms Card -->
-                            <div class="card">
-                                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                                    <h3 style="font-size: 1rem; font-weight: 600;">Linked Platforms</h3>
-                                    <button class="btn btn-sm btn-ghost" onclick="syncAllPlatforms()">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <polyline points="23 4 23 10 17 10"/>
-                                            <polyline points="1 20 1 14 7 14"/>
-                                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-                                        </svg>
-                                        Sync
-                                    </button>
+                    <!-- Skills -->
+                    <div class="main-card">
+                        <div class="main-card-header">
+                            <div class="main-card-title">⚡ Skills</div>
+                        </div>
+                        <div class="main-card-body">
+                            <div class="skills-grid" id="skillsShowcase">
+                                <span class="skill-tag">C++</span>
+                                <span class="skill-tag">Python</span>
+                                <span class="skill-tag">JavaScript</span>
+                                <span class="skill-tag">React</span>
+                                <span class="skill-tag">Node.js</span>
+                                <span class="skill-tag">Data Structures</span>
+                                <span class="skill-tag">Algorithms</span>
+                                <span class="skill-tag">Dynamic Programming</span>
+                                <span class="skill-tag">Graph Theory</span>
+                                <span class="skill-tag">SQL</span>
+                                <span class="skill-tag">Git</span>
+                                <span class="skill-tag">Problem Solving</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Projects -->
+                    <div class="main-card">
+                        <div class="main-card-header">
+                            <div class="main-card-title">📁 Projects</div>
+                            <a href="projects.html" class="view-all">View All →</a>
+                        </div>
+                        <div class="main-card-body">
+                            <div class="projects-list" id="projectsList">
+                                <div class="project-item">
+                                    <div class="project-icon">🌐</div>
+                                    <div class="project-info">
+                                        <h4 class="project-name">UConnect</h4>
+                                        <p class="project-desc">AI-driven university collaboration platform</p>
+                                    </div>
+                                    <div class="project-tags">
+                                        <span class="project-tag">React</span>
+                                        <span class="project-tag">Node.js</span>
+                                    </div>
                                 </div>
-                                <div class="card-body" style="padding: 0;">
-                                    <div id="platformsList"></div>
+                                <div class="project-item">
+                                    <div class="project-icon">💼</div>
+                                    <div class="project-info">
+                                        <h4 class="project-name">Portfolio Website</h4>
+                                        <p class="project-desc">Personal portfolio with dark mode</p>
+                                    </div>
+                                    <div class="project-tags">
+                                        <span class="project-tag">HTML</span>
+                                        <span class="project-tag">CSS</span>
+                                    </div>
+                                </div>
+                                <div class="project-item">
+                                    <div class="project-icon">🧮</div>
+                                    <div class="project-info">
+                                        <h4 class="project-name">CP Problem Archive</h4>
+                                        <p class="project-desc">Collection of competitive programming solutions</p>
+                                    </div>
+                                    <div class="project-tags">
+                                        <span class="project-tag">C++</span>
+                                        <span class="project-tag">Algorithms</span>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- Contact Card -->
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 style="font-size: 1rem; font-weight: 600;">Contact & Links</h3>
+                    <!-- Achievements -->
+                    <div class="main-card">
+                        <div class="main-card-header">
+                            <div class="main-card-title">🏆 Achievements</div>
+                        </div>
+                        <div class="main-card-body">
+                            <div class="achievements-grid" id="achievementsGrid">
+                                <div class="achievement-item">
+                                    <div class="achievement-icon">🥇</div>
+                                    <div class="achievement-name">Expert Rank</div>
                                 </div>
-                                <div class="card-body">
-                                    <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.875rem;" id="contactLinks"></div>
+                                <div class="achievement-item">
+                                    <div class="achievement-icon">🔥</div>
+                                    <div class="achievement-name">30 Day Streak</div>
+                                </div>
+                                <div class="achievement-item">
+                                    <div class="achievement-icon">💯</div>
+                                    <div class="achievement-name">500 Problems</div>
+                                </div>
+                                <div class="achievement-item">
+                                    <div class="achievement-icon">🏅</div>
+                                    <div class="achievement-name">Contest Winner</div>
+                                </div>
+                                <div class="achievement-item">
+                                    <div class="achievement-icon">⭐</div>
+                                    <div class="achievement-name">Top Contributor</div>
+                                </div>
+                                <div class="achievement-item">
+                                    <div class="achievement-icon">🎯</div>
+                                    <div class="achievement-name">Problem Setter</div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- Education Card -->
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 style="font-size: 1rem; font-weight: 600;">Education</h3>
+                    <!-- Activity Heatmap -->
+                    <div class="main-card">
+                        <div class="main-card-header">
+                            <div class="main-card-title">📅 Activity Heatmap</div>
+                            <span class="activity-summary">921 contributions in the last year</span>
+                        </div>
+                        <div class="main-card-body">
+                            <div class="heatmap-container" id="activityHeatmap">
+                                <svg width="722" height="112" class="heatmap-svg">
+                                    <!-- Month labels -->
+                                    <text x="25" y="10" class="heatmap-month">Jan</text>
+                                    <text x="85" y="10" class="heatmap-month">Feb</text>
+                                    <text x="140" y="10" class="heatmap-month">Mar</text>
+                                    <text x="200" y="10" class="heatmap-month">Apr</text>
+                                    <text x="255" y="10" class="heatmap-month">May</text>
+                                    <text x="315" y="10" class="heatmap-month">Jun</text>
+                                    <text x="370" y="10" class="heatmap-month">Jul</text>
+                                    <text x="430" y="10" class="heatmap-month">Aug</text>
+                                    <text x="485" y="10" class="heatmap-month">Sep</text>
+                                    <text x="545" y="10" class="heatmap-month">Oct</text>
+                                    <text x="600" y="10" class="heatmap-month">Nov</text>
+                                    <text x="660" y="10" class="heatmap-month">Dec</text>
+                                    
+                                    <!-- Heatmap grid will be generated by JS -->
+                                    <g class="heatmap-grid" transform="translate(10, 20)" id="heatmapGrid"></g>
+                                </svg>
+                            </div>
+                            <div class="heatmap-legend">
+                                <span>Less</span>
+                                <div class="legend-boxes">
+                                    <div class="legend-box level-0"></div>
+                                    <div class="legend-box level-1"></div>
+                                    <div class="legend-box level-2"></div>
+                                    <div class="legend-box level-3"></div>
+                                    <div class="legend-box level-4"></div>
                                 </div>
-                                <div class="card-body">
-                                    <div style="display: flex; gap: 0.75rem;">
-                                        <div style="width: 40px; height: 40px; background: var(--gray-100); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">🎓</div>
-                                        <div>
-                                            <div style="font-weight: 500; font-size: 0.875rem;">Green University Of Bangladesh</div>
-                                            <div style="font-size: 0.75rem; color: var(--gray-500);">B.Sc. in Computer Science</div>
-                                            <div style="font-size: 0.75rem; color: var(--gray-500);">2021 - 2025</div>
+                                <span>More</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coding Journey Timeline -->
+                    <div class="main-card">
+                        <div class="main-card-header">
+                            <div class="main-card-title">🚀 Coding Journey</div>
+                        </div>
+                        <div class="main-card-body">
+                            <div class="timeline" id="codingTimeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-date">Dec 2024</div>
+                                        <div class="timeline-title">Reached Expert on Codeforces</div>
+                                        <div class="timeline-desc">Achieved 1600+ rating after consistent practice</div>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-date">Oct 2024</div>
+                                        <div class="timeline-title">500+ LeetCode Problems</div>
+                                        <div class="timeline-desc">Completed 500 problems milestone</div>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-date">Aug 2024</div>
+                                        <div class="timeline-title">Started UConnect Project</div>
+                                        <div class="timeline-desc">Building a platform for university collaboration</div>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-date">Jan 2024</div>
+                                        <div class="timeline-title">First Contest Win</div>
+                                        <div class="timeline-desc">Won university programming contest</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Problem Solving Stats -->
+                    <div class="main-card">
+                        <div class="main-card-header">
+                            <div class="main-card-title">📈 Problem Solving Stats</div>
+                        </div>
+                        <div class="main-card-body">
+                            <div class="problem-stats-grid">
+                                <div class="problem-category">
+                                    <div class="category-header">
+                                        <span class="category-name">Data Structures</span>
+                                        <span class="category-count">156 solved</span>
+                                    </div>
+                                    <div class="category-bar">
+                                        <div class="category-progress" style="width: 78%;"></div>
+                                    </div>
+                                </div>
+                                <div class="problem-category">
+                                    <div class="category-header">
+                                        <span class="category-name">Dynamic Programming</span>
+                                        <span class="category-count">124 solved</span>
+                                    </div>
+                                    <div class="category-bar">
+                                        <div class="category-progress" style="width: 62%; background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
+                                    </div>
+                                </div>
+                                <div class="problem-category">
+                                    <div class="category-header">
+                                        <span class="category-name">Graph Theory</span>
+                                        <span class="category-count">98 solved</span>
+                                    </div>
+                                    <div class="category-bar">
+                                        <div class="category-progress" style="width: 49%; background: linear-gradient(90deg, #10b981, #34d399);"></div>
+                                    </div>
+                                </div>
+                                <div class="problem-category">
+                                    <div class="category-header">
+                                        <span class="category-name">Math & Number Theory</span>
+                                        <span class="category-count">87 solved</span>
+                                    </div>
+                                    <div class="category-bar">
+                                        <div class="category-progress" style="width: 44%; background: linear-gradient(90deg, #8b5cf6, #a78bfa);"></div>
+                                    </div>
+                                </div>
+                                <div class="problem-category">
+                                    <div class="category-header">
+                                        <span class="category-name">String Algorithms</span>
+                                        <span class="category-count">65 solved</span>
+                                    </div>
+                                    <div class="category-bar">
+                                        <div class="category-progress" style="width: 33%; background: linear-gradient(90deg, #ec4899, #f472b6);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI/ML Projects Section (Conditional) -->
+                    <div class="main-card domain-section" data-domains="ai-ml,data-science">
+                        <div class="main-card-header">
+                            <div class="main-card-title">🤖 AI/ML Projects</div>
+                        </div>
+                        <div class="main-card-body">
+                            <div class="ml-projects-grid">
+                                <div class="ml-project-card">
+                                    <div class="ml-project-icon">🧠</div>
+                                    <div class="ml-project-info">
+                                        <h4>Neural Network Classifier</h4>
+                                        <p>Deep learning model for image classification with 95% accuracy</p>
+                                        <div class="ml-project-tags">
+                                            <span class="skill-tag">PyTorch</span>
+                                            <span class="skill-tag">CNN</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ml-project-card">
+                                    <div class="ml-project-icon">📈</div>
+                                    <div class="ml-project-info">
+                                        <h4>Stock Price Predictor</h4>
+                                        <p>LSTM-based time series forecasting model</p>
+                                        <div class="ml-project-tags">
+                                            <span class="skill-tag">TensorFlow</span>
+                                            <span class="skill-tag">LSTM</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ml-project-card">
+                                    <div class="ml-project-icon">💬</div>
+                                    <div class="ml-project-info">
+                                        <h4>Sentiment Analyzer</h4>
+                                        <p>NLP model for social media sentiment analysis</p>
+                                        <div class="ml-project-tags">
+                                            <span class="skill-tag">BERT</span>
+                                            <span class="skill-tag">NLP</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Main Content -->
-                        <div class="profile-main">
-                            <!-- Coding Stats Overview -->
-                            <div class="card coding-stats-card">
-                                <div class="card-header">
-                                    <h3 class="section-title"><span class="section-icon">📊</span> Platform Stats</h3>
+                    <!-- Cybersecurity/CTF Section (Conditional) -->
+                    <div class="main-card domain-section" data-domains="cybersecurity" style="display: none;">
+                        <div class="main-card-header">
+                            <div class="main-card-title">🔐 CTF & Security Stats</div>
+                        </div>
+                        <div class="main-card-body">
+                            <div class="ctf-stats-grid">
+                                <div class="ctf-stat-card">
+                                    <div class="ctf-stat-value">42</div>
+                                    <div class="ctf-stat-label">CTFs Played</div>
                                 </div>
-                                <div class="card-body">
-                                    <div class="stats-grid" id="codingStatsGrid"></div>
+                                <div class="ctf-stat-card">
+                                    <div class="ctf-stat-value">156</div>
+                                    <div class="ctf-stat-label">Challenges Solved</div>
+                                </div>
+                                <div class="ctf-stat-card">
+                                    <div class="ctf-stat-value">Top 5%</div>
+                                    <div class="ctf-stat-label">Global Ranking</div>
+                                </div>
+                                <div class="ctf-stat-card">
+                                    <div class="ctf-stat-value">3</div>
+                                    <div class="ctf-stat-label">1st Place Wins</div>
                                 </div>
                             </div>
-
-                            <!-- Skills Visualization -->
-                            <div class="card" style="margin-top: 1.5rem;">
-                                <div class="card-header">
-                                    <h3 class="section-title"><span class="section-icon">⚡</span> Skill Showcase</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="skills-showcase" id="skillsShowcase"></div>
-                                </div>
-                            </div>
-
-                            <!-- Problem Solving Progress (Conditional - only for CP domain) -->
-                            <div class="card domain-section" data-domains="competitive-programming" id="problemSolvingSection" style="margin-top: 1.5rem;">
-                                <div class="card-header">
-                                    <h3 class="section-title"><span class="section-icon">🎯</span> Problem Solving</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="problem-stats" id="problemStats"></div>
-                                </div>
-                            </div>
-
-                            <!-- Dynamic Platform Heatmaps Container (Conditional - mainly for CP) -->
-                            <div id="platformHeatmapsContainer" class="domain-section" data-domains="competitive-programming,software-engineering,web-development"></div>
-                            
-                            <!-- AI/ML Projects Section (Conditional - only for AI/ML domain) -->
-                            <div class="card domain-section" data-domains="ai-ml,data-science" id="mlProjectsSection" style="margin-top: 1.5rem; display: none;">
-                                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                                    <h3 class="section-title"><span class="section-icon">🤖</span> ML Models & Research</h3>
-                                    <a href="#" class="view-all-link">View All →</a>
-                                </div>
-                                <div class="card-body" id="mlProjectsList">
-                                    <div class="ml-projects-grid">
-                                        <div class="ml-project-card">
-                                            <div class="ml-project-icon">🧠</div>
-                                            <div class="ml-project-info">
-                                                <h4>Image Classifier CNN</h4>
-                                                <p>TensorFlow, Keras • 95.2% accuracy</p>
-                                                <div class="ml-project-tags">
-                                                    <span class="tag">Deep Learning</span>
-                                                    <span class="tag">Computer Vision</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="ml-project-card">
-                                            <div class="ml-project-icon">📝</div>
-                                            <div class="ml-project-info">
-                                                <h4>Sentiment Analysis NLP</h4>
-                                                <p>PyTorch, BERT • 89.7% F1 Score</p>
-                                                <div class="ml-project-tags">
-                                                    <span class="tag">NLP</span>
-                                                    <span class="tag">Transformers</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Cybersecurity Section (Conditional - only for Cyber domain) -->
-                            <div class="card domain-section" data-domains="cybersecurity" id="cyberSection" style="margin-top: 1.5rem; display: none;">
-                                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                                    <h3 class="section-title"><span class="section-icon">🔐</span> CTF & Security</h3>
-                                    <a href="#" class="view-all-link">View All →</a>
-                                </div>
-                                <div class="card-body" id="ctfStatsList">
-                                    <div class="ctf-stats-grid">
-                                        <div class="ctf-stat-card">
-                                            <span class="ctf-stat-value">42</span>
-                                            <span class="ctf-stat-label">CTFs Participated</span>
-                                        </div>
-                                        <div class="ctf-stat-card">
-                                            <span class="ctf-stat-value">156</span>
-                                            <span class="ctf-stat-label">Challenges Solved</span>
-                                        </div>
-                                        <div class="ctf-stat-card">
-                                            <span class="ctf-stat-value">Top 10%</span>
-                                            <span class="ctf-stat-label">CTFtime Rank</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Projects -->
-                            <div class="card" style="margin-top: 1.5rem;">
-                                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                                    <h3 class="section-title"><span class="section-icon">📁</span> Projects</h3>
-                                    <a href="projects.html" class="view-all-link">View All →</a>
-                                </div>
-                                <div class="card-body" id="projectsList"></div>
-                            </div>
-
-                            <!-- Achievements -->
-                            <div class="card" style="margin-top: 1.5rem;">
-                                <div class="card-header">
-                                    <h3 class="section-title"><span class="section-icon">🏆</span> Achievements & Badges</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="achievements-grid" id="achievementsGrid"></div>
+                            <div style="margin-top: 1rem;">
+                                <h4 style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Specializations</h4>
+                                <div class="skills-grid">
+                                    <span class="skill-tag">Web Exploitation</span>
+                                    <span class="skill-tag">Cryptography</span>
+                                    <span class="skill-tag">Reverse Engineering</span>
+                                    <span class="skill-tag">Binary Exploitation</span>
+                                    <span class="skill-tag">Forensics</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
             </div>
         </main>
     </div>
 
     <!-- Edit Profile Modal -->
     <div class="modal-overlay" id="editProfileModal">
-        <div class="modal">
+        <div class="modal" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
             <div class="modal-header">
                 <h3>Edit Profile</h3>
                 <button class="btn btn-ghost btn-sm" onclick="closeEditProfileModal()">
@@ -409,211 +2162,260 @@
             </div>
             <div class="modal-body">
                 <form id="editProfileForm">
-                    <div class="form-group">
-                        <label class="form-label">Full Name</label>
-                        <input type="text" class="form-input" id="editName" value="Taslim Ahmed Tamim">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Bio</label>
-                        <textarea class="form-input" id="editBio" rows="3">Passionate full-stack developer with a keen interest in AI/ML and building products that make a difference.</textarea>
-                    </div>
-                    
-                    <!-- Domain/Interest Selection -->
+                    <!-- Basic Info -->
                     <div class="form-section">
                         <div class="form-section-header">
-                            <span class="form-section-title">🎯 Your Domains & Interests</span>
-                            <span style="font-size: 0.75rem; color: var(--gray-500);">Select what you work on • Profile adapts to your selection</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            <span class="form-section-title">Basic Information</span>
                         </div>
-                        <div class="domain-selection-grid" id="domainSelectionGrid">
-                            <label class="domain-option" data-domain="competitive-programming">
-                                <input type="checkbox" name="domains" value="competitive-programming" id="domainCP">
-                                <span class="domain-option-content">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-input" id="editName" value="Taslim Ahmed Tamim">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Bio</label>
+                            <textarea class="form-input" id="editBio" rows="3">Passionate full-stack developer with a keen interest in AI/ML and building products that make a difference.</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="form-section">
+                        <div class="form-section-header">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            <span class="form-section-title">Contact Information</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" id="editEmail" value="taslimahmedtamim4u@gmail.com" placeholder="your.email@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Portfolio / Website</label>
+                            <input type="url" class="form-input" id="editWebsite" value="https://portfolio.dev" placeholder="https://yourwebsite.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">LinkedIn</label>
+                            <input type="url" class="form-input" id="editLinkedin" placeholder="https://linkedin.com/in/username">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Twitter / X</label>
+                            <input type="text" class="form-input" id="editTwitter" placeholder="@username">
+                        </div>
+                    </div>
+
+                    <!-- Domain Selection -->
+                    <div class="form-section">
+                        <div class="form-section-header">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+                            </svg>
+                            <span class="form-section-title">Domains & Interests</span>
+                        </div>
+                        <div class="domain-selection-grid">
+                            <label class="domain-option">
+                                <input type="checkbox" value="competitive-programming" checked>
+                                <div class="domain-option-content">
                                     <span class="domain-icon">🏆</span>
-                                    <span class="domain-name">Competitive Programming</span>
-                                </span>
+                                    <span class="domain-label">CP</span>
+                                </div>
                             </label>
-                            <label class="domain-option" data-domain="ai-ml">
-                                <input type="checkbox" name="domains" value="ai-ml" id="domainAI">
-                                <span class="domain-option-content">
+                            <label class="domain-option">
+                                <input type="checkbox" value="ai-ml" checked>
+                                <div class="domain-option-content">
                                     <span class="domain-icon">🤖</span>
-                                    <span class="domain-name">AI & Machine Learning</span>
-                                </span>
+                                    <span class="domain-label">AI/ML</span>
+                                </div>
                             </label>
-                            <label class="domain-option" data-domain="web-development">
-                                <input type="checkbox" name="domains" value="web-development" id="domainWeb">
-                                <span class="domain-option-content">
+                            <label class="domain-option">
+                                <input type="checkbox" value="web-development" checked>
+                                <div class="domain-option-content">
                                     <span class="domain-icon">🌐</span>
-                                    <span class="domain-name">Web Development</span>
-                                </span>
+                                    <span class="domain-label">Web Dev</span>
+                                </div>
                             </label>
-                            <label class="domain-option" data-domain="cybersecurity">
-                                <input type="checkbox" name="domains" value="cybersecurity" id="domainCyber">
-                                <span class="domain-option-content">
+                            <label class="domain-option">
+                                <input type="checkbox" value="cybersecurity">
+                                <div class="domain-option-content">
                                     <span class="domain-icon">🔐</span>
-                                    <span class="domain-name">Cybersecurity</span>
-                                </span>
+                                    <span class="domain-label">Security</span>
+                                </div>
                             </label>
-                            <label class="domain-option" data-domain="mobile-development">
-                                <input type="checkbox" name="domains" value="mobile-development" id="domainMobile">
-                                <span class="domain-option-content">
+                            <label class="domain-option">
+                                <input type="checkbox" value="mobile-development">
+                                <div class="domain-option-content">
                                     <span class="domain-icon">📱</span>
-                                    <span class="domain-name">Mobile Development</span>
-                                </span>
+                                    <span class="domain-label">Mobile</span>
+                                </div>
                             </label>
-                            <label class="domain-option" data-domain="data-science">
-                                <input type="checkbox" name="domains" value="data-science" id="domainData">
-                                <span class="domain-option-content">
+                            <label class="domain-option">
+                                <input type="checkbox" value="data-science">
+                                <div class="domain-option-content">
                                     <span class="domain-icon">📊</span>
-                                    <span class="domain-name">Data Science</span>
-                                </span>
+                                    <span class="domain-label">Data Sci</span>
+                                </div>
                             </label>
-                            <label class="domain-option" data-domain="devops">
-                                <input type="checkbox" name="domains" value="devops" id="domainDevOps">
-                                <span class="domain-option-content">
-                                    <span class="domain-icon">☁️</span>
-                                    <span class="domain-name">DevOps & Cloud</span>
-                                </span>
+                            <label class="domain-option">
+                                <input type="checkbox" value="devops">
+                                <div class="domain-option-content">
+                                    <span class="domain-icon">⚙️</span>
+                                    <span class="domain-label">DevOps</span>
+                                </div>
                             </label>
-                            <label class="domain-option" data-domain="software-engineering">
-                                <input type="checkbox" name="domains" value="software-engineering" id="domainSE">
-                                <span class="domain-option-content">
+                            <label class="domain-option">
+                                <input type="checkbox" value="software-engineering">
+                                <div class="domain-option-content">
                                     <span class="domain-icon">💻</span>
-                                    <span class="domain-name">Software Engineering</span>
-                                </span>
+                                    <span class="domain-label">SWE</span>
+                                </div>
                             </label>
                         </div>
                     </div>
-                    
+
+                    <!-- Skills Selection -->
                     <div class="form-section">
                         <div class="form-section-header">
-                            <span class="form-section-title">🔗 Link Your Coding Platforms</span>
-                            <span style="font-size: 0.75rem; color: var(--gray-500);">Toggle ON to link • Heatmap shows for linked platforms</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            <span class="form-section-title">Skills</span>
+                        </div>
+                        <div class="skills-input-container">
+                            <div class="skills-selected" id="selectedSkillsContainer">
+                                <!-- Selected skills will appear here -->
+                            </div>
+                            <input type="text" class="form-input" id="skillInput" placeholder="Type a skill and press Enter...">
+                        </div>
+                        <div class="skills-suggestions" id="skillsSuggestions">
+                            <span class="skill-suggestion" data-skill="C++">C++</span>
+                            <span class="skill-suggestion" data-skill="Python">Python</span>
+                            <span class="skill-suggestion" data-skill="JavaScript">JavaScript</span>
+                            <span class="skill-suggestion" data-skill="React">React</span>
+                            <span class="skill-suggestion" data-skill="Node.js">Node.js</span>
+                            <span class="skill-suggestion" data-skill="TypeScript">TypeScript</span>
+                            <span class="skill-suggestion" data-skill="Java">Java</span>
+                            <span class="skill-suggestion" data-skill="HTML/CSS">HTML/CSS</span>
+                            <span class="skill-suggestion" data-skill="SQL">SQL</span>
+                            <span class="skill-suggestion" data-skill="MongoDB">MongoDB</span>
+                            <span class="skill-suggestion" data-skill="Git">Git</span>
+                            <span class="skill-suggestion" data-skill="Docker">Docker</span>
+                            <span class="skill-suggestion" data-skill="AWS">AWS</span>
+                            <span class="skill-suggestion" data-skill="Data Structures">Data Structures</span>
+                            <span class="skill-suggestion" data-skill="Algorithms">Algorithms</span>
+                            <span class="skill-suggestion" data-skill="Dynamic Programming">Dynamic Programming</span>
+                            <span class="skill-suggestion" data-skill="Graph Theory">Graph Theory</span>
+                            <span class="skill-suggestion" data-skill="Machine Learning">Machine Learning</span>
+                            <span class="skill-suggestion" data-skill="Deep Learning">Deep Learning</span>
+                            <span class="skill-suggestion" data-skill="TensorFlow">TensorFlow</span>
+                            <span class="skill-suggestion" data-skill="PyTorch">PyTorch</span>
+                            <span class="skill-suggestion" data-skill="Problem Solving">Problem Solving</span>
+                        </div>
+                    </div>
+
+                    <!-- Platform Linking -->
+                    <div class="form-section">
+                        <div class="form-section-header">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                            </svg>
+                            <span class="form-section-title">Link Platforms</span>
                         </div>
                         
                         <!-- GitHub -->
-                        <div class="platform-link-item" id="platformItem_github">
-                            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; margin-bottom: 0.5rem;">
-                                <div style="width: 36px; height: 36px; background: #33315; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#333"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 500; font-size: 0.875rem;">GitHub</div>
-                                    <div style="font-size: 0.75rem; color: var(--gray-500);" id="githubStatus">Not linked</div>
-                                </div>
+                        <div class="platform-link-item">
+                            <div class="platform-link-header">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                                <span>GitHub</span>
                                 <label class="toggle-switch">
-                                    <input type="checkbox" id="showGithub" onchange="togglePlatformInput('github')">
+                                    <input type="checkbox" id="toggleGithub" checked>
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
-                            <input type="text" class="form-input platform-input" id="editGithub" placeholder="Enter your GitHub username" style="display: none;" oninput="updatePlatformStatus('github')">
+                            <input type="text" class="form-input platform-input" id="editGithub" placeholder="Username" value="taslimahmedtamim">
                         </div>
-                        
+
                         <!-- Codeforces -->
-                        <div class="platform-link-item" id="platformItem_codeforces">
-                            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; margin-bottom: 0.5rem;">
-                                <div style="width: 36px; height: 36px; background: #1da09c15; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#1da09c"><path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5h-3C.672 21 0 20.328 0 19.5V9c0-.828.672-1.5 1.5-1.5h3zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5v-15c0-.828.672-1.5 1.5-1.5h3zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5h3z"/></svg>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 500; font-size: 0.875rem;">Codeforces</div>
-                                    <div style="font-size: 0.75rem; color: var(--gray-500);" id="codeforcesStatus">Not linked</div>
-                                </div>
+                        <div class="platform-link-item">
+                            <div class="platform-link-header">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5h-3C.672 21 0 20.328 0 19.5V9c0-.828.672-1.5 1.5-1.5h3zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5v-15c0-.828.672-1.5 1.5-1.5h3zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5h3z"/></svg>
+                                <span>Codeforces</span>
                                 <label class="toggle-switch">
-                                    <input type="checkbox" id="showCodeforces" onchange="togglePlatformInput('codeforces')">
+                                    <input type="checkbox" id="toggleCodeforces" checked>
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
-                            <input type="text" class="form-input platform-input" id="editCodeforces" placeholder="Enter your Codeforces handle" style="display: none;" oninput="updatePlatformStatus('codeforces')">
+                            <input type="text" class="form-input platform-input" id="editCodeforces" placeholder="Handle" value="tamim_cf">
                         </div>
-                        
+
                         <!-- LeetCode -->
-                        <div class="platform-link-item" id="platformItem_leetcode">
-                            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; margin-bottom: 0.5rem;">
-                                <div style="width: 36px; height: 36px; background: #ffa11615; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#ffa116"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 500; font-size: 0.875rem;">LeetCode</div>
-                                    <div style="font-size: 0.75rem; color: var(--gray-500);" id="leetcodeStatus">Not linked</div>
-                                </div>
+                        <div class="platform-link-item">
+                            <div class="platform-link-header">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg>
+                                <span>LeetCode</span>
                                 <label class="toggle-switch">
-                                    <input type="checkbox" id="showLeetcode" onchange="togglePlatformInput('leetcode')">
+                                    <input type="checkbox" id="toggleLeetcode" checked>
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
-                            <input type="text" class="form-input platform-input" id="editLeetcode" placeholder="Enter your LeetCode username" style="display: none;" oninput="updatePlatformStatus('leetcode')">
+                            <input type="text" class="form-input platform-input" id="editLeetcode" placeholder="Username" value="tamim_lc">
                         </div>
-                        
+
                         <!-- VJudge -->
-                        <div class="platform-link-item" id="platformItem_vjudge">
-                            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; margin-bottom: 0.5rem;">
-                                <div style="width: 36px; height: 36px; background: #4e6ef215; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#4e6ef2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 500; font-size: 0.875rem;">VJudge</div>
-                                    <div style="font-size: 0.75rem; color: var(--gray-500);" id="vjudgeStatus">Not linked</div>
-                                </div>
+                        <div class="platform-link-item">
+                            <div class="platform-link-header">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                                <span>VJudge</span>
                                 <label class="toggle-switch">
-                                    <input type="checkbox" id="showVjudge" onchange="togglePlatformInput('vjudge')">
+                                    <input type="checkbox" id="toggleVjudge">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
-                            <input type="text" class="form-input platform-input" id="editVjudge" placeholder="Enter your VJudge username" style="display: none;" oninput="updatePlatformStatus('vjudge')">
+                            <input type="text" class="form-input platform-input" id="editVjudge" placeholder="Username">
                         </div>
-                        
+
                         <!-- AtCoder -->
-                        <div class="platform-link-item" id="platformItem_atcoder">
-                            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; margin-bottom: 0.5rem;">
-                                <div style="width: 36px; height: 36px; background: #22222215; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#222222"><circle cx="12" cy="12" r="10"/></svg>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 500; font-size: 0.875rem;">AtCoder</div>
-                                    <div style="font-size: 0.75rem; color: var(--gray-500);" id="atcoderStatus">Not linked</div>
-                                </div>
+                        <div class="platform-link-item">
+                            <div class="platform-link-header">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                                <span>AtCoder</span>
                                 <label class="toggle-switch">
-                                    <input type="checkbox" id="showAtcoder" onchange="togglePlatformInput('atcoder')">
+                                    <input type="checkbox" id="toggleAtcoder">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
-                            <input type="text" class="form-input platform-input" id="editAtcoder" placeholder="Enter your AtCoder username" style="display: none;" oninput="updatePlatformStatus('atcoder')">
+                            <input type="text" class="form-input platform-input" id="editAtcoder" placeholder="Username">
                         </div>
-                        
+
                         <!-- HackerRank -->
-                        <div class="platform-link-item" id="platformItem_hackerrank">
-                            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; margin-bottom: 0.5rem;">
-                                <div style="width: 36px; height: 36px; background: #00ea6415; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#00ea64"><path d="M12 0c1.285 0 9.75 4.886 10.392 6 .645 1.115.645 10.885 0 12S13.287 24 12 24s-9.75-4.885-10.395-6c-.641-1.115-.641-10.885 0-12C2.25 4.886 10.715 0 12 0z"/></svg>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 500; font-size: 0.875rem;">HackerRank</div>
-                                    <div style="font-size: 0.75rem; color: var(--gray-500);" id="hackerrankStatus">Not linked</div>
-                                </div>
+                        <div class="platform-link-item">
+                            <div class="platform-link-header">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c1.285 0 9.75 4.886 10.392 6 .645 1.115.645 10.885 0 12S13.287 24 12 24s-9.75-4.885-10.395-6c-.641-1.115-.641-10.885 0-12C2.25 4.886 10.715 0 12 0zm2.295 6.799c-.141 0-.258.115-.258.258v3.875H9.963V6.908h.701c.141 0 .254-.115.254-.258 0-.094-.049-.176-.123-.221L9.223 4.896c-.05-.059-.127-.098-.213-.098-.09 0-.166.037-.215.098l-1.57 1.535c-.074.045-.12.127-.12.221 0 .143.111.258.254.258h.699v10.141c0 .254.115.258.258.258h1.262c.143 0 .258-.115.258-.258v-3.875h4.074v3.917h-.699c-.143 0-.256.115-.256.258 0 .094.047.176.119.221l1.572 1.535c.049.059.127.098.215.098.086 0 .162-.037.211-.098l1.57-1.535c.076-.045.121-.127.121-.221 0-.143-.111-.258-.254-.258h-.701V6.908c0-.143-.113-.258-.256-.258h-1.259z"/></svg>
+                                <span>HackerRank</span>
                                 <label class="toggle-switch">
-                                    <input type="checkbox" id="showHackerrank" onchange="togglePlatformInput('hackerrank')">
+                                    <input type="checkbox" id="toggleHackerrank">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
-                            <input type="text" class="form-input platform-input" id="editHackerrank" placeholder="Enter your HackerRank username" style="display: none;" oninput="updatePlatformStatus('hackerrank')">
+                            <input type="text" class="form-input platform-input" id="editHackerrank" placeholder="Username">
                         </div>
-                        
+
                         <!-- CodeChef -->
-                        <div class="platform-link-item" id="platformItem_codechef">
-                            <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; margin-bottom: 0.5rem;">
-                                <div style="width: 36px; height: 36px; background: #5B463815; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#5B4638"><path d="M11.257.004c-.092.008-.297.062-.458.12C9.021.758 7.513 2.202 6.945 3.837c-.09.253-.103.996-.103 5.688 0 5.512.003 5.584.163 5.584.09 0 .233-.073.32-.163.142-.147.153-.383.173-3.852l.02-3.696.29-.503c.537-.93 1.3-1.5 2.323-1.733.406-.093.584-.093 5.727-.093h5.303l-.238-.287c-.764-.926-1.943-1.737-3.074-2.116-.733-.247-1.186-.344-2.073-.447-.66-.077-4.285-.15-4.52-.122z"/></svg>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 500; font-size: 0.875rem;">CodeChef</div>
-                                    <div style="font-size: 0.75rem; color: var(--gray-500);" id="codechefStatus">Not linked</div>
-                                </div>
+                        <div class="platform-link-item">
+                            <div class="platform-link-header">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.257.004c-.207.025-.399.139-.531.311-.034.044-.072.098-.085.12L.004 19.399l.058.141c.166.404.432.749.77 1.001.339.253.747.402 1.182.433.173.013.386-.002.558-.039.171-.037.363-.098.498-.159l.048-.022 8.882-4.108 8.882 4.108.048.022c.136.061.327.122.498.159.172.037.385.051.558.039.435-.031.843-.181 1.182-.433.339-.253.605-.597.77-1.001l.058-.141L13.361.434c-.013-.022-.051-.076-.085-.12-.132-.172-.324-.286-.531-.311-.109-.013-.25-.013-.359 0-.207.025-.399.139-.531.311-.034.044-.072.098-.085.12L2.999 16.599l.058.141c.166.404.432.749.77 1.001.252.188.546.323.858.393l6.315-2.923 6.315 2.923c.312-.07.606-.205.858-.393.339-.253.605-.597.77-1.001l.058-.141L10.771.434c-.013-.022-.051-.076-.085-.12-.132-.172-.324-.286-.531-.311-.055-.007-.11-.01-.165-.01-.065 0-.13.004-.195.011z"/></svg>
+                                <span>CodeChef</span>
                                 <label class="toggle-switch">
-                                    <input type="checkbox" id="showCodechef" onchange="togglePlatformInput('codechef')">
+                                    <input type="checkbox" id="toggleCodechef">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </div>
-                            <input type="text" class="form-input platform-input" id="editCodechef" placeholder="Enter your CodeChef username" style="display: none;" oninput="updatePlatformStatus('codechef')">
+                            <input type="text" class="form-input platform-input" id="editCodechef" placeholder="Username">
                         </div>
                     </div>
                 </form>
@@ -626,6 +2428,466 @@
     </div>
 
     <script src="../script.js"></script>
-    <script src="../profile-integration.js"></script>
+    <script>
+        // Modal functions
+        function openEditProfileModal() {
+            document.getElementById('editProfileModal').classList.add('active');
+        }
+        
+        function closeEditProfileModal() {
+            document.getElementById('editProfileModal').classList.remove('active');
+        }
+        
+        function saveProfile() {
+            // Update name
+            const newName = document.getElementById('editName')?.value;
+            if (newName) {
+                document.querySelector('.hero-name').childNodes[0].textContent = newName + ' ';
+            }
+
+            // Update bio
+            const newBio = document.getElementById('editBio')?.value;
+            if (newBio) {
+                document.getElementById('profileBio').textContent = newBio;
+            }
+
+            // Update contact info
+            updateContactInfo();
+
+            // Update skills display
+            updateSkillsDisplay();
+
+            // Show success notification
+            showNotification('Profile updated successfully!', 'success');
+
+            closeEditProfileModal();
+        }
+
+        // Sidebar toggle for mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('open');
+                    sidebarToggle.classList.toggle('active');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.toggle('active');
+                    }
+                });
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('open');
+                    sidebarToggle.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+
+            // Close sidebar when clicking a nav link on mobile
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('open');
+                        sidebarToggle.classList.remove('active');
+                        if (sidebarOverlay) {
+                            sidebarOverlay.classList.remove('active');
+                        }
+                    }
+                });
+            });
+
+            // Generate Activity Heatmap
+            generateHeatmap();
+
+            // Initialize domain selection functionality
+            initDomainSelection();
+
+            // Initialize platform toggles
+            initPlatformToggles();
+
+            // Initialize skills functionality
+            initSkillsSelection();
+
+            // Initialize contact info
+            initContactInfo();
+        });
+
+        // Heatmap Generation
+        function generateHeatmap() {
+            const grid = document.getElementById('heatmapGrid');
+            if (!grid) return;
+
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const colors = isDark 
+                ? ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353']
+                : ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'];
+
+            const weeks = 52;
+            const cellSize = 12;
+            const cellGap = 3;
+
+            let html = '';
+            
+            for (let week = 0; week < weeks; week++) {
+                for (let day = 0; day < 7; day++) {
+                    const x = week * (cellSize + cellGap);
+                    const y = day * (cellSize + cellGap);
+                    
+                    // Random activity level for demo
+                    const level = Math.floor(Math.random() * 5);
+                    const contributions = level === 0 ? 0 : Math.floor(Math.random() * 10) + level * 2;
+                    
+                    html += `<rect 
+                        class="heatmap-day" 
+                        x="${x}" 
+                        y="${y}" 
+                        width="${cellSize}" 
+                        height="${cellSize}" 
+                        fill="${colors[level]}"
+                        data-date="${getDateForCell(week, day)}"
+                        data-count="${contributions}"
+                    ><title>${contributions} contributions</title></rect>`;
+                }
+            }
+            
+            grid.innerHTML = html;
+        }
+
+        function getDateForCell(week, day) {
+            const today = new Date();
+            const startOfYear = new Date(today.getFullYear(), 0, 1);
+            const dayOfYear = week * 7 + day;
+            const date = new Date(startOfYear);
+            date.setDate(date.getDate() + dayOfYear);
+            return date.toISOString().split('T')[0];
+        }
+
+        // Update heatmap colors on theme change
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    generateHeatmap();
+                }
+            });
+        });
+        
+        observer.observe(document.documentElement, { attributes: true });
+
+        // Domain Selection Functionality
+        function initDomainSelection() {
+            const domainCheckboxes = document.querySelectorAll('.domain-option input[type="checkbox"]');
+            
+            domainCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateDomainSections();
+                });
+            });
+
+            // Initial update
+            updateDomainSections();
+        }
+
+        function updateDomainSections() {
+            const selectedDomains = [];
+            document.querySelectorAll('.domain-option input[type="checkbox"]:checked').forEach(cb => {
+                selectedDomains.push(cb.value);
+            });
+
+            // Show/hide domain-specific sections
+            document.querySelectorAll('.domain-section').forEach(section => {
+                const sectionDomains = section.getAttribute('data-domains').split(',');
+                const shouldShow = sectionDomains.some(d => selectedDomains.includes(d));
+                section.style.display = shouldShow ? 'block' : 'none';
+            });
+        }
+
+        // Platform Toggle Functionality
+        function initPlatformToggles() {
+            const toggles = document.querySelectorAll('.platform-link-item .toggle-switch input');
+            
+            toggles.forEach(toggle => {
+                const platformInput = toggle.closest('.platform-link-item').querySelector('.platform-input');
+                
+                // Set initial state
+                if (platformInput) {
+                    platformInput.disabled = !toggle.checked;
+                    platformInput.style.opacity = toggle.checked ? '1' : '0.5';
+                }
+
+                toggle.addEventListener('change', function() {
+                    if (platformInput) {
+                        platformInput.disabled = !this.checked;
+                        platformInput.style.opacity = this.checked ? '1' : '0.5';
+                    }
+                });
+            });
+        }
+
+        // Skills Selection Functionality
+        let selectedSkills = ['C++', 'Python', 'JavaScript', 'React', 'Node.js', 'Data Structures', 'Algorithms', 'Dynamic Programming', 'Graph Theory', 'SQL', 'Git', 'Problem Solving'];
+
+        function initSkillsSelection() {
+            const skillInput = document.getElementById('skillInput');
+            const suggestionsContainer = document.getElementById('skillsSuggestions');
+            
+            // Render initial selected skills
+            renderSelectedSkills();
+            updateSuggestions();
+
+            // Handle skill input
+            if (skillInput) {
+                skillInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const skill = this.value.trim();
+                        if (skill && !selectedSkills.includes(skill)) {
+                            selectedSkills.push(skill);
+                            renderSelectedSkills();
+                            updateSkillsDisplay();
+                        }
+                        this.value = '';
+                    }
+                });
+            }
+
+            // Handle suggestion clicks
+            if (suggestionsContainer) {
+                suggestionsContainer.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('skill-suggestion')) {
+                        const skill = e.target.getAttribute('data-skill');
+                        if (!selectedSkills.includes(skill)) {
+                            selectedSkills.push(skill);
+                            renderSelectedSkills();
+                            updateSuggestions();
+                            updateSkillsDisplay();
+                        }
+                    }
+                });
+            }
+        }
+
+        function renderSelectedSkills() {
+            const container = document.getElementById('selectedSkillsContainer');
+            if (!container) return;
+
+            container.innerHTML = selectedSkills.map(skill => `
+                <span class="selected-skill">
+                    ${skill}
+                    <span class="remove-skill" onclick="removeSkill('${skill.replace(/'/g, "\\'")}')">×</span>
+                </span>
+            `).join('');
+        }
+
+        function removeSkill(skill) {
+            selectedSkills = selectedSkills.filter(s => s !== skill);
+            renderSelectedSkills();
+            updateSuggestions();
+            updateSkillsDisplay();
+        }
+
+        function updateSuggestions() {
+            const suggestions = document.querySelectorAll('.skill-suggestion');
+            suggestions.forEach(suggestion => {
+                const skill = suggestion.getAttribute('data-skill');
+                if (selectedSkills.includes(skill)) {
+                    suggestion.classList.add('selected');
+                } else {
+                    suggestion.classList.remove('selected');
+                }
+            });
+        }
+
+        function updateSkillsDisplay() {
+            const skillsShowcase = document.getElementById('skillsShowcase');
+            if (skillsShowcase) {
+                skillsShowcase.innerHTML = selectedSkills.map(skill => 
+                    `<span class="skill-tag">${skill}</span>`
+                ).join('');
+            }
+        }
+
+        // Contact Info Data
+        let contactInfo = {
+            email: 'taslimahmedtamim4u@gmail.com',
+            website: 'https://portfolio.dev',
+            linkedin: '',
+            twitter: ''
+        };
+
+        // Initialize contact display on page load
+        function initContactInfo() {
+            renderContactLinks();
+        }
+
+        function renderContactLinks() {
+            const container = document.getElementById('contactLinks');
+            if (!container) return;
+
+            let html = '';
+
+            // Email
+            if (contactInfo.email) {
+                html += `
+                    <div class="contact-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        <a href="mailto:${contactInfo.email}">${contactInfo.email}</a>
+                    </div>
+                `;
+            }
+
+            // Website
+            if (contactInfo.website) {
+                const displayUrl = contactInfo.website.replace(/^https?:\/\//, '');
+                html += `
+                    <div class="contact-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                        </svg>
+                        <a href="${contactInfo.website}" target="_blank">${displayUrl}</a>
+                    </div>
+                `;
+            }
+
+            // LinkedIn
+            if (contactInfo.linkedin) {
+                const displayLinkedin = contactInfo.linkedin.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//, '');
+                html += `
+                    <div class="contact-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                            <rect x="2" y="9" width="4" height="12"/>
+                            <circle cx="4" cy="4" r="2"/>
+                        </svg>
+                        <a href="${contactInfo.linkedin}" target="_blank">${displayLinkedin}</a>
+                    </div>
+                `;
+            }
+
+            // Twitter
+            if (contactInfo.twitter) {
+                const displayTwitter = contactInfo.twitter.startsWith('@') ? contactInfo.twitter : `@${contactInfo.twitter}`;
+                const twitterUrl = `https://twitter.com/${contactInfo.twitter.replace('@', '')}`;
+                html += `
+                    <div class="contact-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                        </svg>
+                        <a href="${twitterUrl}" target="_blank">${displayTwitter}</a>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html || '<p style="color: var(--text-tertiary); font-size: 0.8rem;">No contact info added</p>';
+        }
+
+        function updateContactInfo() {
+            contactInfo.email = document.getElementById('editEmail')?.value || '';
+            contactInfo.website = document.getElementById('editWebsite')?.value || '';
+            contactInfo.linkedin = document.getElementById('editLinkedin')?.value || '';
+            contactInfo.twitter = document.getElementById('editTwitter')?.value || '';
+            renderContactLinks();
+        }
+
+        // Sync All Platforms
+        function syncAllPlatforms() {
+            const syncBtn = document.querySelector('.sync-btn');
+            if (syncBtn) {
+                syncBtn.classList.add('syncing');
+                syncBtn.innerHTML = `
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin">
+                        <path d="M23 4v6h-6"/>
+                        <path d="M1 20v-6h6"/>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/>
+                        <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/>
+                    </svg>
+                `;
+            }
+
+            // Simulate API sync
+            setTimeout(() => {
+                if (syncBtn) {
+                    syncBtn.classList.remove('syncing');
+                    syncBtn.innerHTML = `
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    `;
+                    
+                    // Reset back to sync icon after a moment
+                    setTimeout(() => {
+                        syncBtn.innerHTML = `
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 4v6h-6"/>
+                                <path d="M1 20v-6h6"/>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/>
+                                <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/>
+                            </svg>
+                        `;
+                    }, 2000);
+                }
+
+                // Show success message
+                showNotification('All platforms synced successfully!', 'success');
+            }, 1500);
+        }
+
+        // Simple notification function
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">×</button>
+            `;
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    </script>
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        .sync-btn .spin {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </body>
 </html>
