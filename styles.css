@@ -693,8 +693,11 @@ section {
 
 .section-header {
     text-align: center;
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto var(--spacing-3xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .section-badge {
@@ -704,18 +707,29 @@ section {
     background: rgba(37, 99, 235, 0.1);
     color: var(--primary);
     font-size: var(--font-size-sm);
-    font-weight: 500;
+    font-weight: 600;
     border-radius: var(--radius-full);
     margin-bottom: var(--spacing-md);
+    letter-spacing: 0.025em;
 }
 
 .section-title {
     margin-bottom: var(--spacing-md);
+    line-height: 1.25;
+    font-weight: 700;
+    text-align: center;
 }
 
 .section-subtitle {
     color: var(--gray-600);
     font-size: var(--font-size-lg);
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+[data-theme="dark"] .section-subtitle {
+    color: var(--gray-400);
 }
 
 /* ==========================================
@@ -763,6 +777,54 @@ section {
 .feature-card p {
     color: var(--gray-600);
     font-size: var(--font-size-sm);
+}
+
+/* Feature list used inside highlight cards */
+.feature-list {
+    margin-top: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    color: var(--gray-700);
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+}
+
+.feature-list li svg {
+    flex-shrink: 0;
+    color: var(--primary);
+    width: 16px;
+    height: 16px;
+    margin-top: 0.125rem;
+}
+
+.feature-list a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color var(--transition-fast);
+}
+
+.feature-list a:hover {
+    text-decoration-color: var(--primary);
+}
+
+[data-theme="dark"] .feature-list li {
+    color: var(--gray-300);
+}
+
+[data-theme="dark"] .feature-list a {
+    color: var(--primary-light);
+}
+
+[data-theme="dark"] .feature-list a:hover {
+    text-decoration-color: var(--primary-light);
 }
 
 /* ==========================================
