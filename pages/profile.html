@@ -615,13 +615,45 @@
         /* Content Grid */
         .content-grid {
             display: grid;
-            grid-template-columns: 220px minmax(0, 1fr);
-            gap: 1.25rem;
+            grid-template-columns: 200px 1fr;
+            gap: 1.5rem;
+        }
+
+        .profile-sidebar-col {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        .profile-main-col {
+            display: contents;
+        }
+
+        .about-education-row {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .profile-main-col > .main-card {
+            grid-column: 1 / -1;
         }
 
         @media (max-width: 1000px) {
             .content-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .profile-sidebar-col {
+                grid-column: 1;
+                grid-row: auto;
+            }
+
+            .about-education-row {
+                grid-column: 1;
+                grid-row: auto;
+            }
+
+            .profile-main-col > .main-card {
+                grid-column: 1;
             }
         }
 
@@ -666,8 +698,9 @@
         .platform-item {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 0.75rem;
-            padding: 0.625rem 0;
+            padding: 0.75rem 0;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -692,17 +725,22 @@
             align-items: center;
             justify-content: center;
             font-size: 1rem;
+            flex-shrink: 0;
         }
 
         .platform-info {
             flex: 1;
             min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
         }
 
         .platform-name {
             font-size: 0.8rem;
             font-weight: 500;
             color: var(--text-primary);
+            line-height: 1;
         }
 
         [data-theme="dark"] .platform-name {
@@ -712,6 +750,7 @@
         .platform-handle {
             font-size: 0.7rem;
             color: var(--text-tertiary);
+            line-height: 1;
         }
 
         [data-theme="dark"] .platform-handle {
@@ -723,6 +762,8 @@
             font-weight: 600;
             padding: 0.2rem 0.5rem;
             border-radius: 100px;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
         /* Contact Links */
@@ -733,6 +774,8 @@
             font-size: 0.8rem;
             color: var(--text-secondary);
             padding: 0.375rem 0;
+            overflow: hidden;
+            min-width: 0;
         }
 
         [data-theme="dark"] .contact-item {
@@ -750,6 +793,8 @@
             color: var(--primary);
             text-decoration: none;
             word-break: break-all;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .contact-item a:hover {
@@ -818,6 +863,7 @@
 
         .main-card-body {
             padding: 1.25rem;
+            overflow: hidden;
         }
 
         .view-all {
@@ -834,20 +880,21 @@
         /* Platform Stats Grid */
         .platform-stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
-            overflow-x: auto;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        @media (max-width: 1024px) {
+            .platform-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 700px) {
             .platform-stats-grid {
-                display: flex;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                gap: 1rem;
-            }
-            .platform-stat-card {
-                min-width: 180px;
+                grid-template-columns: 1fr;
             }
         }
 
@@ -861,6 +908,7 @@
             border: 1px solid var(--border-color);
             transition: all 0.2s;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
         }
 
         [data-theme="dark"] .platform-stat-card {
@@ -899,6 +947,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .platform-stat-info h4 {
@@ -947,6 +996,9 @@
             color: var(--primary);
             border-radius: 100px;
             border: 1px solid rgba(59, 130, 246, 0.2);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         [data-theme="dark"] .skill-tag {
@@ -1012,6 +1064,8 @@
             border-radius: 10px;
             border: 1px solid var(--border-color);
             transition: all 0.2s;
+            overflow: hidden;
+            flex-shrink: 0;
         }
 
         [data-theme="dark"] .project-item {
@@ -1326,6 +1380,7 @@
             padding: 1rem;
             border-radius: 10px;
             border: 1px solid var(--border-color);
+            overflow: hidden;
         }
 
         [data-theme="dark"] .timeline-content {
@@ -1367,18 +1422,22 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
+            overflow: hidden;
         }
 
         .problem-category {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            overflow: hidden;
         }
 
         .category-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            overflow: hidden;
+            gap: 1rem;
         }
 
         .category-name {
@@ -1697,53 +1756,6 @@
             <div class="content-grid">
                 <!-- Sidebar -->
                 <div class="profile-sidebar-col">
-                    <!-- Linked Platforms -->
-                    <div class="sidebar-card">
-                        <div class="sidebar-card-title" style="display: flex; justify-content: space-between; align-items: center;">
-                            <span>Platforms</span>
-                            <button class="sync-btn" onclick="syncAllPlatforms()" title="Sync All Platforms">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M23 4v6h-6"/>
-                                    <path d="M1 20v-6h6"/>
-                                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/>
-                                    <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <div id="platformsList">
-                            <div class="platform-item">
-                                <div class="platform-icon" style="background: rgba(26, 115, 232, 0.1);">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#1a73e8"><path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5h-3C.672 21 0 20.328 0 19.5V9c0-.828.672-1.5 1.5-1.5h3zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5v-15c0-.828.672-1.5 1.5-1.5h3zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5h3z"/></svg>
-                                </div>
-                                <div class="platform-info">
-                                    <div class="platform-name">Codeforces</div>
-                                    <div class="platform-handle">@tamim_cf</div>
-                                </div>
-                                <span class="platform-badge" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">Expert</span>
-                            </div>
-                            <div class="platform-item">
-                                <div class="platform-icon" style="background: rgba(255, 161, 22, 0.1);">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffa116"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg>
-                                </div>
-                                <div class="platform-info">
-                                    <div class="platform-name">LeetCode</div>
-                                    <div class="platform-handle">@tamim_lc</div>
-                                </div>
-                                <span class="platform-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">23 🔥</span>
-                            </div>
-                            <div class="platform-item">
-                                <div class="platform-icon" style="background: rgba(51, 51, 51, 0.1);">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#333"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                                </div>
-                                <div class="platform-info">
-                                    <div class="platform-name">GitHub</div>
-                                    <div class="platform-handle">@taslimahmedtamim</div>
-                                </div>
-                                <span class="platform-badge" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">45 repos</span>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Contact -->
                     <div class="sidebar-card">
                         <div class="sidebar-card-title">Contact</div>
@@ -1778,9 +1790,12 @@
                         </div>
                         <div class="main-card-body">
                             <div class="platform-stats-grid" id="codingStatsGrid">
+                                <!-- Codeforces -->
                                 <div class="platform-stat-card">
                                     <div class="platform-stat-icon" style="background: rgba(26, 115, 232, 0.1);">
-                                        <svg viewBox="0 0 24 24" fill="#1a73e8"><path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5h-3C.672 21 0 20.328 0 19.5V9c0-.828.672-1.5 1.5-1.5h3zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5v-15c0-.828.672-1.5 1.5-1.5h3zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5h3z"/></svg>
+                                        <svg viewBox="0 0 24 24" fill="#1a73e8">
+                                            <path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5h-3C.672 21 0 20.328 0 19.5V9c0-.828.672-1.5 1.5-1.5h3zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5v-15c0-.828.672-1.5 1.5-1.5h3zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5h3z" />
+                                        </svg>
                                     </div>
                                     <div class="platform-stat-info">
                                         <div class="stat-number">
@@ -1790,9 +1805,13 @@
                                         <p>Codeforces</p>
                                     </div>
                                 </div>
+
+                                <!-- LeetCode -->
                                 <div class="platform-stat-card">
                                     <div class="platform-stat-icon" style="background: rgba(255, 161, 22, 0.1);">
-                                        <svg viewBox="0 0 24 24" fill="#ffa116"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg>
+                                        <svg viewBox="0 0 24 24" fill="#ffa116">
+                                            <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z" />
+                                        </svg>
                                     </div>
                                     <div class="platform-stat-info">
                                         <div class="stat-number">
@@ -1802,9 +1821,13 @@
                                         <p>LeetCode</p>
                                     </div>
                                 </div>
+
+                                <!-- GitHub -->
                                 <div class="platform-stat-card">
                                     <div class="platform-stat-icon" style="background: rgba(51, 51, 51, 0.08);">
-                                        <svg viewBox="0 0 24 24" fill="#333"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                                        <svg viewBox="0 0 24 24" fill="#333">
+                                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                                        </svg>
                                     </div>
                                     <div class="platform-stat-info">
                                         <div class="stat-number">
@@ -1962,6 +1985,18 @@
                         </div>
                     </div>
 
+                    <!-- Platforms Heatmap -->
+                    <div class="main-card">
+                        <div class="main-card-header">
+                            <div class="main-card-title">🔥 Platform Activity Heatmaps</div>
+                        </div>
+                        <div class="main-card-body">
+                            <div id="platformHeatmapsContainer" style="display: grid; gap: 2rem; overflow: hidden;">
+                                <!-- Platform heatmaps will be rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Coding Journey Timeline -->
                     <div class="main-card">
                         <div class="main-card-header">
@@ -2005,100 +2040,65 @@
                         </div>
                     </div>
 
-                    <!-- Problem Solving Stats -->
+                    <!-- Overall Skill Set Stats -->
                     <div class="main-card">
                         <div class="main-card-header">
-                            <div class="main-card-title">📈 Problem Solving Stats</div>
+                            <div class="main-card-title">🎯 Overall Skill Set</div>
                         </div>
                         <div class="main-card-body">
                             <div class="problem-stats-grid">
                                 <div class="problem-category">
                                     <div class="category-header">
-                                        <span class="category-name">Data Structures</span>
-                                        <span class="category-count">156 solved</span>
+                                        <span class="category-name">Problem Solving</span>
+                                        <span class="category-count">Expert</span>
                                     </div>
                                     <div class="category-bar">
-                                        <div class="category-progress" style="width: 78%;"></div>
+                                        <div class="category-progress" style="width: 92%;"></div>
                                     </div>
                                 </div>
                                 <div class="problem-category">
                                     <div class="category-header">
-                                        <span class="category-name">Dynamic Programming</span>
-                                        <span class="category-count">124 solved</span>
+                                        <span class="category-name">Backend Development</span>
+                                        <span class="category-count">Advanced</span>
                                     </div>
                                     <div class="category-bar">
-                                        <div class="category-progress" style="width: 62%; background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
+                                        <div class="category-progress" style="width: 85%; background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div>
                                     </div>
                                 </div>
                                 <div class="problem-category">
                                     <div class="category-header">
-                                        <span class="category-name">Graph Theory</span>
-                                        <span class="category-count">98 solved</span>
+                                        <span class="category-name">Web Development</span>
+                                        <span class="category-count">Advanced</span>
                                     </div>
                                     <div class="category-bar">
-                                        <div class="category-progress" style="width: 49%; background: linear-gradient(90deg, #10b981, #34d399);"></div>
+                                        <div class="category-progress" style="width: 80%; background: linear-gradient(90deg, #10b981, #34d399);"></div>
                                     </div>
                                 </div>
                                 <div class="problem-category">
                                     <div class="category-header">
-                                        <span class="category-name">Math & Number Theory</span>
-                                        <span class="category-count">87 solved</span>
+                                        <span class="category-name">Cybersecurity & CTF</span>
+                                        <span class="category-count">Intermediate</span>
                                     </div>
                                     <div class="category-bar">
-                                        <div class="category-progress" style="width: 44%; background: linear-gradient(90deg, #8b5cf6, #a78bfa);"></div>
+                                        <div class="category-progress" style="width: 65%; background: linear-gradient(90deg, #8b5cf6, #a78bfa);"></div>
                                     </div>
                                 </div>
                                 <div class="problem-category">
                                     <div class="category-header">
-                                        <span class="category-name">String Algorithms</span>
-                                        <span class="category-count">65 solved</span>
+                                        <span class="category-name">Database Design</span>
+                                        <span class="category-count">Advanced</span>
                                     </div>
                                     <div class="category-bar">
-                                        <div class="category-progress" style="width: 33%; background: linear-gradient(90deg, #ec4899, #f472b6);"></div>
+                                        <div class="category-progress" style="width: 78%; background: linear-gradient(90deg, #ec4899, #f472b6);"></div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- AI/ML Projects Section (Conditional) -->
-                    <div class="main-card domain-section" data-domains="ai-ml,data-science">
-                        <div class="main-card-header">
-                            <div class="main-card-title">🤖 AI/ML Projects</div>
-                        </div>
-                        <div class="main-card-body">
-                            <div class="ml-projects-grid">
-                                <div class="ml-project-card">
-                                    <div class="ml-project-icon">🧠</div>
-                                    <div class="ml-project-info">
-                                        <h4>Neural Network Classifier</h4>
-                                        <p>Deep learning model for image classification with 95% accuracy</p>
-                                        <div class="ml-project-tags">
-                                            <span class="skill-tag">PyTorch</span>
-                                            <span class="skill-tag">CNN</span>
-                                        </div>
+                                <div class="problem-category">
+                                    <div class="category-header">
+                                        <span class="category-name">System Design</span>
+                                        <span class="category-count">Intermediate</span>
                                     </div>
-                                </div>
-                                <div class="ml-project-card">
-                                    <div class="ml-project-icon">📈</div>
-                                    <div class="ml-project-info">
-                                        <h4>Stock Price Predictor</h4>
-                                        <p>LSTM-based time series forecasting model</p>
-                                        <div class="ml-project-tags">
-                                            <span class="skill-tag">TensorFlow</span>
-                                            <span class="skill-tag">LSTM</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="ml-project-card">
-                                    <div class="ml-project-icon">💬</div>
-                                    <div class="ml-project-info">
-                                        <h4>Sentiment Analyzer</h4>
-                                        <p>NLP model for social media sentiment analysis</p>
-                                        <div class="ml-project-tags">
-                                            <span class="skill-tag">BERT</span>
-                                            <span class="skill-tag">NLP</span>
-                                        </div>
+                                    <div class="category-bar">
+                                        <div class="category-progress" style="width: 70%; background: linear-gradient(90deg, #06b6d4, #22d3ee);"></div>
                                     </div>
                                 </div>
                             </div>
@@ -2417,6 +2417,65 @@
                             </div>
                             <input type="text" class="form-input platform-input" id="editCodechef" placeholder="Username">
                         </div>
+
+                        <!-- CTF Platforms Section -->
+                        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                            <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                🔓 CTF & Security Platforms
+                            </h4>
+
+                            <!-- HackTheBox -->
+                            <div class="platform-link-item">
+                                <div class="platform-link-header">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L2 4v8c0 8 10 12 10 12s10-4 10-12V4l-10-4zm0 3l7 2.5v6.5c0 5-7 8-7 8s-7-3-7-8V5.5L12 3z"/></svg>
+                                    <span>HackTheBox</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="toggleHackthebox">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <input type="text" class="form-input platform-input" id="editHackthebox" placeholder="Username">
+                            </div>
+
+                            <!-- TryHackMe -->
+                            <div class="platform-link-item">
+                                <div class="platform-link-header">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                    <span>TryHackMe</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="toggleTryhackme">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <input type="text" class="form-input platform-input" id="editTryhackme" placeholder="Username">
+                            </div>
+
+                            <!-- PicoCTF -->
+                            <div class="platform-link-item">
+                                <div class="platform-link-header">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
+                                    <span>PicoCTF</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="togglePicoctf">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <input type="text" class="form-input platform-input" id="editPicoctf" placeholder="Username">
+                            </div>
+
+                            <!-- OverTheWire -->
+                            <div class="platform-link-item">
+                                <div class="platform-link-header">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9h4V5H3v4zm0 5h4v-4H3v4zm5 0h4v-4H8v4zm5 0h4v-4h-4v4zm-10 5h4v-4H3v4zm5 0h4v-4H8v4zm5 0h4v-4h-4v4zm5-14v4h4V5h-4zm0 9h4v-4h-4v4z"/></svg>
+                                    <span>OverTheWire</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="toggleOverthewire">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <input type="text" class="form-input platform-input" id="editOverthewire" placeholder="Username">
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -2454,14 +2513,34 @@
             // Update contact info
             updateContactInfo();
 
+            // Update platforms display
+            updatePlatformsDisplay();
+
+            // Update platform activity
+            renderPlatformActivity();
+
             // Update skills display
             updateSkillsDisplay();
 
             // Show success notification
             showNotification('Profile updated successfully!', 'success');
-
             closeEditProfileModal();
         }
+
+        // Platform Data Structure
+        let platformsData = {
+            github: { name: 'GitHub', icon: 'github', handle: 'taslimahmedtamim', enabled: true, badge: '45 repos', activity: 128, lastActive: '2024-12-15', category: 'coding' },
+            codeforces: { name: 'Codeforces', icon: 'codeforces', handle: 'tamim_cf', enabled: true, badge: 'Expert', activity: 87, lastActive: '2024-12-14', category: 'coding' },
+            leetcode: { name: 'LeetCode', icon: 'leetcode', handle: 'tamim_lc', enabled: true, badge: '23 🔥', activity: 156, lastActive: '2024-12-15', category: 'coding' },
+            vjudge: { name: 'VJudge', icon: 'vjudge', handle: '', enabled: false, badge: '', activity: 0, lastActive: '', category: 'coding' },
+            atcoder: { name: 'AtCoder', icon: 'atcoder', handle: '', enabled: false, badge: '', activity: 0, lastActive: '', category: 'coding' },
+            hackerrank: { name: 'HackerRank', icon: 'hackerrank', handle: '', enabled: false, badge: '', activity: 0, lastActive: '', category: 'coding' },
+            codechef: { name: 'CodeChef', icon: 'codechef', handle: '', enabled: false, badge: '', activity: 0, lastActive: '', category: 'coding' },
+            hackthebox: { name: 'HackTheBox', icon: 'hackthebox', handle: '', enabled: false, badge: '', activity: 0, lastActive: '', category: 'ctf' },
+            tryhackme: { name: 'TryHackMe', icon: 'tryhackme', handle: '', enabled: false, badge: '', activity: 0, lastActive: '', category: 'ctf' },
+            picoctf: { name: 'PicoCTF', icon: 'picoctf', handle: '', enabled: false, badge: '', activity: 0, lastActive: '', category: 'ctf' },
+            overthewire: { name: 'OverTheWire', icon: 'overthewire', handle: '', enabled: false, badge: '', activity: 0, lastActive: '', category: 'ctf' }
+        };
 
         // Sidebar toggle for mobile
         document.addEventListener('DOMContentLoaded', function() {
@@ -2515,6 +2594,15 @@
 
             // Initialize contact info
             initContactInfo();
+
+            // Initialize platforms display
+            initPlatformsDisplay();
+
+            // Initialize platform heatmaps
+            renderPlatformHeatmaps();
+
+            // Listen to platform input changes
+            initPlatformListeners();
         });
 
         // Heatmap Generation
@@ -2795,6 +2883,220 @@
             contactInfo.linkedin = document.getElementById('editLinkedin')?.value || '';
             contactInfo.twitter = document.getElementById('editTwitter')?.value || '';
             renderContactLinks();
+        }
+
+        // Initialize platform display listeners
+        function initPlatformListeners() {
+            const platformInputs = ['editGithub', 'editCodeforces', 'editLeetcode', 'editVjudge', 'editAtcoder', 'editHackerrank', 'editCodechef', 'editHackthebox', 'editTryhackme', 'editPicoctf', 'editOverthewire'];
+            const platformToggles = ['toggleGithub', 'toggleCodeforces', 'toggleLeetcode', 'toggleVjudge', 'toggleAtcoder', 'toggleHackerrank', 'toggleCodechef', 'toggleHackthebox', 'toggleTryhackme', 'togglePicoctf', 'toggleOverthewire'];
+            const platformKeys = ['github', 'codeforces', 'leetcode', 'vjudge', 'atcoder', 'hackerrank', 'codechef', 'hackthebox', 'tryhackme', 'picoctf', 'overthewire'];
+
+            platformInputs.forEach((inputId, index) => {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    // Sync initial value
+                    platformsData[platformKeys[index]].handle = input.value;
+                    input.addEventListener('input', () => {
+                        platformsData[platformKeys[index]].handle = input.value;
+                        updatePlatformsDisplay();
+                        renderPlatformHeatmaps();
+                    });
+                }
+            });
+
+            platformToggles.forEach((toggleId, index) => {
+                const toggle = document.getElementById(toggleId);
+                if (toggle) {
+                    // Sync initial toggle state from form
+                    platformsData[platformKeys[index]].enabled = toggle.checked;
+                    toggle.addEventListener('change', () => {
+                        platformsData[platformKeys[index]].enabled = toggle.checked;
+                        updatePlatformsDisplay();
+                        renderPlatformHeatmaps();
+                    });
+                }
+            });
+        }
+
+        // Initialize platforms display
+        function initPlatformsDisplay() {
+            updatePlatformsDisplay();
+        }
+
+        // Update platforms display in sidebar
+        function updatePlatformsDisplay() {
+            const platformsList = document.getElementById('platformsList');
+            if (!platformsList) return;
+
+            let html = '';
+            const platformOrder = ['codeforces', 'leetcode', 'github', 'vjudge', 'atcoder', 'hackerrank', 'codechef', 'hackthebox', 'tryhackme', 'picoctf', 'overthewire'];
+            const platformIcons = {
+                github: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#333"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>',
+                codeforces: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#1a73e8"><path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5h-3C.672 21 0 20.328 0 19.5V9c0-.828.672-1.5 1.5-1.5h3zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5v-15c0-.828.672-1.5 1.5-1.5h3zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5h3z" /></svg>',
+                leetcode: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#ffa116"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z" /></svg>',
+                vjudge: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#666"><circle cx="12" cy="12" r="10"/></svg>',
+                atcoder: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#666"><circle cx="12" cy="12" r="10"/></svg>',
+                hackerrank: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#666"><path d="M12 0c1.285 0 9.75 4.886 10.392 6 .645 1.115.645 10.885 0 12S13.287 24 12 24s-9.75-4.885-10.395-6c-.641-1.115-.641-10.885 0-12C2.25 4.886 10.715 0 12 0zm2.295 6.799c-.141 0-.258.115-.258.258v3.875H9.963V6.908h.701c.141 0 .254-.115.254-.258 0-.094-.049-.176-.123-.221L9.223 4.896c-.05-.059-.127-.098-.213-.098-.09 0-.166.037-.215.098l-1.57 1.535c-.074.045-.12.127-.12.221 0 .143.111.258.254.258h.699v10.141c0 .254.115.258.258.258h1.262c.143 0 .258-.115.258-.258v-3.875h4.074v3.917h-.699c-.143 0-.256.115-.256.258 0 .094.047.176.119.221l1.572 1.535c.049.059.127.098.215.098.086 0 .162-.037.211-.098l1.57-1.535c.076-.045.121-.127.121-.221 0-.143-.111-.258-.254-.258h-.701V6.908c0-.143-.113-.258-.256-.258h-1.259z"/></svg>',
+                codechef: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#666"><path d="M11.257.004c-.207.025-.399.139-.531.311-.034.044-.072.098-.085.12L.004 19.399l.058.141c.166.404.432.749.77 1.001.339.253.747.402 1.182.433.173.013.386-.002.558-.039.171-.037.363-.098.498-.159l.048-.022 8.882-4.108 8.882 4.108.048.022c.136.061.327.122.498.159.172.037.385.051.558.039.435-.031.843-.181 1.182-.433.339-.253.605-.597.77-1.001l.058-.141L13.361.434c-.013-.022-.051-.076-.085-.12-.132-.172-.324-.286-.531-.311-.109-.013-.25-.013-.359 0-.207.025-.399.139-.531.311-.034.044-.072.098-.085.12L2.999 16.599l.058.141c.166.404.432.749.77 1.001.252.188.546.323.858.393l6.315-2.923 6.315 2.923c.312-.07.606-.205.858-.393.339-.253.605-.597.77-1.001l.058-.141L10.771.434c-.013-.022-.051-.076-.085-.12-.132-.172-.324-.286-.531-.311-.055-.007-.11-.01-.165-.01-.065 0-.13.004-.195.011z"/></svg>',
+                hackthebox: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#9fef00"><path d="M12 0L2 4v8c0 8 10 12 10 12s10-4 10-12V4l-10-4zm0 3l7 2.5v6.5c0 5-7 8-7 8s-7-3-7-8V5.5L12 3z"/></svg>',
+                tryhackme: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#ec2a42"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l4 2.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+                picoctf: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#4684e8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>',
+                overthewire: '<svg width="18" height="18" viewBox="0 0 24 24" fill="#0071ba"><path d="M3 9h4V5H3v4zm0 5h4v-4H3v4zm5 0h4v-4H8v4zm5 0h4v-4h-4v4zm-10 5h4v-4H3v4zm5 0h4v-4H8v4zm5 0h4v-4h-4v4zm5-14v4h4V5h-4zm0 9h4v-4h-4v4z"/></svg>'
+            };
+
+            const badgeStyles = {
+                github: 'background: rgba(59, 130, 246, 0.15); color: #3b82f6;',
+                codeforces: 'background: rgba(139, 92, 246, 0.15); color: #8b5cf6;',
+                leetcode: 'background: rgba(16, 185, 129, 0.15); color: #10b981;',
+                vjudge: 'background: rgba(109, 114, 120, 0.15); color: #6d7278;',
+                atcoder: 'background: rgba(109, 114, 120, 0.15); color: #6d7278;',
+                hackerrank: 'background: rgba(109, 114, 120, 0.15); color: #6d7278;',
+                codechef: 'background: rgba(109, 114, 120, 0.15); color: #6d7278;',
+                hackthebox: 'background: rgba(159, 239, 0, 0.15); color: #9fef00;',
+                tryhackme: 'background: rgba(236, 42, 66, 0.15); color: #ec2a42;',
+                picoctf: 'background: rgba(70, 132, 232, 0.15); color: #4684e8;',
+                overthewire: 'background: rgba(0, 113, 186, 0.15); color: #0071ba;'
+            };
+
+            platformOrder.forEach(key => {
+                const platform = platformsData[key];
+                if (platform.enabled && platform.handle) {
+                    const bgColor = key === 'codeforces' ? 'rgba(26, 115, 232, 0.1)' : key === 'leetcode' ? 'rgba(255, 161, 22, 0.1)' : key === 'github' ? 'rgba(51, 51, 51, 0.1)' : key === 'hackthebox' ? 'rgba(159, 239, 0, 0.1)' : key === 'tryhackme' ? 'rgba(236, 42, 66, 0.1)' : key === 'picoctf' ? 'rgba(70, 132, 232, 0.1)' : key === 'overthewire' ? 'rgba(0, 113, 186, 0.1)' : 'rgba(100, 100, 100, 0.1)';
+                    html += `
+                        <div class="platform-item">
+                            <div class="platform-icon" style="background: ${bgColor};">
+                                ${platformIcons[key]}
+                            </div>
+                            <div class="platform-info">
+                                <div class="platform-name">${platform.name}</div>
+                                <div class="platform-handle">@${platform.handle}</div>
+                            </div>
+                            <span class="platform-badge" style="${badgeStyles[key]}">${platform.badge}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            platformsList.innerHTML = html || '<p style="color: var(--text-tertiary); font-size: 0.8rem; padding: 1rem 0;">No platforms linked yet</p>';
+        }
+
+        // Render Platform Heatmaps
+        function renderPlatformHeatmaps() {
+            const container = document.getElementById('platformHeatmapsContainer');
+            if (!container) return;
+
+            const enabledPlatforms = Object.entries(platformsData).filter(([key, platform]) => platform.enabled && platform.handle);
+
+            if (enabledPlatforms.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-tertiary);">No platforms connected</div>';
+                return;
+            }
+
+            let html = '';
+            enabledPlatforms.forEach(([key, platform], index) => {
+                const platformIcon = platform.name === 'GitHub' ? '🐙' : 
+                                     platform.name === 'Codeforces' ? '⚡' : 
+                                     platform.name === 'LeetCode' ? '📝' :
+                                     platform.name === 'HackTheBox' ? '🔓' :
+                                     platform.name === 'TryHackMe' ? '🎯' :
+                                     platform.name === 'PicoCTF' ? '🚩' :
+                                     platform.name === 'OverTheWire' ? '🔐' : '🔗';
+
+                const platformColor = key === 'codeforces' ? '#1a73e8' : 
+                                     key === 'leetcode' ? '#ffa116' : 
+                                     key === 'github' ? '#333' :
+                                     key === 'hackthebox' ? '#9fef00' :
+                                     key === 'tryhackme' ? '#ec2a42' :
+                                     key === 'picoctf' ? '#4684e8' :
+                                     key === 'overthewire' ? '#0071ba' : '#666';
+
+                html += `
+                    <div style="border-radius: 8px; border: 1px solid var(--border-color); padding: 1rem; overflow: hidden;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; overflow: hidden;">
+                            <span style="font-size: 1.5rem; flex-shrink: 0;">${platformIcon}</span>
+                            <div style="min-width: 0; flex: 1;">
+                                <div style="font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${platform.name}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@${platform.handle}</div>
+                            </div>
+                        </div>
+                        <div style="overflow-x: auto; width: 100%; border-radius: 4px;">
+                            <svg width="100%" height="100" viewBox="0 0 722 112" preserveAspectRatio="xMidYMid meet" class="platform-heatmap-svg-${index}" style="min-width: 600px; background: var(--surface); border: 1px solid var(--border-color); border-radius: 4px;">
+                                <!-- Month labels -->
+                                <text x="25" y="10" class="heatmap-month" font-size="12" fill="var(--text-tertiary)">Jan</text>
+                                <text x="85" y="10" class="heatmap-month" font-size="12" fill="var(--text-tertiary)">Feb</text>
+                                <text x="140" y="10" class="heatmap-month" font-size="12" fill="var(--text-tertiary)">Mar</text>
+                                <text x="200" y="10" class="heatmap-month" font-size="12" fill="var(--text-tertiary)">Apr</text>
+                                <text x="255" y="10" class="heatmap-month" font-size="12" fill="var(--text-tertiary)">May</text>
+                                <text x="315" y="10" class="heatmap-month" font-size="12" fill="var(--text-tertiary)">Jun</text>
+                                <text x="370" y="10" class="heatmap-month" font-size="12" fill="var(--text-tertiary)">Jul</text>
+                                <text x="430" y="10" class="heatmap-month" font-size="12" fill="var(--text-tertiary)">Aug</text>
+                                <text x="485" y="10" class="heatmap-month" font-size="12" fill="var(--text-tertiary)">Sep</text>
+                                <text x="545" y="10" class="heatmap-month" font-size="12" fill="var(--text-tertiary)">Oct</text>
+                                <text x="600" y="10" class="heatmap-month" font-size="12" fill="var(--text-tertiary)">Nov</text>
+                                <text x="660" y="10" class="heatmap-month" font-size="12" fill="var(--text-tertiary)">Dec</text>
+                                
+                                <!-- Heatmap grid will be generated by JS -->
+                                <g class="heatmap-grid" transform="translate(10, 20)" id="heatmapGrid-${index}"></g>
+                            </svg>
+                        </div>
+                        <div style="display: flex; gap: 1rem; justify-content: space-between; margin-top: 0.75rem; font-size: 0.75rem; color: var(--text-tertiary); white-space: nowrap;">
+                            <span>Less active</span>
+                            <span>More active</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            // Generate heatmap for each platform
+            enabledPlatforms.forEach(([key, platform], index) => {
+                generatePlatformHeatmap(index, key);
+            });
+        }
+
+        // Generate individual platform heatmap
+        function generatePlatformHeatmap(index, platformKey) {
+            const gridElement = document.getElementById(`heatmapGrid-${index}`);
+            if (!gridElement) return;
+
+            const weeksInYear = 52;
+            const daysPerWeek = 7;
+            const platformColor = platformKey === 'codeforces' ? '#1a73e8' : 
+                                 platformKey === 'leetcode' ? '#ffa116' : 
+                                 platformKey === 'github' ? '#333' :
+                                 platformKey === 'hackthebox' ? '#9fef00' :
+                                 platformKey === 'tryhackme' ? '#ec2a42' :
+                                 platformKey === 'picoctf' ? '#4684e8' :
+                                 platformKey === 'overthewire' ? '#0071ba' : '#666';
+
+            let svgContent = '';
+
+            for (let week = 0; week < weeksInYear; week++) {
+                for (let day = 0; day < daysPerWeek; day++) {
+                    const x = week * 14;
+                    const y = day * 14;
+                    
+                    // Generate random activity level (0-4)
+                    const activityLevel = Math.floor(Math.random() * 5);
+                    
+                    // Color intensity map
+                    const colorIntensity = {
+                        0: '#ebedf0',
+                        1: `${platformColor}33`,
+                        2: `${platformColor}66`,
+                        3: `${platformColor}99`,
+                        4: platformColor
+                    };
+
+                    svgContent += `
+                        <rect x="${x}" y="${y}" width="12" height="12" fill="${colorIntensity[activityLevel]}" 
+                              rx="2" style="stroke: var(--border-color); stroke-width: 0.5;"/>
+                    `;
+                }
+            }
+
+            gridElement.innerHTML = svgContent;
         }
 
         // Sync All Platforms
