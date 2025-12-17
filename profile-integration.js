@@ -2,11 +2,29 @@
    Profile Integration - API & Dynamic Data
    ========================================== */
 
+// Shared inline SVG icons
+const icons = {
+    trophy: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M5 5h14"/></svg>',
+    robot: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="12" rx="2" ry="2"/><path d="M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/><path d="M7 15h2"/><path d="M15 15h2"/><circle cx="12" cy="13" r="2"/></svg>',
+    globe: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 0 0 20"/><path d="M12 2a15 15 0 0 1 0 20"/></svg>',
+    lock: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+    phone: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2" ry="2"/><circle cx="12" cy="18" r="1"/></svg>',
+    chart: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="6" y="10" width="3" height="6" rx="1"/><rect x="11" y="6" width="3" height="10" rx="1"/><rect x="16" y="12" width="3" height="4" rx="1"/></svg>',
+    gear: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+    laptop: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2" ry="2"/><path d="M2 18h20"/></svg>',
+    flame: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3s-5 4-5 9a6 6 0 0 0 12 0c0-3-2-5-4-7-1-1-2-2-2-2Z"/><path d="M9 12c0 3 2 5 4 5"/></svg>',
+    star: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 9 8l-7 .5 5 4.9L5 22l7-3.5L19 22l-2-8.6 5-4.9L15 8z"/></svg>',
+    link: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 1 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>',
+    chartUp: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m6 14 4-4 3 3 5-6"/><path d="M15 7h5v5"/></svg>',
+    code: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="M8 6 2 12l6 6"/></svg>',
+    target: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M2 12h4"/><path d="M18 12h4"/></svg>'
+};
+
 // Available domains/interests
 const domainOptions = {
     'competitive-programming': {
         name: 'Competitive Programming',
-        icon: '🏆',
+        icon: icons.trophy,
         color: '#f59e0b',
         sections: ['platforms', 'problemSolving', 'heatmaps', 'contests'],
         skills: [
@@ -20,7 +38,7 @@ const domainOptions = {
     },
     'ai-ml': {
         name: 'AI & Machine Learning',
-        icon: '🤖',
+        icon: icons.robot,
         color: '#8b5cf6',
         sections: ['platforms', 'mlProjects', 'research', 'certifications'],
         skills: [
@@ -34,7 +52,7 @@ const domainOptions = {
     },
     'web-development': {
         name: 'Web Development',
-        icon: '🌐',
+        icon: icons.globe,
         color: '#3b82f6',
         sections: ['platforms', 'webProjects', 'techStack'],
         skills: [
@@ -48,7 +66,7 @@ const domainOptions = {
     },
     'cybersecurity': {
         name: 'Cybersecurity',
-        icon: '🔐',
+        icon: icons.lock,
         color: '#ef4444',
         sections: ['platforms', 'ctfStats', 'certifications', 'writeups'],
         skills: [
@@ -62,7 +80,7 @@ const domainOptions = {
     },
     'mobile-development': {
         name: 'Mobile Development',
-        icon: '📱',
+        icon: icons.phone,
         color: '#10b981',
         sections: ['platforms', 'mobileApps', 'techStack'],
         skills: [
@@ -76,7 +94,7 @@ const domainOptions = {
     },
     'data-science': {
         name: 'Data Science',
-        icon: '📊',
+        icon: icons.chart,
         color: '#06b6d4',
         sections: ['platforms', 'notebooks', 'datasets', 'visualizations'],
         skills: [
@@ -90,7 +108,7 @@ const domainOptions = {
     },
     'devops': {
         name: 'DevOps & Cloud',
-        icon: '☁️',
+        icon: icons.gear,
         color: '#f97316',
         sections: ['platforms', 'infrastructure', 'certifications'],
         skills: [
@@ -104,7 +122,7 @@ const domainOptions = {
     },
     'software-engineering': {
         name: 'Software Engineering',
-        icon: '💻',
+        icon: icons.laptop,
         color: '#6366f1',
         sections: ['platforms', 'projects', 'contributions', 'techStack'],
         skills: [
@@ -398,7 +416,7 @@ function updateQuickStatsForDomain() {
         'competitive-programming': {
             primary: { value: 'totalProblems', label: 'Problems Solved' },
             secondary: { value: 'totalContests', label: 'Contests' },
-            tertiary: { value: 'currentStreak', label: 'Day Streak 🔥' },
+            tertiary: { value: 'currentStreak', label: 'Day Streak' },
             quaternary: { value: 'globalRank', label: 'Global Rank' }
         },
         'ai-ml': {
@@ -422,7 +440,7 @@ function updateQuickStatsForDomain() {
         'mobile-development': {
             primary: { value: '8', label: 'Apps Published' },
             secondary: { value: '15k', label: 'Downloads' },
-            tertiary: { value: '4.5', label: 'Avg Rating ⭐' },
+            tertiary: { value: '4.5', label: 'Avg Rating' },
             quaternary: { value: '3', label: 'Platforms' }
         },
         'data-science': {
@@ -598,7 +616,7 @@ function renderCodingStats() {
                     <div class="stat-value">${lc.solved}</div>
                     <div class="stat-label">LeetCode</div>
                 </div>
-                <span class="badge" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white;">${lc.streak}🔥</span>
+                <span class="badge" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; display: inline-flex; align-items: center; gap: 0.35rem;">${lc.streak}${icons.flame}</span>
             </div>
         `;
     }
@@ -658,7 +676,7 @@ function renderCodingStats() {
                     <div class="stat-value">${hr.badges}</div>
                     <div class="stat-label">HackerRank</div>
                 </div>
-                <span class="badge" style="background: linear-gradient(135deg, #00ea64, #00c853); color: #003d21;">${hr.stars}★</span>
+                <span class="badge" style="background: linear-gradient(135deg, #00ea64, #00c853); color: #003d21; display: inline-flex; align-items: center; gap: 0.25rem;">${hr.stars}${icons.star}</span>
             </div>
         `;
     }
@@ -673,7 +691,7 @@ function renderCodingStats() {
                     <div class="stat-value">${cc.rating}</div>
                     <div class="stat-label">CodeChef</div>
                 </div>
-                <span class="badge" style="background: linear-gradient(135deg, #5B4638, #4e3b2f); color: white;">${cc.stars}★</span>
+                <span class="badge" style="background: linear-gradient(135deg, #5B4638, #4e3b2f); color: white; display: inline-flex; align-items: center; gap: 0.25rem;">${cc.stars}${icons.star}</span>
             </div>
         `;
     }
@@ -682,7 +700,7 @@ function renderCodingStats() {
     if (!html) {
         html = `
             <div class="empty-state-card">
-                <div class="empty-icon">🔗</div>
+                <div class="empty-icon">${icons.link}</div>
                 <h4>No Platforms Linked</h4>
                 <p>Connect your coding platforms to showcase your achievements</p>
                 <button class="btn btn-primary btn-sm" onclick="openEditProfileModal()">Link Platforms</button>
@@ -789,7 +807,7 @@ function renderProblemStats() {
     if (!lcLinked && !cfLinked && !vjLinked) {
         container.innerHTML = `
             <div style="text-align: center; padding: 2rem; color: var(--gray-500);">
-                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
+                <div style="margin-bottom: 0.5rem; display: inline-flex; align-items: center; justify-content: center;">${icons.chartUp}</div>
                 <p>Link LeetCode, Codeforces, or VJudge to see problem stats</p>
             </div>
         `;
@@ -891,7 +909,7 @@ function renderActivityHeatmap() {
                     statsText = `${data.solved} problems solved • ${data.contests} contests`;
                     break;
                 case 'leetcode':
-                    statsText = `${data.solved} problems solved • ${data.streak} day streak 🔥`;
+                    statsText = `${data.solved} problems solved • ${data.streak}-day streak`;
                     break;
                 case 'vjudge':
                     statsText = `${data.solved} problems solved`;
@@ -903,7 +921,7 @@ function renderActivityHeatmap() {
                     statsText = `${data.badges} badges earned • ${data.solved} problems`;
                     break;
                 case 'codechef':
-                    statsText = `${data.solved} problems solved • ${data.stars}★ rating`;
+                    statsText = `${data.solved} problems solved • ${data.stars}-star rating`;
                     break;
                 default:
                     statsText = `${data.solved || 0} ${platform.statsLabel}`;
@@ -940,9 +958,9 @@ function renderActivityHeatmap() {
     
     if (!html) {
         html = `
-            <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card" style="margin-top: 1.5rem;">
                 <div class="card-body" style="text-align: center; padding: 3rem;">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+                    <div style="margin-bottom: 1rem; display: inline-flex; align-items: center; justify-content: center;">${icons.chart}</div>
                     <h3 style="margin-bottom: 0.5rem;">No Platforms Selected</h3>
                     <p style="color: var(--gray-500); margin-bottom: 1rem;">Select platforms to display in your profile settings</p>
                     <button class="btn btn-primary" onclick="openEditProfileModal()">Configure Platforms</button>
@@ -1041,16 +1059,16 @@ function renderAchievements() {
     if (!container) return;
     
     const achievements = [
-        { icon: '🏆', name: 'Problem Master', desc: '500+ problems solved' },
-        { icon: '⭐', name: 'Expert Coder', desc: 'CF Expert rank' },
-        { icon: '🔥', name: 'Streak King', desc: '30+ day streak' },
-        { icon: '👨‍💻', name: 'Open Source', desc: '100+ contributions' },
-        { icon: '🎯', name: 'Precision', desc: '90% accuracy' }
+        { icon: icons.trophy, name: 'Problem Master', desc: '500+ problems solved' },
+        { icon: icons.star, name: 'Expert Coder', desc: 'CF Expert rank' },
+        { icon: icons.flame, name: 'Streak King', desc: '30+ day streak' },
+        { icon: icons.code, name: 'Open Source', desc: '100+ contributions' },
+        { icon: icons.target, name: 'Precision', desc: '90% accuracy' }
     ];
     
     container.innerHTML = achievements.map(a => `
-        <div style="text-align: center; padding: 1rem; background: var(--gray-50); border-radius: 0.75rem;">
-            <div style="font-size: 2rem; margin-bottom: 0.5rem;">${a.icon}</div>
+            <div style="text-align: center; padding: 1rem; background: var(--gray-50); border-radius: 0.75rem;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem; display: inline-flex; align-items: center; justify-content: center;">${a.icon}</div>
             <div style="font-weight: 500; font-size: 0.875rem;">${a.name}</div>
             <div style="font-size: 0.75rem; color: var(--gray-500);">${a.desc}</div>
         </div>
