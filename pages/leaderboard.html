@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - UConnect</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle-btn" id="sidebarToggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Top Right Theme Toggle -->
+    <div class="top-right-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"/>
+                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="dashboard-layout">
+        <!-- Left Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../index.html" class="logo">
+                    <span class="logo-icon">U</span>
+                    <span class="logo-text">Connect</span>
+                </a>
+                <button class="sidebar-close-btn" id="sidebarClose" aria-label="Close menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Main</div>
+                <nav class="sidebar-nav">
+                    <a href="dashboard.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <a href="projects.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        Projects
+                    </a>
+                    <a href="teams.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Teams
+                    </a>
+                    <a href="opportunities.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                        Opportunities
+                    </a>
+                </nav>
+            </div>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Career Tools</div>
+                <nav class="sidebar-nav">
+                    <a href="profile.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Profile
+                    </a>
+                    <a href="resume.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        U-Resume
+                    </a>
+                    <a href="skillmap.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                            <polyline points="2 17 12 22 22 17"/>
+                            <polyline points="2 12 12 17 22 12"/>
+                        </svg>
+                        U-SkillMap
+                    </a>
+                </nav>
+            </div>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Community</div>
+                <nav class="sidebar-nav">
+                    <a href="showcase.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21"/>
+                            <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                        Showcase
+                    </a>
+                    <a href="leaderboard.html" class="active">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                            <path d="M4 22h16"/>
+                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                        </svg>
+                        Leaderboard
+                    </a>
+                    <a href="mentors.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Mentors
+                    </a>
+                </nav>
+            </div>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Support</div>
+                <nav class="sidebar-nav">
+                    <a href="messages.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        Messages
+                        <span class="nav-badge">3</span>
+                    </a>
+                    <a href="help.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        Help Board
+                    </a>
+                </nav>
+            </div>
+            <div class="sidebar-user">
+                <div class="sidebar-user-avatar">JD</div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name">John Doe</div>
+                    <div class="sidebar-user-email">john@university.edu</div>
+                </div>
+            </div>
+
+            <div class="sidebar-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                    <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                </button>
+                <a href="login.html" class="logout-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Leaderboard & Achievements</h1>
+                    <p>Track your progress, earn badges, and compete with peers.</p>
+                </div>
+            </header>
+
+            <div class="dashboard-body">
+                <!-- Your Stats -->
+                <div class="card" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: white;">
+                    <div class="card-body" style="padding: 1.5rem;">
+                        <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="width: 64px; height: 64px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700;">
+                                    TT
+                                </div>
+                                <div>
+                                    <h3 style="font-size: 1.125rem; margin-bottom: 0.25rem;">Taslim Ahmed Tamim</h3>
+                                    <p style="font-size: 0.875rem; opacity: 0.9;">Rank #12 this week</p>
+                                </div>
+                            </div>
+                            <div style="flex: 1; display: flex; gap: 2rem; justify-content: flex-end; flex-wrap: wrap;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.75rem; font-weight: 700;">2,450</div>
+                                    <div style="font-size: 0.75rem; opacity: 0.9;">Total XP</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.75rem; font-weight: 700;">15</div>
+                                    <div style="font-size: 0.75rem; opacity: 0.9;">Day Streak</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.75rem; font-weight: 700;">8</div>
+                                    <div style="font-size: 0.75rem; opacity: 0.9;">Badges</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.75rem; font-weight: 700;">4.8</div>
+                                    <div style="font-size: 0.75rem; opacity: 0.9;">U-Score</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+                    <!-- Leaderboard -->
+                    <div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                    <h2 style="font-size: 1.25rem;">Weekly Leaderboard</h2>
+                                    <select class="form-input" style="width: auto; padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                        <option value="weekly">This Week</option>
+                                        <option value="monthly">This Month</option>
+                                        <option value="all">All Time</option>
+                                    </select>
+                                </div>
+
+                                <!-- Top 3 -->
+                                <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem;">
+                                    <!-- 2nd Place -->
+                                    <div style="text-align: center; margin-top: 1rem;">
+                                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #94a3b8, #64748b); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; margin: 0 auto 0.5rem;">
+                                            SK
+                                        </div>
+                                        <div style="font-size: 0.875rem; font-weight: 600;">Salman K.</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray-500);">3,120 XP</div>
+                                        <div style="width: 32px; height: 32px; background: #c0c0c0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.875rem; margin: 0.5rem auto 0;">2</div>
+                                    </div>
+                                    <!-- 1st Place -->
+                                    <div style="text-align: center;">
+                                        <div style="width: 72px; height: 72px; background: linear-gradient(135deg, #fbbf24, #f59e0b); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.25rem; margin: 0 auto 0.5rem; box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);">
+                                            MI
+                                        </div>
+                                        <div style="font-size: 0.875rem; font-weight: 600;">Majharul I.</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray-500);">4,250 XP</div>
+                                        <div style="width: 36px; height: 36px; background: #fbbf24; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; margin: 0.5rem auto 0;">1</div>
+                                    </div>
+                                    <!-- 3rd Place -->
+                                    <div style="text-align: center; margin-top: 1.5rem;">
+                                        <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #d97706, #b45309); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; margin: 0 auto 0.5rem;">
+                                            AR
+                                        </div>
+                                        <div style="font-size: 0.875rem; font-weight: 600;">Anika R.</div>
+                                        <div style="font-size: 0.75rem; color: var(--gray-500);">2,890 XP</div>
+                                        <div style="width: 28px; height: 28px; background: #cd7f32; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.75rem; margin: 0.5rem auto 0;">3</div>
+                                    </div>
+                                </div>
+
+                                <!-- Leaderboard List -->
+                                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                    <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                                        <span style="width: 24px; text-align: center; font-weight: 600; color: var(--gray-500);">4</span>
+                                        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #ec4899, #f43f5e); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">SN</div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 500;">Sarah N.</div>
+                                            <div style="font-size: 0.75rem; color: var(--gray-500);">CSE Department</div>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <div style="font-weight: 600;">2,780 XP</div>
+                                            <div style="font-size: 0.75rem; color: var(--success);">+120 today</div>
+                                        </div>
+                                    </div>
+
+                                    <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                                        <span style="width: 24px; text-align: center; font-weight: 600; color: var(--gray-500);">5</span>
+                                        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #06b6d4, #0891b2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">KR</div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 500;">Karim R.</div>
+                                            <div style="font-size: 0.75rem; color: var(--gray-500);">EEE Department</div>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <div style="font-weight: 600;">2,650 XP</div>
+                                            <div style="font-size: 0.75rem; color: var(--success);">+85 today</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Current User Highlighted -->
+                                    <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: rgba(59, 130, 246, 0.1); border: 2px solid var(--primary); border-radius: 0.5rem;">
+                                        <span style="width: 24px; text-align: center; font-weight: 600; color: var(--primary);">12</span>
+                                        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">TT</div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 500;">Taslim Ahmed (You)</div>
+                                            <div style="font-size: 0.75rem; color: var(--gray-500);">CSE Department</div>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <div style="font-weight: 600;">2,450 XP</div>
+                                            <div style="font-size: 0.75rem; color: var(--success);">+150 today</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="text-align: center; margin-top: 1.5rem;">
+                                    <button class="btn btn-outline">View Full Leaderboard</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Badges & Achievements -->
+                    <div>
+                        <!-- Streak Card -->
+                        <div class="card" style="margin-bottom: 1rem;">
+                            <div class="card-body" style="text-align: center; padding: 1.5rem;">
+                                <div style="font-size: 3rem; margin-bottom: 0.5rem;">🔥</div>
+                                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">15 Day Streak!</h3>
+                                <p style="font-size: 0.875rem; color: var(--gray-500);">Keep it up! 5 more days for bonus XP</p>
+                                <div style="display: flex; justify-content: center; gap: 0.25rem; margin-top: 1rem;">
+                                    <span style="width: 28px; height: 28px; background: var(--primary); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem;">M</span>
+                                    <span style="width: 28px; height: 28px; background: var(--primary); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem;">T</span>
+                                    <span style="width: 28px; height: 28px; background: var(--primary); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem;">W</span>
+                                    <span style="width: 28px; height: 28px; background: var(--primary); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem;">T</span>
+                                    <span style="width: 28px; height: 28px; background: var(--primary); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem;">F</span>
+                                    <span style="width: 28px; height: 28px; background: var(--gray-200); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--gray-500); font-size: 0.7rem;">S</span>
+                                    <span style="width: 28px; height: 28px; background: var(--gray-200); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--gray-500); font-size: 0.7rem;">S</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Badges -->
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 style="font-size: 1rem; margin-bottom: 1rem;">Your Badges (8)</h3>
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;">
+                                    <div style="text-align: center; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">🚀</div>
+                                        <div style="font-size: 0.7rem; font-weight: 500;">First Project</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">⭐</div>
+                                        <div style="font-size: 0.7rem; font-weight: 500;">Star Coder</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">🤝</div>
+                                        <div style="font-size: 0.7rem; font-weight: 500;">Team Player</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">🔥</div>
+                                        <div style="font-size: 0.7rem; font-weight: 500;">On Fire</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">💡</div>
+                                        <div style="font-size: 0.7rem; font-weight: 500;">Innovator</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">🎯</div>
+                                        <div style="font-size: 0.7rem; font-weight: 500;">Goal Getter</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">📚</div>
+                                        <div style="font-size: 0.7rem; font-weight: 500;">Learner</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">🏆</div>
+                                        <div style="font-size: 0.7rem; font-weight: 500;">Champion</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 0.75rem; background: var(--gray-100); border-radius: 0.5rem; opacity: 0.5;">
+                                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">🔒</div>
+                                        <div style="font-size: 0.7rem; font-weight: 500;">Locked</div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-ghost" style="width: 100%; margin-top: 1rem;">View All Badges</button>
+                            </div>
+                        </div>
+
+                        <!-- Active Challenges -->
+                        <div class="card" style="margin-top: 1rem;">
+                            <div class="card-body">
+                                <h3 style="font-size: 1rem; margin-bottom: 1rem;">Active Challenges</h3>
+                                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                    <div style="padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">Complete 5 Tasks</span>
+                                            <span style="font-size: 0.75rem; color: var(--primary);">+100 XP</span>
+                                        </div>
+                                        <div style="height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden;">
+                                            <div style="width: 60%; height: 100%; background: var(--primary); border-radius: 3px;"></div>
+                                        </div>
+                                        <div style="font-size: 0.7rem; color: var(--gray-500); margin-top: 0.25rem;">3/5 completed</div>
+                                    </div>
+                                    <div style="padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">Review 3 PRs</span>
+                                            <span style="font-size: 0.75rem; color: var(--primary);">+75 XP</span>
+                                        </div>
+                                        <div style="height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden;">
+                                            <div style="width: 33%; height: 100%; background: var(--primary); border-radius: 3px;"></div>
+                                        </div>
+                                        <div style="font-size: 0.7rem; color: var(--gray-500); margin-top: 0.25rem;">1/3 completed</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        // Sidebar Toggle Functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarClose = document.getElementById('sidebarClose');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function openSidebar() {
+            sidebar.classList.add('open');
+            sidebarToggle.classList.add('active');
+            sidebarOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            sidebarToggle.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        sidebarToggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+
+        sidebarClose.addEventListener('click', closeSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        // Close sidebar on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+                closeSidebar();
+            }
+        });
+    </script>
+</body>
+</html>

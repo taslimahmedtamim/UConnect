@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Board - UConnect</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle-btn" id="sidebarToggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Top Right Theme Toggle -->
+    <div class="top-right-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"/>
+                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="dashboard-layout">
+        <!-- Left Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../index.html" class="logo">
+                    <span class="logo-icon">U</span>
+                    <span class="logo-text">Connect</span>
+                </a>
+                <button class="sidebar-close-btn" id="sidebarClose" aria-label="Close menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Main</div>
+                <nav class="sidebar-nav">
+                    <a href="dashboard.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <a href="projects.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        Projects
+                    </a>
+                    <a href="teams.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Teams
+                    </a>
+                    <a href="opportunities.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                        Opportunities
+                    </a>
+                </nav>
+            </div>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Career Tools</div>
+                <nav class="sidebar-nav">
+                    <a href="profile.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Profile
+                    </a>
+                    <a href="resume.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        U-Resume
+                    </a>
+                    <a href="skillmap.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                            <polyline points="2 17 12 22 22 17"/>
+                            <polyline points="2 12 12 17 22 12"/>
+                        </svg>
+                        U-SkillMap
+                    </a>
+                </nav>
+            </div>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Community</div>
+                <nav class="sidebar-nav">
+                    <a href="showcase.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21"/>
+                            <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                        Showcase
+                    </a>
+                    <a href="leaderboard.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                            <path d="M4 22h16"/>
+                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                        </svg>
+                        Leaderboard
+                    </a>
+                    <a href="mentors.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Mentors
+                    </a>
+                </nav>
+            </div>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Support</div>
+                <nav class="sidebar-nav">
+                    <a href="messages.html">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        Messages
+                        <span class="nav-badge">3</span>
+                    </a>
+                    <a href="help.html" class="active">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        Help Board
+                    </a>
+                </nav>
+            </div>
+            <div class="sidebar-user">
+                <div class="sidebar-user-avatar">JD</div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name">John Doe</div>
+                    <div class="sidebar-user-email">john@university.edu</div>
+                </div>
+            </div>
+
+            <div class="sidebar-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                    <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                </button>
+                <a href="login.html" class="logout-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Help Board</h1>
+                    <p>Request help, share repos, and collaborate with the community.</p>
+                </div>
+                <div class="dashboard-actions">
+                    <button class="btn btn-outline">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                        </svg>
+                        Link GitHub
+                    </button>
+                    <button class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Post Request
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard-body">
+                <!-- Filters -->
+                <div class="card" style="margin-bottom: 1.5rem;">
+                    <div class="card-body" style="padding: 1rem;">
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                            <div style="flex: 1; min-width: 200px;">
+                                <input type="text" class="form-input" placeholder="Search help requests..." style="padding: 0.625rem 1rem;">
+                            </div>
+                            <select class="form-input" style="width: auto; padding: 0.625rem 1rem;">
+                                <option value="">All Types</option>
+                                <option value="bug">Bug Fix</option>
+                                <option value="feature">Feature Request</option>
+                                <option value="review">Code Review</option>
+                                <option value="docs">Documentation</option>
+                                <option value="question">Question</option>
+                            </select>
+                            <select class="form-input" style="width: auto; padding: 0.625rem 1rem;">
+                                <option value="">All Stack</option>
+                                <option value="react">React</option>
+                                <option value="node">Node.js</option>
+                                <option value="python">Python</option>
+                                <option value="ml">ML/AI</option>
+                            </select>
+                            <select class="form-input" style="width: auto; padding: 0.625rem 1rem;">
+                                <option value="">Sort By</option>
+                                <option value="recent">Most Recent</option>
+                                <option value="urgent">Most Urgent</option>
+                                <option value="popular">Most Popular</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Help Requests -->
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Request 1 - Bug -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; min-width: 50px;">
+                                    <button style="background: none; border: none; cursor: pointer; color: var(--gray-400);" title="Upvote">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="18 15 12 9 6 15"/>
+                                        </svg>
+                                    </button>
+                                    <span style="font-weight: 600; font-size: 1.125rem;">12</span>
+                                    <button style="background: none; border: none; cursor: pointer; color: var(--gray-400);" title="Downvote">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="6 9 12 15 18 9"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                        <span class="badge" style="background: #fef2f2; color: #dc2626;">Bug</span>
+                                        <span class="badge" style="background: #fef3c7; color: #d97706;">Urgent</span>
+                                        <span style="font-size: 0.75rem; color: var(--gray-400);">Posted 2 hours ago</span>
+                                    </div>
+                                    <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">
+                                        <a href="#" style="color: var(--text-primary); text-decoration: none;">React useEffect cleanup causing memory leak in chat component</a>
+                                    </h3>
+                                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.75rem;">
+                                        I'm seeing memory leaks when users navigate away from the chat page. The WebSocket connection doesn't seem to be closing properly...
+                                    </p>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem;">
+                                        <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: var(--gray-100); border-radius: 4px;">React</span>
+                                        <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: var(--gray-100); border-radius: 4px;">WebSocket</span>
+                                        <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: var(--gray-100); border-radius: 4px;">Memory</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <div style="width: 28px; height: 28px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem; font-weight: 600;">AR</div>
+                                            <span style="font-size: 0.8rem;">Anika Rahman</span>
+                                        </div>
+                                        <div style="display: flex; gap: 1rem; font-size: 0.8rem; color: var(--gray-500);">
+                                            <span style="display: flex; align-items: center; gap: 0.25rem;">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                                </svg>
+                                                5 replies
+                                            </span>
+                                            <a href="#" style="color: var(--primary); display: flex; align-items: center; gap: 0.25rem;">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77"/>
+                                                </svg>
+                                                View Repo
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Request 2 - Code Review -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; min-width: 50px;">
+                                    <button style="background: none; border: none; cursor: pointer; color: var(--primary);" title="Upvote">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
+                                            <polyline points="18 15 12 9 6 15"/>
+                                        </svg>
+                                    </button>
+                                    <span style="font-weight: 600; font-size: 1.125rem; color: var(--primary);">28</span>
+                                    <button style="background: none; border: none; cursor: pointer; color: var(--gray-400);" title="Downvote">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="6 9 12 15 18 9"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                        <span class="badge" style="background: #dbeafe; color: #1d4ed8;">Code Review</span>
+                                        <span class="badge badge-success">Open</span>
+                                        <span style="font-size: 0.75rem; color: var(--gray-400);">Posted 5 hours ago</span>
+                                    </div>
+                                    <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">
+                                        <a href="#" style="color: var(--text-primary); text-decoration: none;">Need review for authentication middleware implementation</a>
+                                    </h3>
+                                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.75rem;">
+                                        I've implemented JWT authentication with refresh tokens. Would appreciate a security review before merging to main...
+                                    </p>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem;">
+                                        <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: var(--gray-100); border-radius: 4px;">Node.js</span>
+                                        <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: var(--gray-100); border-radius: 4px;">JWT</span>
+                                        <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: var(--gray-100); border-radius: 4px;">Security</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <div style="width: 28px; height: 28px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem; font-weight: 600;">SK</div>
+                                            <span style="font-size: 0.8rem;">Salman Kabir</span>
+                                        </div>
+                                        <div style="display: flex; gap: 1rem; font-size: 0.8rem; color: var(--gray-500);">
+                                            <span style="display: flex; align-items: center; gap: 0.25rem;">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                                </svg>
+                                                12 replies
+                                            </span>
+                                            <a href="#" style="color: var(--primary); display: flex; align-items: center; gap: 0.25rem;">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77"/>
+                                                </svg>
+                                                View PR
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Request 3 - Feature -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; min-width: 50px;">
+                                    <button style="background: none; border: none; cursor: pointer; color: var(--gray-400);" title="Upvote">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="18 15 12 9 6 15"/>
+                                        </svg>
+                                    </button>
+                                    <span style="font-weight: 600; font-size: 1.125rem;">7</span>
+                                    <button style="background: none; border: none; cursor: pointer; color: var(--gray-400);" title="Downvote">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="6 9 12 15 18 9"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                        <span class="badge" style="background: #d1fae5; color: #047857;">Feature</span>
+                                        <span class="badge badge-success">Open</span>
+                                        <span style="font-size: 0.75rem; color: var(--gray-400);">Posted yesterday</span>
+                                    </div>
+                                    <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">
+                                        <a href="#" style="color: var(--text-primary); text-decoration: none;">Looking for help with ML model optimization for real-time predictions</a>
+                                    </h3>
+                                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.75rem;">
+                                        Our recommendation model is too slow for production. Need help with quantization or distillation techniques...
+                                    </p>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem;">
+                                        <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: var(--gray-100); border-radius: 4px;">Python</span>
+                                        <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: var(--gray-100); border-radius: 4px;">TensorFlow</span>
+                                        <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: var(--gray-100); border-radius: 4px;">ML</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <div style="width: 28px; height: 28px; background: #8b5cf6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem; font-weight: 600;">MI</div>
+                                            <span style="font-size: 0.8rem;">Majharul Islam</span>
+                                        </div>
+                                        <div style="display: flex; gap: 1rem; font-size: 0.8rem; color: var(--gray-500);">
+                                            <span style="display: flex; align-items: center; gap: 0.25rem;">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                                </svg>
+                                                3 replies
+                                            </span>
+                                            <button class="btn btn-sm btn-primary">Help Out</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Request 4 - Resolved -->
+                    <div class="card" style="opacity: 0.7;">
+                        <div class="card-body">
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; min-width: 50px;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14.01 9 11.01"/>
+                                    </svg>
+                                    <span style="font-weight: 600; font-size: 0.875rem; color: var(--success);">Solved</span>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                        <span class="badge" style="background: #f3e8ff; color: #7c3aed;">Question</span>
+                                        <span class="badge" style="background: #d1fae5; color: #047857;">Resolved</span>
+                                        <span style="font-size: 0.75rem; color: var(--gray-400);">2 days ago</span>
+                                    </div>
+                                    <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">
+                                        <a href="#" style="color: var(--text-primary); text-decoration: none;">How to implement infinite scroll in React with virtualization?</a>
+                                    </h3>
+                                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.75rem;">
+                                        Solved using react-window library. Thanks everyone for the suggestions!
+                                    </p>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <div style="width: 28px; height: 28px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem; font-weight: 600;">KN</div>
+                                            <span style="font-size: 0.8rem;">Karim Noor</span>
+                                        </div>
+                                        <span style="font-size: 0.8rem; color: var(--gray-500);">8 replies • Accepted answer by SK</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem;">
+                    <button class="btn btn-outline btn-sm" disabled>Previous</button>
+                    <button class="btn btn-primary btn-sm">1</button>
+                    <button class="btn btn-outline btn-sm">2</button>
+                    <button class="btn btn-outline btn-sm">3</button>
+                    <button class="btn btn-outline btn-sm">Next</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        // Sidebar Toggle Functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarClose = document.getElementById('sidebarClose');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function openSidebar() {
+            sidebar.classList.add('open');
+            sidebarToggle.classList.add('active');
+            sidebarOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            sidebarToggle.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        sidebarToggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+
+        sidebarClose.addEventListener('click', closeSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        // Close sidebar on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+                closeSidebar();
+            }
+        });
+    </script>
+</body>
+</html>
