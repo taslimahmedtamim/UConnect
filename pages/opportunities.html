@@ -4,614 +4,380 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Opportunities - UConnect</title>
-    <link rel="stylesheet" href="../styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="layout.css">
+    
 </head>
 <body>
-    <!-- Sidebar Toggle Button -->
-    <button class="sidebar-toggle-btn" id="sidebarToggle" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
-
-    <!-- Top Right Theme Toggle -->
-    <div class="top-right-actions">
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="5"/>
-                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-            </svg>
-            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-            </svg>
-        </button>
-    </div>
-
-    <!-- Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <div class="dashboard-layout">
-        <!-- Left Sidebar -->
+    <div class="app-container">
+        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <a href="../index.html" class="logo">
-                    <span class="logo-icon">U</span>
-                    <span class="logo-text">Connect</span>
+                    <div class="logo-icon">U</div>
+                    <div class="logo-text">
+                        <span class="logo-title">UConnect</span>
+                        <span class="logo-subtitle">University Ecosystem</span>
+                    </div>
                 </a>
-                <button class="sidebar-close-btn" id="sidebarClose" aria-label="Close menu">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"/>
-                        <line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
+                <button class="sidebar-collapse-btn" id="sidebarCollapse">
+                    <i class="fas fa-chevron-left"></i>
                 </button>
             </div>
 
-            <div class="sidebar-section">
-                <div class="sidebar-section-title">Main</div>
-                <nav class="sidebar-nav">
-                    <a href="dashboard.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="7" height="7"/>
-                            <rect x="14" y="3" width="7" height="7"/>
-                            <rect x="14" y="14" width="7" height="7"/>
-                            <rect x="3" y="14" width="7" height="7"/>
-                        </svg>
-                        Dashboard
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
                     </a>
-                    <a href="projects.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                        </svg>
-                        Projects
+                    <a href="projects.html" class="nav-item">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Projects</span>
                     </a>
-                    <a href="teams.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                        </svg>
-                        Teams
+                    <a href="teams.html" class="nav-item">
+                        <i class="fas fa-users"></i>
+                        <span>Teams</span>
                     </a>
-                    <a href="opportunities.html" class="active">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
-                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-                        </svg>
-                        Opportunities
+                    <a href="opportunities.html" class="nav-item active">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Opportunities</span>
+                        <span class="nav-badge">24</span>
                     </a>
-                </nav>
-            </div>
-            <div class="sidebar-divider"></div>
-            <div class="sidebar-section">
-                <div class="sidebar-section-title">Career Tools</div>
-                <nav class="sidebar-nav">
-                    <a href="profile.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
-                        </svg>
-                        Profile
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Career Tools</div>
+                    <a href="profile.html" class="nav-item">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
                     </a>
-                    <a href="resume.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                        </svg>
-                        U-Resume
+                    <a href="resume.html" class="nav-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>U-Resume</span>
                     </a>
-                    <a href="skillmap.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-                            <polyline points="2 17 12 22 22 17"/>
-                            <polyline points="2 12 12 17 22 12"/>
-                        </svg>
-                        U-SkillMap
+                    <a href="skillmap.html" class="nav-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>U-SkillMap</span>
                     </a>
-                </nav>
-            </div>
-            <div class="sidebar-divider"></div>
-            <div class="sidebar-section">
-                <div class="sidebar-section-title">Community</div>
-                <nav class="sidebar-nav">
-                    <a href="showcase.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                            <line x1="8" y1="21" x2="16" y2="21"/>
-                            <line x1="12" y1="17" x2="12" y2="21"/>
-                        </svg>
-                        Showcase
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Community</div>
+                    <a href="showcase.html" class="nav-item">
+                        <i class="fas fa-desktop"></i>
+                        <span>Showcase</span>
                     </a>
-                    <a href="leaderboard.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
-                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
-                            <path d="M4 22h16"/>
-                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
-                        </svg>
-                        Leaderboard
+                    <a href="leaderboard.html" class="nav-item">
+                        <i class="fas fa-trophy"></i>
+                        <span>Leaderboard</span>
                     </a>
-                    <a href="mentors.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                        </svg>
-                        Mentors
+                    <a href="mentors.html" class="nav-item">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>Mentors</span>
                     </a>
-                </nav>
-            </div>
-            <div class="sidebar-divider"></div>
-            <div class="sidebar-section">
-                <div class="sidebar-section-title">Support</div>
-                <nav class="sidebar-nav">
-                    <a href="messages.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                        </svg>
-                        Messages
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Support</div>
+                    <a href="messages.html" class="nav-item">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Messages</span>
                         <span class="nav-badge">3</span>
                     </a>
-                    <a href="help.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                            <line x1="12" y1="17" x2="12.01" y2="17"/>
-                        </svg>
-                        Help Board
+                    <a href="help.html" class="nav-item">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Help Board</span>
                     </a>
-                </nav>
-            </div>
-            <div class="sidebar-user">
-                <div class="sidebar-user-avatar">JD</div>
-                <div class="sidebar-user-info">
-                    <div class="sidebar-user-name">John Doe</div>
-                    <div class="sidebar-user-email">john@university.edu</div>
                 </div>
-            </div>
-
-            <div class="sidebar-actions">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                    <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                    </svg>
-                    <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <line x1="12" y1="1" x2="12" y2="3"/>
-                        <line x1="12" y1="21" x2="12" y2="23"/>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                        <line x1="1" y1="12" x2="3" y2="12"/>
-                        <line x1="21" y1="12" x2="23" y2="12"/>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                    </svg>
-                </button>
-                <a href="login.html" class="logout-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                        <polyline points="16 17 21 12 16 7"/>
-                        <line x1="21" y1="12" x2="9" y2="12"/>
-                    </svg>
-                </a>
-            </div>
+            </nav>
         </aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <header class="dashboard-header">
-                <div class="dashboard-title">
-                    <h1>Opportunities</h1>
-                    <p>Discover jobs, internships, and projects that match your skills</p>
+        <div class="main-wrapper">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-title">
+                        <h1>Opportunities</h1>
+                        <p>Discover internships, jobs, and research positions</p>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-bookmark"></i>
+                        Saved Jobs
+                    </button>
+                </div>
+
+                <div class="header-right">
+                    <button class="icon-btn theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="icon-btn notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <button class="user-btn">
+                            <div class="user-avatar">JD</div>
+                            <span class="user-name">John Doe</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="profile.html" class="dropdown-item">
+                                <i class="fas fa-user-circle"></i>
+                                My Profile
+                            </a>
+                            <a href="resume.html" class="dropdown-item">
+                                <i class="fas fa-file-alt"></i>
+                                U-Resume
+                            </a>
+                            <a href="skillmap.html" class="dropdown-item">
+                                <i class="fas fa-layer-group"></i>
+                                U-SkillMap
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="login.html" class="dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Log Out
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </header>
 
-            <div class="dashboard-body">
+            <main class="main-content">
                 <!-- Filters -->
                 <div class="card" style="margin-bottom: 1.5rem;">
-                    <div class="card-body" style="padding: 1rem;">
-                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                    <div class="card-body">
+                        <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
                             <div style="flex: 1; min-width: 200px;">
-                                <input type="text" class="form-input" placeholder="Search opportunities..." style="padding: 0.625rem 1rem;">
+                                <div style="position: relative;">
+                                    <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                                    <input type="text" class="form-input" placeholder="Search opportunities..." style="padding-left: 2.5rem;">
+                                </div>
                             </div>
-                            <select class="form-input" style="width: auto; padding: 0.625rem 1rem;">
+                            <select class="form-input" style="width: auto; min-width: 150px;">
                                 <option value="">All Types</option>
-                                <option value="job">Full-time Job</option>
                                 <option value="internship">Internship</option>
-                                <option value="freelance">Freelance</option>
-                                <option value="project">Project</option>
+                                <option value="full-time">Full-time</option>
+                                <option value="part-time">Part-time</option>
+                                <option value="research">Research</option>
                             </select>
-                            <select class="form-input" style="width: auto; padding: 0.625rem 1rem;">
+                            <select class="form-input" style="width: auto; min-width: 150px;">
                                 <option value="">All Locations</option>
                                 <option value="remote">Remote</option>
-                                <option value="dhaka">Dhaka</option>
-                                <option value="chittagong">Chittagong</option>
                                 <option value="onsite">On-site</option>
+                                <option value="hybrid">Hybrid</option>
                             </select>
-                            <select class="form-input" style="width: auto; padding: 0.625rem 1rem;">
-                                <option value="">Experience Level</option>
-                                <option value="entry">Entry Level</option>
-                                <option value="mid">Mid Level</option>
-                                <option value="senior">Senior Level</option>
+                            <select class="form-input" style="width: auto; min-width: 150px;">
+                                <option value="">All Skills</option>
+                                <option value="react">React</option>
+                                <option value="python">Python</option>
+                                <option value="ml">Machine Learning</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <!-- Results Count -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <p style="font-size: 0.875rem; color: var(--gray-600);">Showing <strong>24</strong> opportunities matching your profile</p>
-                    <select class="form-input" style="width: auto; padding: 0.5rem 1rem; font-size: 0.875rem;">
-                        <option value="match">Best Match</option>
-                        <option value="recent">Most Recent</option>
-                        <option value="salary">Highest Salary</option>
-                    </select>
-                </div>
-
-                <!-- Opportunities Grid -->
-                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- Opportunity Cards -->
+                <div style="display: grid; gap: 1rem;">
                     <!-- Opportunity 1 -->
-                    <div class="opportunity-card">
-                        <div class="opportunity-header">
-                            <div class="company-logo">TC</div>
-                            <div class="opportunity-info" style="flex: 1;">
-                                <h3>Full Stack Developer</h3>
-                                <p class="opportunity-company">TechCorp Bangladesh • Dhaka</p>
+                    <div class="card">
+                        <div class="card-body">
+                            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                                <div style="width: 60px; height: 60px; background: #f3f4f6; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <img src="https://logo.clearbit.com/google.com" alt="Google" style="width: 40px; height: 40px; border-radius: 8px;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=color:#4285f4;font-weight:600;font-size:1.25rem>G</span>'">
+                                </div>
+                                <div style="flex: 1; min-width: 200px;">
+                                    <div style="display: flex; align-items: start; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+                                        <div>
+                                            <h3 style="font-size: 1.125rem; margin-bottom: 0.25rem;">Software Engineering Intern</h3>
+                                            <p style="font-size: 0.875rem; color: var(--text-secondary);">Google • Mountain View, CA</p>
+                                        </div>
+                                        <button class="icon-btn" title="Save">
+                                            <i class="far fa-bookmark"></i>
+                                        </button>
+                                    </div>
+                                    <p style="font-size: 0.875rem; color: var(--text-secondary); margin: 0.75rem 0;">Join Google as a Software Engineering Intern and work on impactful projects that affect billions of users worldwide.</p>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                                        <span class="badge badge-primary">Internship</span>
+                                        <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">Remote</span>
+                                        <span class="project-tag">Python</span>
+                                        <span class="project-tag">C++</span>
+                                        <span class="project-tag">Distributed Systems</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                                        <div style="display: flex; gap: 1.5rem; font-size: 0.75rem; color: var(--text-secondary);">
+                                            <span><i class="fas fa-dollar-sign"></i> $8,000/month</span>
+                                            <span><i class="fas fa-clock"></i> Posted 2 days ago</span>
+                                            <span><i class="fas fa-users"></i> 1,234 applicants</span>
+                                        </div>
+                                        <a href="#" class="btn btn-primary btn-sm">Apply Now</a>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="match-score">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"/>
-                                </svg>
-                                92% Match
-                            </div>
-                        </div>
-                        <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
-                            We're looking for a passionate Full Stack Developer to join our growing team. You'll work on building scalable web applications using modern technologies.
-                        </p>
-                        <div class="opportunity-details">
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="7" width="18" height="13" rx="2" ry="2" />
-                                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                                </svg>
-                                Full-time
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 22s8-6.5 8-12a8 8 0 1 0-16 0c0 5.5 8 12 8 12z" />
-                                    <circle cx="12" cy="10" r="3" />
-                                </svg>
-                                Dhaka, Bangladesh
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 1v22" />
-                                    <path d="M17 5H9.5a3.5 3.5 0 1 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
-                                </svg>
-                                ৳80,000 - ৳120,000/month
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <polyline points="12 6 12 12 16 14" />
-                                </svg>
-                                Posted 2 days ago
-                            </span>
-                        </div>
-                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
-                            <span class="project-tag">React</span>
-                            <span class="project-tag">Node.js</span>
-                            <span class="project-tag">PostgreSQL</span>
-                            <span class="project-tag">AWS</span>
-                        </div>
-                        <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-                            <button class="btn btn-primary">Apply with UConnect</button>
-                            <button class="btn btn-outline">Save</button>
-                            <button class="btn btn-ghost">View Details</button>
                         </div>
                     </div>
 
                     <!-- Opportunity 2 -->
-                    <div class="opportunity-card">
-                        <div class="opportunity-header">
-                            <div class="company-logo" style="background: var(--success); color: white;">GS</div>
-                            <div class="opportunity-info" style="flex: 1;">
-                                <h3>Machine Learning Intern</h3>
-                                <p class="opportunity-company">Grameenphone • Remote</p>
+                    <div class="card">
+                        <div class="card-body">
+                            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                                <div style="width: 60px; height: 60px; background: #f3f4f6; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <span style="color: #0a66c2; font-weight: 600; font-size: 1.25rem;">in</span>
+                                </div>
+                                <div style="flex: 1; min-width: 200px;">
+                                    <div style="display: flex; align-items: start; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+                                        <div>
+                                            <h3 style="font-size: 1.125rem; margin-bottom: 0.25rem;">Data Science Intern</h3>
+                                            <p style="font-size: 0.875rem; color: var(--text-secondary);">LinkedIn • Sunnyvale, CA</p>
+                                        </div>
+                                        <button class="icon-btn" title="Save">
+                                            <i class="fas fa-bookmark" style="color: var(--primary);"></i>
+                                        </button>
+                                    </div>
+                                    <p style="font-size: 0.875rem; color: var(--text-secondary); margin: 0.75rem 0;">Work with LinkedIn's data science team to derive insights from massive datasets and build ML models.</p>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                                        <span class="badge badge-primary">Internship</span>
+                                        <span class="badge" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);">Hybrid</span>
+                                        <span class="project-tag">Python</span>
+                                        <span class="project-tag">ML</span>
+                                        <span class="project-tag">SQL</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                                        <div style="display: flex; gap: 1.5rem; font-size: 0.75rem; color: var(--text-secondary);">
+                                            <span><i class="fas fa-dollar-sign"></i> $7,500/month</span>
+                                            <span><i class="fas fa-clock"></i> Posted 5 days ago</span>
+                                            <span><i class="fas fa-users"></i> 856 applicants</span>
+                                        </div>
+                                        <a href="#" class="btn btn-primary btn-sm">Apply Now</a>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="match-score">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"/>
-                                </svg>
-                                88% Match
-                            </div>
-                        </div>
-                        <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
-                            Join our AI/ML team as an intern and work on cutting-edge machine learning projects. Great opportunity for students passionate about AI.
-                        </p>
-                        <div class="opportunity-details">
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 3l9 4-9 4-9-4 9-4z" />
-                                    <path d="M3 7v5a9 9 0 0 0 18 0V7" />
-                                </svg>
-                                Internship
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 11l9-8 9 8" />
-                                    <path d="M5 10v10h14V10" />
-                                    <path d="M9 21V12h6v9" />
-                                </svg>
-                                Remote
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 1v22" />
-                                    <path d="M17 5H9.5a3.5 3.5 0 1 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
-                                </svg>
-                                ৳25,000 - ৳35,000/month
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <polyline points="12 6 12 12 16 14" />
-                                </svg>
-                                Posted 1 week ago
-                            </span>
-                        </div>
-                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
-                            <span class="project-tag">Python</span>
-                            <span class="project-tag">TensorFlow</span>
-                            <span class="project-tag">NLP</span>
-                        </div>
-                        <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-                            <button class="btn btn-primary">Apply with UConnect</button>
-                            <button class="btn btn-outline">Save</button>
-                            <button class="btn btn-ghost">View Details</button>
                         </div>
                     </div>
 
                     <!-- Opportunity 3 -->
-                    <div class="opportunity-card">
-                        <div class="opportunity-header">
-                            <div class="company-logo" style="background: var(--accent); color: white;">SN</div>
-                            <div class="opportunity-info" style="flex: 1;">
-                                <h3>Frontend Developer</h3>
-                                <p class="opportunity-company">Startup Nation • Dhaka</p>
+                    <div class="card">
+                        <div class="card-body">
+                            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <span style="color: white; font-weight: 600; font-size: 1rem;">UIU</span>
+                                </div>
+                                <div style="flex: 1; min-width: 200px;">
+                                    <div style="display: flex; align-items: start; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+                                        <div>
+                                            <h3 style="font-size: 1.125rem; margin-bottom: 0.25rem;">Research Assistant - NLP Lab</h3>
+                                            <p style="font-size: 0.875rem; color: var(--text-secondary);">UIU Research Lab • On Campus</p>
+                                        </div>
+                                        <button class="icon-btn" title="Save">
+                                            <i class="far fa-bookmark"></i>
+                                        </button>
+                                    </div>
+                                    <p style="font-size: 0.875rem; color: var(--text-secondary); margin: 0.75rem 0;">Contribute to cutting-edge NLP research under Dr. Rahman. Work on sentiment analysis and text summarization projects.</p>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                                        <span class="badge" style="background: rgba(139, 92, 246, 0.1); color: var(--accent);">Research</span>
+                                        <span class="badge" style="background: rgba(239, 68, 68, 0.1); color: var(--danger);">On-site</span>
+                                        <span class="project-tag">NLP</span>
+                                        <span class="project-tag">PyTorch</span>
+                                        <span class="project-tag">Transformers</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                                        <div style="display: flex; gap: 1.5rem; font-size: 0.75rem; color: var(--text-secondary);">
+                                            <span><i class="fas fa-graduation-cap"></i> Credit Hours</span>
+                                            <span><i class="fas fa-clock"></i> Posted 1 week ago</span>
+                                            <span><i class="fas fa-users"></i> 23 applicants</span>
+                                        </div>
+                                        <a href="#" class="btn btn-primary btn-sm">Apply Now</a>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="match-score">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"/>
-                                </svg>
-                                85% Match
-                            </div>
-                        </div>
-                        <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
-                            We need a creative Frontend Developer to build beautiful, responsive user interfaces. Join a fast-paced startup environment.
-                        </p>
-                        <div class="opportunity-details">
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="7" width="18" height="13" rx="2" ry="2" />
-                                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                                </svg>
-                                Full-time
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 22s8-6.5 8-12a8 8 0 1 0-16 0c0 5.5 8 12 8 12z" />
-                                    <circle cx="12" cy="10" r="3" />
-                                </svg>
-                                Dhaka, Bangladesh
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 1v22" />
-                                    <path d="M17 5H9.5a3.5 3.5 0 1 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
-                                </svg>
-                                ৳60,000 - ৳90,000/month
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <polyline points="12 6 12 12 16 14" />
-                                </svg>
-                                Posted 3 days ago
-                            </span>
-                        </div>
-                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
-                            <span class="project-tag">React</span>
-                            <span class="project-tag">TypeScript</span>
-                            <span class="project-tag">Tailwind CSS</span>
-                        </div>
-                        <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-                            <button class="btn btn-primary">Apply with UConnect</button>
-                            <button class="btn btn-outline">Save</button>
-                            <button class="btn btn-ghost">View Details</button>
                         </div>
                     </div>
 
                     <!-- Opportunity 4 -->
-                    <div class="opportunity-card">
-                        <div class="opportunity-header">
-                            <div class="company-logo" style="background: var(--warning); color: white;">BK</div>
-                            <div class="opportunity-info" style="flex: 1;">
-                                <h3>Backend Developer</h3>
-                                <p class="opportunity-company">Bkash • Dhaka</p>
+                    <div class="card">
+                        <div class="card-body">
+                            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                                <div style="width: 60px; height: 60px; background: #f3f4f6; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <span style="color: #ff4500; font-weight: 700; font-size: 1.25rem;">S</span>
+                                </div>
+                                <div style="flex: 1; min-width: 200px;">
+                                    <div style="display: flex; align-items: start; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+                                        <div>
+                                            <h3 style="font-size: 1.125rem; margin-bottom: 0.25rem;">Full Stack Developer</h3>
+                                            <p style="font-size: 0.875rem; color: var(--text-secondary);">Startup XYZ • Remote</p>
+                                        </div>
+                                        <button class="icon-btn" title="Save">
+                                            <i class="far fa-bookmark"></i>
+                                        </button>
+                                    </div>
+                                    <p style="font-size: 0.875rem; color: var(--text-secondary); margin: 0.75rem 0;">Join our early-stage startup as a full stack developer. Build products from scratch and grow with us.</p>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                                        <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">Full-time</span>
+                                        <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">Remote</span>
+                                        <span class="project-tag">React</span>
+                                        <span class="project-tag">Node.js</span>
+                                        <span class="project-tag">PostgreSQL</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                                        <div style="display: flex; gap: 1.5rem; font-size: 0.75rem; color: var(--text-secondary);">
+                                            <span><i class="fas fa-dollar-sign"></i> $60K - $80K/year</span>
+                                            <span><i class="fas fa-clock"></i> Posted 3 days ago</span>
+                                            <span><i class="fas fa-users"></i> 189 applicants</span>
+                                        </div>
+                                        <a href="#" class="btn btn-primary btn-sm">Apply Now</a>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="match-score">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"/>
-                                </svg>
-                                82% Match
-                            </div>
-                        </div>
-                        <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
-                            Join Bangladesh's leading fintech company as a Backend Developer. Work on high-scale systems processing millions of transactions.
-                        </p>
-                        <div class="opportunity-details">
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="7" width="18" height="13" rx="2" ry="2" />
-                                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                                </svg>
-                                Full-time
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 22s8-6.5 8-12a8 8 0 1 0-16 0c0 5.5 8 12 8 12z" />
-                                    <circle cx="12" cy="10" r="3" />
-                                </svg>
-                                Dhaka, Bangladesh
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 1v22" />
-                                    <path d="M17 5H9.5a3.5 3.5 0 1 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
-                                </svg>
-                                ৳100,000 - ৳150,000/month
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <polyline points="12 6 12 12 16 14" />
-                                </svg>
-                                Posted 5 days ago
-                            </span>
-                        </div>
-                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
-                            <span class="project-tag">Java</span>
-                            <span class="project-tag">Spring Boot</span>
-                            <span class="project-tag">Microservices</span>
-                            <span class="project-tag">Kafka</span>
-                        </div>
-                        <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-                            <button class="btn btn-primary">Apply with UConnect</button>
-                            <button class="btn btn-outline">Save</button>
-                            <button class="btn btn-ghost">View Details</button>
-                        </div>
-                    </div>
-
-                    <!-- Opportunity 5 -->
-                    <div class="opportunity-card">
-                        <div class="opportunity-header">
-                            <div class="company-logo" style="background: #06b6d4; color: white;">FC</div>
-                            <div class="opportunity-info" style="flex: 1;">
-                                <h3>Freelance Web Project</h3>
-                                <p class="opportunity-company">FreeCode Agency • Remote</p>
-                            </div>
-                            <div class="match-score">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"/>
-                                </svg>
-                                78% Match
-                            </div>
-                        </div>
-                        <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6;">
-                            Looking for a developer to build an e-commerce website. 4-6 week project with possibility of extension. Great for students!
-                        </p>
-                        <div class="opportunity-details">
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14.7 6.3l3 3a1 1 0 0 1 0 1.4l-7.4 7.4a2 2 0 0 1-2.8 0l-1.2-1.2a2 2 0 0 1 0-2.8l7.4-7.4a1 1 0 0 1 1.4 0z" />
-                                    <path d="M11.3 6.3l-1.6-1.6a2 2 0 0 0-2.8 0L4 7.6a2 2 0 0 0 0 2.8l1.6 1.6" />
-                                </svg>
-                                Freelance
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M3 11l9-8 9 8" />
-                                    <path d="M5 10v10h14V10" />
-                                    <path d="M9 21V12h6v9" />
-                                </svg>
-                                Remote
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 1v22" />
-                                    <path d="M17 5H9.5a3.5 3.5 0 1 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
-                                </svg>
-                                ৳50,000 - ৳80,000 (Fixed)
-                            </span>
-                            <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <polyline points="12 6 12 12 16 14" />
-                                </svg>
-                                Posted 1 day ago
-                            </span>
-                        </div>
-                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
-                            <span class="project-tag">Next.js</span>
-                            <span class="project-tag">Stripe</span>
-                            <span class="project-tag">MongoDB</span>
-                        </div>
-                        <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-                            <button class="btn btn-primary">Apply with UConnect</button>
-                            <button class="btn btn-outline">Save</button>
-                            <button class="btn btn-ghost">View Details</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Pagination -->
                 <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem;">
-                    <button class="btn btn-ghost btn-sm" disabled>Previous</button>
-                    <button class="btn btn-primary btn-sm">1</button>
-                    <button class="btn btn-ghost btn-sm">2</button>
-                    <button class="btn btn-ghost btn-sm">3</button>
-                    <button class="btn btn-ghost btn-sm">...</button>
-                    <button class="btn btn-ghost btn-sm">10</button>
-                    <button class="btn btn-ghost btn-sm">Next</button>
+                    <button class="btn btn-sm btn-outline-primary" disabled><i class="fas fa-chevron-left"></i></button>
+                    <button class="btn btn-sm btn-primary">1</button>
+                    <button class="btn btn-sm btn-outline-primary">2</button>
+                    <button class="btn btn-sm btn-outline-primary">3</button>
+                    <button class="btn btn-sm btn-outline-primary">...</button>
+                    <button class="btn btn-sm btn-outline-primary">12</button>
+                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-chevron-right"></i></button>
                 </div>
-            </div>
-        </main>
+            </main>
+        </div>
     </div>
 
-    <script src="../script.js"></script>
-    <script>
-        // Sidebar Toggle Functionality
-        const sidebar = document.getElementById('sidebar');
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebarClose = document.getElementById('sidebarClose');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
+    <!-- Chat Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-bubble" id="chatBubble">
+            <div class="chat-bubble-content">
+                <span class="wave-emoji">👋</span>
+                <span>Hi! How can we help?</span>
+            </div>
+            <div class="chat-bubble-actions">
+                <button class="chat-action-btn">I have a question</button>
+                <button class="chat-action-btn">Tell me more</button>
+            </div>
+        </div>
+        <button class="chat-toggle-btn" id="chatToggle">
+            <i class="fas fa-comment-dots"></i>
+            <span class="notification-badge">1</span>
+        </button>
+    </div>
 
-        function openSidebar() {
-            sidebar.classList.add('open');
-            sidebarToggle.classList.add('active');
-            sidebarOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeSidebar() {
-            sidebar.classList.remove('open');
-            sidebarToggle.classList.remove('active');
-            sidebarOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        sidebarToggle.addEventListener('click', () => {
-            if (sidebar.classList.contains('open')) {
-                closeSidebar();
-            } else {
-                openSidebar();
-            }
-        });
-
-        sidebarClose.addEventListener('click', closeSidebar);
-        sidebarOverlay.addEventListener('click', closeSidebar);
-
-        // Close sidebar on escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && sidebar.classList.contains('open')) {
-                closeSidebar();
-            }
-        });
-    </script>
+    <script src="layout.js"></script>
 </body>
 </html>

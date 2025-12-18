@@ -3,504 +3,478 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>U-SkillMap - UConnect</title>
-    <link rel="stylesheet" href="../styles.css">
+    <title>SkillMap - UConnect</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="layout.css">
+    
 </head>
 <body>
-    <!-- Sidebar Toggle Button -->
-    <button class="sidebar-toggle-btn" id="sidebarToggle" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
-
-    <!-- Top Right Theme Toggle -->
-    <div class="top-right-actions">
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="5"/>
-                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-            </svg>
-            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-            </svg>
-        </button>
-    </div>
-
-    <!-- Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <div class="dashboard-layout">
-        <!-- Left Sidebar -->
+    <div class="app-container">
+        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <a href="../index.html" class="logo">
-                    <span class="logo-icon">U</span>
-                    <span class="logo-text">Connect</span>
+                    <div class="logo-icon">U</div>
+                    <div class="logo-text">
+                        <span class="logo-title">UConnect</span>
+                        <span class="logo-subtitle">University Ecosystem</span>
+                    </div>
                 </a>
-                <button class="sidebar-close-btn" id="sidebarClose" aria-label="Close menu">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"/>
-                        <line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
+                <button class="sidebar-collapse-btn" id="sidebarCollapse">
+                    <i class="fas fa-chevron-left"></i>
                 </button>
             </div>
 
-            <div class="sidebar-section">
-                <div class="sidebar-section-title">Main</div>
-                <nav class="sidebar-nav">
-                    <a href="dashboard.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="7" height="7"/>
-                            <rect x="14" y="3" width="7" height="7"/>
-                            <rect x="14" y="14" width="7" height="7"/>
-                            <rect x="3" y="14" width="7" height="7"/>
-                        </svg>
-                        Dashboard
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
                     </a>
-                    <a href="projects.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                        </svg>
-                        Projects
+                    <a href="projects.html" class="nav-item">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Projects</span>
                     </a>
-                    <a href="teams.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                        </svg>
-                        Teams
+                    <a href="teams.html" class="nav-item">
+                        <i class="fas fa-users"></i>
+                        <span>Teams</span>
                     </a>
-                    <a href="opportunities.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
-                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-                        </svg>
-                        Opportunities
+                    <a href="opportunities.html" class="nav-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Opportunities</span>
+                        <span class="nav-badge">24</span>
                     </a>
-                </nav>
-            </div>
-            <div class="sidebar-divider"></div>
-            <div class="sidebar-section">
-                <div class="sidebar-section-title">Career Tools</div>
-                <nav class="sidebar-nav">
-                    <a href="profile.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
-                        </svg>
-                        Profile
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Career Tools</div>
+                    <a href="profile.html" class="nav-item">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
                     </a>
-                    <a href="resume.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                        </svg>
-                        U-Resume
+                    <a href="resume.html" class="nav-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>U-Resume</span>
                     </a>
-                    <a href="skillmap.html" class="active">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-                            <polyline points="2 17 12 22 22 17"/>
-                            <polyline points="2 12 12 17 22 12"/>
-                        </svg>
-                        U-SkillMap
+                    <a href="skillmap.html" class="nav-item active">
+                        <i class="fas fa-layer-group"></i>
+                        <span>U-SkillMap</span>
                     </a>
-                </nav>
-            </div>
-            <div class="sidebar-divider"></div>
-            <div class="sidebar-section">
-                <div class="sidebar-section-title">Community</div>
-                <nav class="sidebar-nav">
-                    <a href="showcase.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                            <line x1="8" y1="21" x2="16" y2="21"/>
-                            <line x1="12" y1="17" x2="12" y2="21"/>
-                        </svg>
-                        Showcase
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Community</div>
+                    <a href="showcase.html" class="nav-item">
+                        <i class="fas fa-desktop"></i>
+                        <span>Showcase</span>
                     </a>
-                    <a href="leaderboard.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
-                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
-                            <path d="M4 22h16"/>
-                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
-                        </svg>
-                        Leaderboard
+                    <a href="leaderboard.html" class="nav-item">
+                        <i class="fas fa-trophy"></i>
+                        <span>Leaderboard</span>
                     </a>
-                    <a href="mentors.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                        </svg>
-                        Mentors
+                    <a href="mentors.html" class="nav-item">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>Mentors</span>
                     </a>
-                </nav>
-            </div>
-            <div class="sidebar-divider"></div>
-            <div class="sidebar-section">
-                <div class="sidebar-section-title">Support</div>
-                <nav class="sidebar-nav">
-                    <a href="messages.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                        </svg>
-                        Messages
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Support</div>
+                    <a href="messages.html" class="nav-item">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Messages</span>
                         <span class="nav-badge">3</span>
                     </a>
-                    <a href="help.html">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                            <line x1="12" y1="17" x2="12.01" y2="17"/>
-                        </svg>
-                        Help Board
+                    <a href="help.html" class="nav-item">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Help Board</span>
                     </a>
-                </nav>
-            </div>
-            <div class="sidebar-user">
-                <div class="sidebar-user-avatar">JD</div>
-                <div class="sidebar-user-info">
-                    <div class="sidebar-user-name">John Doe</div>
-                    <div class="sidebar-user-email">john@university.edu</div>
                 </div>
-            </div>
-
-            <div class="sidebar-actions">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                    <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                    </svg>
-                    <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <line x1="12" y1="1" x2="12" y2="3"/>
-                        <line x1="12" y1="21" x2="12" y2="23"/>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                        <line x1="1" y1="12" x2="3" y2="12"/>
-                        <line x1="21" y1="12" x2="23" y2="12"/>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                    </svg>
-                </button>
-                <a href="login.html" class="logout-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                        <polyline points="16 17 21 12 16 7"/>
-                        <line x1="21" y1="12" x2="9" y2="12"/>
-                    </svg>
-                </a>
-            </div>
+            </nav>
         </aside>
 
-        <main class="main-content">
-            <header class="dashboard-header">
-                <div class="dashboard-title">
-                    <h1>U-SkillMap</h1>
-                    <p>Analyze skill gaps, get personalized learning paths, and track time-to-readiness.</p>
+        <div class="main-wrapper">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-title">
+                        <h1>U-SkillMap</h1>
+                        <p>Track your skills and learning progress</p>
+                    </div>
                 </div>
-                <div class="dashboard-actions">
-                    <button class="btn btn-outline">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="7 10 12 15 17 10"/>
-                            <line x1="12" y1="15" x2="12" y2="3"/>
-                        </svg>
-                        Export Roadmap
+
+                <div class="header-actions">
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-chart-line"></i>
+                        Skill Analytics
                     </button>
                     <button class="btn btn-primary">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/>
-                        </svg>
-                        AI Analyze
+                        <i class="fas fa-plus"></i>
+                        Add Skill
                     </button>
+                </div>
+
+                <div class="header-right">
+                    <button class="icon-btn theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="icon-btn notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <button class="user-btn">
+                            <div class="user-avatar">TT</div>
+                            <span class="user-name">Taslim Ahmed</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="profile.html" class="dropdown-item">
+                                <i class="fas fa-user-circle"></i>
+                                My Profile
+                            </a>
+                            <a href="resume.html" class="dropdown-item">
+                                <i class="fas fa-file-alt"></i>
+                                U-Resume
+                            </a>
+                            <a href="skillmap.html" class="dropdown-item">
+                                <i class="fas fa-layer-group"></i>
+                                U-SkillMap
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="login.html" class="dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Log Out
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </header>
 
-            <div class="dashboard-body">
-                <!-- Target Role Selection -->
-                <div class="card" style="margin-bottom: 1.5rem;">
-                    <div class="card-body" style="padding: 1rem;">
-                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
-                            <span style="font-weight: 500;">Compare against:</span>
-                            <select class="form-input" style="width: auto; padding: 0.625rem 1rem;">
-                                <option value="">Select Target Role</option>
-                                <option value="frontend" selected>Frontend Developer</option>
-                                <option value="backend">Backend Developer</option>
-                                <option value="fullstack">Full Stack Developer</option>
-                                <option value="data">Data Scientist</option>
-                                <option value="ml">ML Engineer</option>
-                                <option value="devops">DevOps Engineer</option>
-                                <option value="mobile">Mobile Developer</option>
-                                <option value="ux">UX Designer</option>
-                                <option value="pm">Product Manager</option>
-                            </select>
-                            <span style="font-size: 0.875rem; color: var(--gray-500);">or paste a job description</span>
-                            <button class="btn btn-outline btn-sm">Paste JD</button>
+            <main class="main-content">
+                <!-- Stats Overview -->
+                <div class="stats-grid" style="margin-bottom: 1.5rem;">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(37, 99, 235, 0.1); color: var(--primary);">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">24</span>
+                            <span class="stat-label">Total Skills</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">8</span>
+                            <span class="stat-label">Expert Level</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">+12%</span>
+                            <span class="stat-label">Growth This Month</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1); color: var(--accent);">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value">5</span>
+                            <span class="stat-label">Certifications</span>
                         </div>
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                    <!-- Skill Gap Analysis -->
-                    <div class="card">
-                        <div class="card-body">
-                            <h2 style="font-size: 1.125rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-                                </svg>
-                                Skill Gap Analysis
-                            </h2>
-
-                            <!-- Overall Match -->
-                            <div style="text-align: center; margin-bottom: 1.5rem;">
-                                <div style="width: 120px; height: 120px; margin: 0 auto; position: relative;">
-                                    <svg viewBox="0 0 36 36" style="transform: rotate(-90deg);">
-                                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--gray-200)" stroke-width="3"/>
-                                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--primary)" stroke-width="3" stroke-dasharray="72, 100"/>
-                                    </svg>
-                                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
-                                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">72%</div>
-                                        <div style="font-size: 0.7rem; color: var(--gray-500);">Match</div>
-                                    </div>
-                                </div>
-                                <p style="font-size: 0.875rem; color: var(--gray-600); margin-top: 0.75rem;">You're 72% ready for <strong>Frontend Developer</strong></p>
+                <div style="display: grid; grid-template-columns: 1fr 350px; gap: 1.5rem;">
+                    <!-- Skills by Category -->
+                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <!-- Frontend Skills -->
+                        <div class="card">
+                            <div class="card-header" style="padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                                <h3 style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-palette" style="color: var(--primary);"></i>
+                                    Frontend Development
+                                </h3>
+                                <span class="badge badge-primary">8 Skills</span>
                             </div>
-
-                            <!-- Skill Breakdown -->
-                            <div style="display: flex; flex-direction: column; gap: 1rem;">
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                                        <span style="font-size: 0.875rem;">JavaScript</span>
-                                        <span style="font-size: 0.75rem; color: var(--success);">Advanced</span>
-                                    </div>
-                                    <div style="height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
-                                        <div style="width: 90%; height: 100%; background: var(--success); border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                                        <span style="font-size: 0.875rem;">React</span>
-                                        <span style="font-size: 0.75rem; color: var(--success);">Proficient</span>
-                                    </div>
-                                    <div style="height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
-                                        <div style="width: 75%; height: 100%; background: var(--success); border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                                        <span style="font-size: 0.875rem;">TypeScript</span>
-                                        <span style="font-size: 0.75rem; color: var(--warning);">Intermediate</span>
-                                    </div>
-                                    <div style="height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
-                                        <div style="width: 50%; height: 100%; background: var(--warning); border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                                        <span style="font-size: 0.875rem;">Testing (Jest/Cypress)</span>
-                                        <span style="font-size: 0.75rem; color: var(--error);">Gap</span>
-                                    </div>
-                                    <div style="height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
-                                        <div style="width: 20%; height: 100%; background: var(--error); border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                                        <span style="font-size: 0.875rem;">Performance Optimization</span>
-                                        <span style="font-size: 0.75rem; color: var(--error);">Gap</span>
-                                    </div>
-                                    <div style="height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
-                                        <div style="width: 15%; height: 100%; background: var(--error); border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Time to Readiness -->
-                    <div class="card">
-                        <div class="card-body">
-                            <h2 style="font-size: 1.125rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <polyline points="12 6 12 12 16 14"/>
-                                </svg>
-                                Time to Readiness
-                            </h2>
-
-                            <div style="text-align: center; padding: 1rem; background: var(--gray-50); border-radius: 0.75rem; margin-bottom: 1.5rem;">
-                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">~6 weeks</div>
-                                <p style="font-size: 0.875rem; color: var(--gray-600);">Estimated time to reach 90% readiness</p>
-                                <p style="font-size: 0.75rem; color: var(--gray-500);">Based on 10 hours/week learning</p>
-                            </div>
-
-                            <h3 style="font-size: 0.95rem; margin-bottom: 1rem;">Priority Learning Path</h3>
-                            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                                <div style="display: flex; gap: 1rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; border-left: 3px solid var(--error);">
-                                    <div style="width: 24px; height: 24px; background: var(--error); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600;">1</div>
-                                    <div style="flex: 1;">
-                                        <div style="font-weight: 500; font-size: 0.875rem;">Testing Fundamentals</div>
-                                        <div style="font-size: 0.75rem; color: var(--gray-500);">Jest, React Testing Library • ~2 weeks</div>
-                                    </div>
-                                    <button class="btn btn-sm btn-primary">Start</button>
-                                </div>
-                                <div style="display: flex; gap: 1rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; border-left: 3px solid var(--warning);">
-                                    <div style="width: 24px; height: 24px; background: var(--warning); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600;">2</div>
-                                    <div style="flex: 1;">
-                                        <div style="font-weight: 500; font-size: 0.875rem;">TypeScript Deep Dive</div>
-                                        <div style="font-size: 0.75rem; color: var(--gray-500);">Advanced types, generics • ~2 weeks</div>
-                                    </div>
-                                    <button class="btn btn-sm btn-outline">View</button>
-                                </div>
-                                <div style="display: flex; gap: 1rem; padding: 0.75rem; background: var(--gray-50); border-radius: 0.5rem; border-left: 3px solid var(--gray-400);">
-                                    <div style="width: 24px; height: 24px; background: var(--gray-400); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600;">3</div>
-                                    <div style="flex: 1;">
-                                        <div style="font-weight: 500; font-size: 0.875rem;">Performance Optimization</div>
-                                        <div style="font-size: 0.75rem; color: var(--gray-500);">Code splitting, lazy loading • ~2 weeks</div>
-                                    </div>
-                                    <button class="btn btn-sm btn-outline">View</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Learning Resources -->
-                <div class="card" style="margin-top: 1.5rem;">
-                    <div class="card-body">
-                        <h2 style="font-size: 1.125rem; margin-bottom: 1rem;">Recommended Resources</h2>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
-                            <div style="padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.5rem;">
-                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                                    <div style="width: 40px; height: 40px; background: #f43f5e; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                                            <polygon points="5 3 19 12 5 21 5 3"/>
-                                        </svg>
+                            <div class="card-body">
+                                <div style="display: grid; gap: 1rem;">
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">JavaScript</span>
+                                            <span style="font-size: 0.75rem; color: var(--success);">Expert • 90%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 90%; background: var(--success);"></div>
+                                        </div>
                                     </div>
                                     <div>
-                                        <div style="font-weight: 500; font-size: 0.875rem;">Testing JavaScript</div>
-                                        <div style="font-size: 0.75rem; color: var(--gray-500);">Kent C. Dodds • Video Course</div>
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <span class="badge badge-primary" style="font-size: 0.7rem;">Jest</span>
-                                    <span class="badge" style="font-size: 0.7rem; background: var(--gray-100);">4h 30m</span>
-                                </div>
-                            </div>
-                            <div style="padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.5rem;">
-                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                                    <div style="width: 40px; height: 40px; background: #3178c6; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.875rem;">TS</div>
-                                    <div>
-                                        <div style="font-weight: 500; font-size: 0.875rem;">TypeScript Handbook</div>
-                                        <div style="font-size: 0.75rem; color: var(--gray-500);">Official Docs • Reading</div>
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <span class="badge badge-primary" style="font-size: 0.7rem;">TypeScript</span>
-                                    <span class="badge" style="font-size: 0.7rem; background: var(--gray-100);">Free</span>
-                                </div>
-                            </div>
-                            <div style="padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.5rem;">
-                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                                    <div style="width: 40px; height: 40px; background: #10b981; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                                        </svg>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">React</span>
+                                            <span style="font-size: 0.75rem; color: var(--success);">Expert • 85%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 85%; background: var(--success);"></div>
+                                        </div>
                                     </div>
                                     <div>
-                                        <div style="font-weight: 500; font-size: 0.875rem;">Mini Project: Todo App</div>
-                                        <div style="font-size: 0.75rem; color: var(--gray-500);">Practice • Build</div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">TypeScript</span>
+                                            <span style="font-size: 0.75rem; color: var(--primary);">Advanced • 75%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 75%;"></div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <span class="badge badge-success" style="font-size: 0.7rem;">Hands-on</span>
-                                    <span class="badge" style="font-size: 0.7rem; background: var(--gray-100);">~3 hours</span>
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">CSS/Tailwind</span>
+                                            <span style="font-size: 0.75rem; color: var(--primary);">Advanced • 80%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 80%;"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Career Path Comparison -->
-                <div class="card" style="margin-top: 1.5rem;">
-                    <div class="card-body">
-                        <h2 style="font-size: 1.125rem; margin-bottom: 1rem;">Compare Career Paths</h2>
-                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                            <div style="flex: 1; min-width: 200px; padding: 1rem; border: 2px solid var(--primary); border-radius: 0.75rem; background: rgba(59, 130, 246, 0.05);">
-                                <div style="font-weight: 600; margin-bottom: 0.5rem;">Frontend Developer</div>
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.25rem;">72%</div>
-                                <div style="font-size: 0.75rem; color: var(--gray-500);">6 weeks to 90%</div>
+                        <!-- Backend Skills -->
+                        <div class="card">
+                            <div class="card-header" style="padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                                <h3 style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-server" style="color: var(--success);"></i>
+                                    Backend Development
+                                </h3>
+                                <span class="badge badge-success">6 Skills</span>
                             </div>
-                            <div style="flex: 1; min-width: 200px; padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.75rem;">
-                                <div style="font-weight: 600; margin-bottom: 0.5rem;">Full Stack Developer</div>
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--gray-600); margin-bottom: 0.25rem;">58%</div>
-                                <div style="font-size: 0.75rem; color: var(--gray-500);">12 weeks to 90%</div>
+                            <div class="card-body">
+                                <div style="display: grid; gap: 1rem;">
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">Node.js</span>
+                                            <span style="font-size: 0.75rem; color: var(--success);">Expert • 85%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 85%; background: var(--success);"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">Python</span>
+                                            <span style="font-size: 0.75rem; color: var(--primary);">Advanced • 75%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 75%;"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">PostgreSQL</span>
+                                            <span style="font-size: 0.75rem; color: var(--primary);">Advanced • 70%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 70%;"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">MongoDB</span>
+                                            <span style="font-size: 0.75rem; color: var(--warning);">Intermediate • 60%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 60%; background: var(--warning);"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div style="flex: 1; min-width: 200px; padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.75rem;">
-                                <div style="font-weight: 600; margin-bottom: 0.5rem;">UX Engineer</div>
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--gray-600); margin-bottom: 0.25rem;">45%</div>
-                                <div style="font-size: 0.75rem; color: var(--gray-500);">16 weeks to 90%</div>
+                        </div>
+
+                        <!-- AI/ML Skills -->
+                        <div class="card">
+                            <div class="card-header" style="padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                                <h3 style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-brain" style="color: var(--accent);"></i>
+                                    AI & Machine Learning
+                                </h3>
+                                <span class="badge" style="background: rgba(139, 92, 246, 0.1); color: var(--accent);">5 Skills</span>
                             </div>
-                            <div style="flex: 1; min-width: 200px; padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.75rem;">
-                                <div style="font-weight: 600; margin-bottom: 0.5rem;">Mobile Developer</div>
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--gray-600); margin-bottom: 0.25rem;">35%</div>
-                                <div style="font-size: 0.75rem; color: var(--gray-500);">20 weeks to 90%</div>
+                            <div class="card-body">
+                                <div style="display: grid; gap: 1rem;">
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">TensorFlow</span>
+                                            <span style="font-size: 0.75rem; color: var(--warning);">Intermediate • 55%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 55%; background: var(--warning);"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">PyTorch</span>
+                                            <span style="font-size: 0.75rem; color: var(--warning);">Intermediate • 50%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 50%; background: var(--warning);"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">NLP</span>
+                                            <span style="font-size: 0.75rem; color: var(--warning);">Intermediate • 45%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 45%; background: var(--warning);"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <!-- Skill Recommendations -->
+                        <div class="card">
+                            <div class="card-header" style="padding: 1rem; border-bottom: 1px solid var(--border-color);">
+                                <h3 style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-magic" style="color: var(--accent);"></i>
+                                    AI Recommendations
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 1rem;">Based on your projects and goals:</p>
+                                <div style="display: grid; gap: 0.75rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--surface-elevated); border-radius: 0.5rem;">
+                                        <div style="width: 32px; height: 32px; background: rgba(37, 99, 235, 0.1); border-radius: 0.375rem; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fab fa-docker" style="color: var(--primary);"></i>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">Docker</span>
+                                            <p style="font-size: 0.65rem; color: var(--text-secondary);">High demand skill</p>
+                                        </div>
+                                        <button class="btn btn-sm btn-primary">Learn</button>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--surface-elevated); border-radius: 0.5rem;">
+                                        <div style="width: 32px; height: 32px; background: rgba(245, 158, 11, 0.1); border-radius: 0.375rem; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fab fa-aws" style="color: var(--warning);"></i>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">AWS</span>
+                                            <p style="font-size: 0.65rem; color: var(--text-secondary);">Career booster</p>
+                                        </div>
+                                        <button class="btn btn-sm btn-primary">Learn</button>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--surface-elevated); border-radius: 0.5rem;">
+                                        <div style="width: 32px; height: 32px; background: rgba(16, 185, 129, 0.1); border-radius: 0.375rem; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-code-branch" style="color: var(--success);"></i>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">GraphQL</span>
+                                            <p style="font-size: 0.65rem; color: var(--text-secondary);">Trending API tech</p>
+                                        </div>
+                                        <button class="btn btn-sm btn-primary">Learn</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Certifications -->
+                        <div class="card">
+                            <div class="card-header" style="padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                                <h3 style="font-size: 1rem;">Certifications</h3>
+                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <div class="card-body">
+                                <div style="display: grid; gap: 0.75rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--surface-elevated); border-radius: 0.5rem;">
+                                        <i class="fas fa-certificate" style="color: var(--warning);"></i>
+                                        <div style="flex: 1;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">Meta Frontend Developer</span>
+                                            <p style="font-size: 0.65rem; color: var(--text-secondary);">Coursera • 2024</p>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--surface-elevated); border-radius: 0.5rem;">
+                                        <i class="fas fa-certificate" style="color: var(--warning);"></i>
+                                        <div style="flex: 1;">
+                                            <span style="font-size: 0.875rem; font-weight: 500;">Google Data Analytics</span>
+                                            <p style="font-size: 0.65rem; color: var(--text-secondary);">Coursera • 2023</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Learning Path -->
+                        <div class="card">
+                            <div class="card-header" style="padding: 1rem; border-bottom: 1px solid var(--border-color);">
+                                <h3 style="font-size: 1rem;">Current Learning</h3>
+                            </div>
+                            <div class="card-body">
+                                <div style="display: grid; gap: 0.75rem;">
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                            <span style="font-size: 0.875rem;">Deep Learning Specialization</span>
+                                            <span style="font-size: 0.75rem; color: var(--text-secondary);">65%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 65%;"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                            <span style="font-size: 0.875rem;">System Design Course</span>
+                                            <span style="font-size: 0.75rem; color: var(--text-secondary);">30%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 30%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </main>
+            </main>
+        </div>
     </div>
 
-    <script src="../script.js"></script>
-    <script>
-        // Sidebar Toggle Functionality
-        const sidebar = document.getElementById('sidebar');
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebarClose = document.getElementById('sidebarClose');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
+    <!-- Chat Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-bubble" id="chatBubble">
+            <div class="chat-bubble-content">
+                <span class="wave-emoji">👋</span>
+                <span>Hi! How can we help?</span>
+            </div>
+            <div class="chat-bubble-actions">
+                <button class="chat-action-btn">I have a question</button>
+                <button class="chat-action-btn">Tell me more</button>
+            </div>
+        </div>
+        <button class="chat-toggle-btn" id="chatToggle">
+            <i class="fas fa-comment-dots"></i>
+            <span class="notification-badge">1</span>
+        </button>
+    </div>
 
-        function openSidebar() {
-            sidebar.classList.add('open');
-            sidebarToggle.classList.add('active');
-            sidebarOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeSidebar() {
-            sidebar.classList.remove('open');
-            sidebarToggle.classList.remove('active');
-            sidebarOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        sidebarToggle.addEventListener('click', () => {
-            if (sidebar.classList.contains('open')) {
-                closeSidebar();
-            } else {
-                openSidebar();
-            }
-        });
-
-        sidebarClose.addEventListener('click', closeSidebar);
-        sidebarOverlay.addEventListener('click', closeSidebar);
-
-        // Close sidebar on escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && sidebar.classList.contains('open')) {
-                closeSidebar();
-            }
-        });
-    </script>
+    <script src="layout.js"></script>
 </body>
 </html>
