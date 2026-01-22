@@ -4,13 +4,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // Sidebar Toggle
     const sidebar = document.getElementById('sidebar');
     const sidebarCollapse = document.getElementById('sidebarCollapse');
+    const sidebarToggle = document.getElementById('sidebarToggle');
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const mainWrapper = document.querySelector('.main-wrapper');
 
-    sidebarCollapse?.addEventListener('click', () => {
-        sidebar.classList.toggle('collapsed');
+    // Load saved sidebar state
+    const savedSidebarState = localStorage.getItem('sidebarCollapsed');
+    if (savedSidebarState === 'true') {
+        sidebar?.classList.add('collapsed');
+        mainWrapper?.classList.add('sidebar-collapsed');
+    }
+
+    // Toggle sidebar function
+    function toggleSidebar() {
+        sidebar?.classList.toggle('collapsed');
         mainWrapper?.classList.toggle('sidebar-collapsed');
-    });
+        // Save state
+        localStorage.setItem('sidebarCollapsed', sidebar?.classList.contains('collapsed'));
+    }
+
+    sidebarCollapse?.addEventListener('click', toggleSidebar);
+    sidebarToggle?.addEventListener('click', toggleSidebar);
 
     mobileMenuBtn?.addEventListener('click', () => {
         sidebar.classList.toggle('mobile-open');
