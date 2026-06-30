@@ -1,0 +1,138 @@
+import { useState, useEffect } from 'react';
+import { Outlet, NavLink, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+
+const navItems = [
+  { to: '/dashboard', icon: '⊞', label: 'Dashboard' },
+  { to: '/profile', icon: '◉', label: 'My Profile' },
+  { to: '/projects', icon: '◈', label: 'Projects' },
+  { to: '/teams', icon: '◎', label: 'Teams' },
+  { to: '/opportunities', icon: '◇', label: 'Opportunities' },
+  { to: '/resume', icon: '◆', label: 'Resume' },
+];
+
+const communityItems = [
+  { to: '/messages', icon: '◌', label: 'Messages' },
+  { to: '/mentors', icon: '◉', label: 'Mentors' },
+  { to: '/leaderboard', icon: '◑', label: 'Leaderboard' },
+];
+
+export default function AppLayout() {
+  const { user, logout } = useAuth();
+  const [theme, setTheme] = useState(() => localStorage.getItem('uc_theme') || 'light');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('uc_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(t => t === 'light' ? 'dark' : 'light');
+
+  const pageTitles = {
+    '/dashboard': 'Dashboard',
+    '/profile': 'My Profile',
+    '/projects': 'Projects',
+    '/teams': 'Teams',
+    '/opportunities': 'Opportunities',
+    '/resume': 'Resume Builder',
+    '/messages': 'Messages',
+    '/mentors': 'Mentors',
+    '/leaderboard': 'Leaderboard',
+  };
+
+  const currentTitle = Object.entries(pageTitles).find(([path]) =>
+    location.pathname.startsWith(path)
+  )?.[1] || 'UConnect';
+
+  const initials = user?.name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'U';
+
+  return (
+    <div className="app-shell">
+      {/* Sidebar */}
+      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+        <div className="sidebar-logo">
+          <div className="sidebar-logo-icon">U</div>
+          <span className="sidebar-logo-text">Connect</span>
+        </div>
+
+        <nav className="sidebar-nav">
+          <div className="sidebar-section-label">Main</div>
+          {navItems.map(item => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
+              onClick={() => setSidebarOpen(false)}
+            >
+              <span style={{ fontSize: '1rem', width: 18, textAlign: 'center' }}>{item.icon}</span>
+              {item.label}
+            </NavLink>
+          ))}
+
+          <div className="sidebar-section-label" style={{ marginTop: 8 }}>Community</div>
+          {communityItems.map(item => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
+              onClick={() => setSidebarOpen(false)}
+            >
+              <span style={{ fontSize: '1rem', width: 18, textAlign: 'center' }}>{item.icon}</span>
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* Sidebar User */}
+        <div className="sidebar-footer">
+          <div className="sidebar-user">
+            <div className="sidebar-avatar">{initials}</div>
+            <div className="sidebar-user-info">
+              <div className="sidebar-user-name">{user?.name}</div>
+              <div className="sidebar-user-role">{user?.role?.toLowerCase()}</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <div className="main-content">
+        {/* Topbar */}
+        <header className="topbar">
+          <div className="flex gap-3" style={{ alignItems: 'center' }}>
+            <button
+              className="theme-btn"
+              style={{ display: 'none' }}
+              onClick={() => setSidebarOpen(o => !o)}
+              aria-label="Toggle sidebar"
+            >☰</button>
+            <span className="topbar-title">{currentTitle}</span>
+          </div>
+          <div className="topbar-actions">
+            <button className="theme-btn" onClick={toggleTheme} title="Toggle theme">
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
+            <button className="topbar-logout" onClick={logout}>
+              <span>→</span> Logout
+            </button>
+          </div>
+        </header>
+
+        {/* Page */}
+        <main className="page-content">
+          <Outlet />
+        </main>
+      </div>
+
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 199 }}
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+    </div>
+  );
+}
