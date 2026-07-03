@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - UConnect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="layout.css">
+    
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Sidebar Toggle Handle -->
+            <div class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="sidebar-header">
+                <a href="../index.html" class="logo">
+                    <div class="logo-icon">U</div>
+                    <div class="logo-text">
+                        <span class="logo-title">UConnect</span>
+                        <span class="logo-subtitle">University Ecosystem</span>
+                    </div>
+                </a>
+                <button class="sidebar-collapse-btn" id="sidebarCollapse">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="projects.html" class="nav-item">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Projects</span>
+                    </a>
+                    <a href="teams.html" class="nav-item">
+                        <i class="fas fa-users"></i>
+                        <span>Teams</span>
+                    </a>
+                    <a href="opportunities.html" class="nav-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Opportunities</span>
+                        <span class="nav-badge">24</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Career Tools</div>
+                    <a href="profile.html" class="nav-item">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                    <a href="resume.html" class="nav-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>U-Resume</span>
+                    </a>
+                    <a href="skillmap.html" class="nav-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>U-SkillMap</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Community</div>
+                    <a href="showcase.html" class="nav-item">
+                        <i class="fas fa-desktop"></i>
+                        <span>Showcase</span>
+                    </a>
+                    <a href="leaderboard.html" class="nav-item">
+                        <i class="fas fa-trophy"></i>
+                        <span>Leaderboard</span>
+                    </a>
+                    <a href="mentors.html" class="nav-item">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>Mentors</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Support</div>
+                    <a href="messages.html" class="nav-item active">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Messages</span>
+                        <span class="nav-badge">3</span>
+                    </a>
+                    <a href="help.html" class="nav-item">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Help Board</span>
+                    </a>
+                </div>
+            </nav>
+
+        </aside>
+
+        <div class="main-wrapper">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-title">
+                        <h1>Messages</h1>
+                        <p>Stay connected with your teams and mentors</p>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        New Message
+                    </button>
+                </div>
+
+                <div class="header-right">
+                    <button class="icon-btn theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="icon-btn notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <button class="user-btn">
+                            <div class="user-avatar">TT</div>
+                            <span class="user-name">Taslim Ahmed</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="profile.html" class="dropdown-item">
+                                <i class="fas fa-user-circle"></i>
+                                My Profile
+                            </a>
+                            <a href="resume.html" class="dropdown-item">
+                                <i class="fas fa-file-alt"></i>
+                                U-Resume
+                            </a>
+                            <a href="skillmap.html" class="dropdown-item">
+                                <i class="fas fa-layer-group"></i>
+                                U-SkillMap
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="login.html" class="dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Log Out
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="main-content" style="padding: 0; height: calc(100vh - 70px);">
+                <div style="display: grid; grid-template-columns: 350px 1fr; height: 100%;">
+                    <!-- Conversations List -->
+                    <div style="border-right: 1px solid var(--border-color); display: flex; flex-direction: column; background: var(--surface);">
+                        <!-- Search -->
+                        <div style="padding: 1rem; border-bottom: 1px solid var(--border-color);">
+                            <div style="position: relative;">
+                                <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                                <input type="text" class="form-input" placeholder="Search conversations..." style="padding-left: 2.5rem;">
+                            </div>
+                        </div>
+
+                        <!-- Tabs -->
+                        <div style="display: flex; border-bottom: 1px solid var(--border-color);">
+                            <button style="flex: 1; padding: 0.75rem; background: none; border: none; border-bottom: 2px solid var(--primary); color: var(--primary); font-weight: 500; cursor: pointer;">All</button>
+                            <button style="flex: 1; padding: 0.75rem; background: none; border: none; color: var(--text-secondary); cursor: pointer;">Teams</button>
+                            <button style="flex: 1; padding: 0.75rem; background: none; border: none; color: var(--text-secondary); cursor: pointer;">Mentors</button>
+                        </div>
+
+                        <!-- Conversations -->
+                        <div style="flex: 1; overflow-y: auto;">
+                            <!-- Active Conversation -->
+                            <div style="display: flex; gap: 0.75rem; padding: 1rem; background: rgba(37, 99, 235, 0.05); border-left: 3px solid var(--primary); cursor: pointer;">
+                                <div style="position: relative;">
+                                    <div class="avatar avatar-sm" style="background: var(--success);">SK</div>
+                                    <span style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: var(--success); border: 2px solid white; border-radius: 50%;"></span>
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                        <span style="font-weight: 600; font-size: 0.875rem;">Salman Kabir</span>
+                                        <span style="font-size: 0.7rem; color: var(--text-secondary);">2m ago</span>
+                                    </div>
+                                    <p style="font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Hey! I pushed the new API changes...</p>
+                                </div>
+                                <span class="nav-badge">2</span>
+                            </div>
+
+                            <!-- Conversation -->
+                            <div style="display: flex; gap: 0.75rem; padding: 1rem; border-bottom: 1px solid var(--border-color); cursor: pointer;">
+                                <div style="position: relative;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; font-weight: 600;">UC</div>
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                        <span style="font-weight: 600; font-size: 0.875rem;">UConnect Team</span>
+                                        <span style="font-size: 0.7rem; color: var(--text-secondary);">1h ago</span>
+                                    </div>
+                                    <p style="font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Majharul: Great work on the dashboard!</p>
+                                </div>
+                            </div>
+
+                            <!-- Conversation -->
+                            <div style="display: flex; gap: 0.75rem; padding: 1rem; border-bottom: 1px solid var(--border-color); cursor: pointer;">
+                                <div style="position: relative;">
+                                    <div class="avatar avatar-sm" style="background: var(--accent);">MI</div>
+                                    <span style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: var(--success); border: 2px solid white; border-radius: 50%;"></span>
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                        <span style="font-weight: 600; font-size: 0.875rem;">Majharul Islam</span>
+                                        <span style="font-size: 0.7rem; color: var(--text-secondary);">3h ago</span>
+                                    </div>
+                                    <p style="font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Can you review my PR?</p>
+                                </div>
+                                <span class="nav-badge">1</span>
+                            </div>
+
+                            <!-- Conversation -->
+                            <div style="display: flex; gap: 0.75rem; padding: 1rem; border-bottom: 1px solid var(--border-color); cursor: pointer;">
+                                <div style="position: relative;">
+                                    <div class="avatar avatar-sm" style="background: linear-gradient(135deg, var(--primary), var(--accent));">DR</div>
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                        <span style="font-weight: 500; font-size: 0.875rem;">Dr. Rahman Khan</span>
+                                        <span style="font-size: 0.7rem; color: var(--text-secondary);">Yesterday</span>
+                                    </div>
+                                    <p style="font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Your mentoring session is confirmed...</p>
+                                </div>
+                            </div>
+
+                            <!-- Conversation -->
+                            <div style="display: flex; gap: 0.75rem; padding: 1rem; border-bottom: 1px solid var(--border-color); cursor: pointer;">
+                                <div style="position: relative;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--success), #059669); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; font-weight: 600;">AI</div>
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                        <span style="font-weight: 500; font-size: 0.875rem;">AI Research Lab</span>
+                                        <span style="font-size: 0.7rem; color: var(--text-secondary);">2 days ago</span>
+                                    </div>
+                                    <p style="font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Meeting notes from yesterday's session</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Area -->
+                    <div style="display: flex; flex-direction: column; height: 100%;">
+                        <!-- Chat Header -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color);">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <div style="position: relative;">
+                                    <div class="avatar avatar-sm" style="background: var(--success);">SK</div>
+                                    <span style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: var(--success); border: 2px solid white; border-radius: 50%;"></span>
+                                </div>
+                                <div>
+                                    <h3 style="font-size: 1rem;">Salman Kabir Sany</h3>
+                                    <p style="font-size: 0.75rem; color: var(--success);">Online</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="icon-btn"><i class="fas fa-phone"></i></button>
+                                <button class="icon-btn"><i class="fas fa-video"></i></button>
+                                <button class="icon-btn"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Messages -->
+                        <div style="flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                            <!-- Date Separator -->
+                            <div style="text-align: center;">
+                                <span style="background: var(--surface-elevated); padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; color: var(--text-secondary);">Today</span>
+                            </div>
+
+                            <!-- Received Message -->
+                            <div style="display: flex; gap: 0.5rem; max-width: 70%;">
+                                <div class="avatar avatar-sm" style="background: var(--success); flex-shrink: 0;">SK</div>
+                                <div>
+                                    <div style="background: var(--surface-elevated); padding: 0.75rem 1rem; border-radius: 1rem; border-top-left-radius: 0.25rem;">
+                                        <p style="font-size: 0.875rem;">Hey Tamim! Just wanted to let you know that I pushed the new API changes to the feature branch.</p>
+                                    </div>
+                                    <span style="font-size: 0.65rem; color: var(--text-secondary); margin-left: 0.5rem;">10:32 AM</span>
+                                </div>
+                            </div>
+
+                            <!-- Received Message -->
+                            <div style="display: flex; gap: 0.5rem; max-width: 70%;">
+                                <div class="avatar avatar-sm" style="background: var(--success); flex-shrink: 0;">SK</div>
+                                <div>
+                                    <div style="background: var(--surface-elevated); padding: 0.75rem 1rem; border-radius: 1rem; border-top-left-radius: 0.25rem;">
+                                        <p style="font-size: 0.875rem;">Can you take a look when you get a chance? The authentication flow is now complete.</p>
+                                    </div>
+                                    <span style="font-size: 0.65rem; color: var(--text-secondary); margin-left: 0.5rem;">10:33 AM</span>
+                                </div>
+                            </div>
+
+                            <!-- Sent Message -->
+                            <div style="display: flex; gap: 0.5rem; max-width: 70%; margin-left: auto; flex-direction: row-reverse;">
+                                <div class="avatar avatar-sm" style="flex-shrink: 0;">TT</div>
+                                <div style="text-align: right;">
+                                    <div style="background: var(--primary); color: white; padding: 0.75rem 1rem; border-radius: 1rem; border-top-right-radius: 0.25rem;">
+                                        <p style="font-size: 0.875rem;">That's great! I'll check it out right now.</p>
+                                    </div>
+                                    <span style="font-size: 0.65rem; color: var(--text-secondary); margin-right: 0.5rem;">10:45 AM <i class="fas fa-check-double" style="color: var(--primary);"></i></span>
+                                </div>
+                            </div>
+
+                            <!-- Sent Message -->
+                            <div style="display: flex; gap: 0.5rem; max-width: 70%; margin-left: auto; flex-direction: row-reverse;">
+                                <div class="avatar avatar-sm" style="flex-shrink: 0;">TT</div>
+                                <div style="text-align: right;">
+                                    <div style="background: var(--primary); color: white; padding: 0.75rem 1rem; border-radius: 1rem; border-top-right-radius: 0.25rem;">
+                                        <p style="font-size: 0.875rem;">BTW, I also finished the dashboard redesign. Want to sync up after lunch?</p>
+                                    </div>
+                                    <span style="font-size: 0.65rem; color: var(--text-secondary); margin-right: 0.5rem;">10:46 AM <i class="fas fa-check-double" style="color: var(--primary);"></i></span>
+                                </div>
+                            </div>
+
+                            <!-- Received Message -->
+                            <div style="display: flex; gap: 0.5rem; max-width: 70%;">
+                                <div class="avatar avatar-sm" style="background: var(--success); flex-shrink: 0;">SK</div>
+                                <div>
+                                    <div style="background: var(--surface-elevated); padding: 0.75rem 1rem; border-radius: 1rem; border-top-left-radius: 0.25rem;">
+                                        <p style="font-size: 0.875rem;">Perfect! Let's meet at 2 PM. I'll book a room.</p>
+                                    </div>
+                                    <span style="font-size: 0.65rem; color: var(--text-secondary); margin-left: 0.5rem;">11:02 AM</span>
+                                </div>
+                            </div>
+
+                            <!-- Received Message -->
+                            <div style="display: flex; gap: 0.5rem; max-width: 70%;">
+                                <div class="avatar avatar-sm" style="background: var(--success); flex-shrink: 0;">SK</div>
+                                <div>
+                                    <div style="background: var(--surface-elevated); padding: 0.75rem 1rem; border-radius: 1rem; border-top-left-radius: 0.25rem;">
+                                        <p style="font-size: 0.875rem;">Hey! I pushed the new API changes. Please review when you can! 🚀</p>
+                                    </div>
+                                    <span style="font-size: 0.65rem; color: var(--text-secondary); margin-left: 0.5rem;">Just now</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Message Input -->
+                        <div style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-color);">
+                            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                                <button class="icon-btn"><i class="fas fa-plus"></i></button>
+                                <div style="flex: 1; position: relative;">
+                                    <input type="text" class="form-input" placeholder="Type a message..." style="padding-right: 5rem;">
+                                    <div style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); display: flex; gap: 0.25rem;">
+                                        <button class="icon-btn" style="width: 32px; height: 32px;"><i class="fas fa-smile"></i></button>
+                                        <button class="icon-btn" style="width: 32px; height: 32px;"><i class="fas fa-paperclip"></i></button>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="padding: 0.75rem;">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="layout.js"></script>
+</body>
+</html>
