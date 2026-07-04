@@ -46,13 +46,13 @@ export default function DashboardPage() {
     <div>
       {/* Welcome banner */}
       <div className="card mb-6" style={{
-        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+        background: 'var(--primary)',
         border: 'none', color: 'white', padding: '28px 32px'
       }}>
         <div className="flex-between">
           <div>
-            <h1 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: 6 }}>
-              Welcome back, {user?.name?.split(' ')[0]}! 👋
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 600, marginBottom: 6 }}>
+              Welcome back, {user?.name?.split(' ')[0]}
             </h1>
             <p style={{ opacity: 0.85, fontSize: '0.875rem' }}>
               {user?.role === 'STUDENT' && 'Ready to build something amazing today?'}
@@ -63,7 +63,7 @@ export default function DashboardPage() {
               <Link to="/profile" className="btn btn-sm" style={{ background: 'rgba(255,255,255,0.2)', color: 'white', border: '1px solid rgba(255,255,255,0.3)' }}>
                 Complete Profile
               </Link>
-              <Link to="/projects" className="btn btn-sm" style={{ background: 'white', color: '#6366f1' }}>
+              <Link to="/projects" className="btn btn-sm" style={{ background: 'white', color: 'var(--primary)' }}>
                 Browse Projects
               </Link>
             </div>

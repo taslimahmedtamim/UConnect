@@ -1,20 +1,24 @@
 import { useState, useEffect } from 'react';
 import { Outlet, NavLink, useLocation } from 'react-router-dom';
+import {
+  LuLayoutGrid, LuUserRound, LuFolderGit2, LuUsers, LuBriefcase, LuFileText,
+  LuMessageCircle, LuGraduationCap, LuTrophy, LuMenu, LuSun, LuMoon, LuLogOut,
+} from 'react-icons/lu';
 import { useAuth } from '../../context/AuthContext';
 
 const navItems = [
-  { to: '/dashboard', icon: '⊞', label: 'Dashboard' },
-  { to: '/profile', icon: '◉', label: 'My Profile' },
-  { to: '/projects', icon: '◈', label: 'Projects' },
-  { to: '/teams', icon: '◎', label: 'Teams' },
-  { to: '/opportunities', icon: '◇', label: 'Opportunities' },
-  { to: '/resume', icon: '◆', label: 'Resume' },
+  { to: '/dashboard', icon: LuLayoutGrid, label: 'Dashboard' },
+  { to: '/profile', icon: LuUserRound, label: 'My Profile' },
+  { to: '/projects', icon: LuFolderGit2, label: 'Projects' },
+  { to: '/teams', icon: LuUsers, label: 'Teams' },
+  { to: '/opportunities', icon: LuBriefcase, label: 'Opportunities' },
+  { to: '/resume', icon: LuFileText, label: 'Resume' },
 ];
 
 const communityItems = [
-  { to: '/messages', icon: '◌', label: 'Messages' },
-  { to: '/mentors', icon: '◉', label: 'Mentors' },
-  { to: '/leaderboard', icon: '◑', label: 'Leaderboard' },
+  { to: '/messages', icon: LuMessageCircle, label: 'Messages' },
+  { to: '/mentors', icon: LuGraduationCap, label: 'Mentors' },
+  { to: '/leaderboard', icon: LuTrophy, label: 'Leaderboard' },
 ];
 
 export default function AppLayout() {
@@ -66,7 +70,7 @@ export default function AppLayout() {
               className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
               onClick={() => setSidebarOpen(false)}
             >
-              <span style={{ fontSize: '1rem', width: 18, textAlign: 'center' }}>{item.icon}</span>
+              <item.icon className="nav-icon" aria-hidden="true" />
               {item.label}
             </NavLink>
           ))}
@@ -79,7 +83,7 @@ export default function AppLayout() {
               className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
               onClick={() => setSidebarOpen(false)}
             >
-              <span style={{ fontSize: '1rem', width: 18, textAlign: 'center' }}>{item.icon}</span>
+              <item.icon className="nav-icon" aria-hidden="true" />
               {item.label}
             </NavLink>
           ))}
@@ -103,19 +107,23 @@ export default function AppLayout() {
         <header className="topbar">
           <div className="flex gap-3" style={{ alignItems: 'center' }}>
             <button
-              className="theme-btn"
-              style={{ display: 'none' }}
+              className="theme-btn mobile-menu-btn"
               onClick={() => setSidebarOpen(o => !o)}
               aria-label="Toggle sidebar"
-            >☰</button>
+            ><LuMenu /></button>
             <span className="topbar-title">{currentTitle}</span>
           </div>
           <div className="topbar-actions">
-            <button className="theme-btn" onClick={toggleTheme} title="Toggle theme">
-              {theme === 'light' ? '🌙' : '☀️'}
+            <button
+              className="theme-btn"
+              onClick={toggleTheme}
+              aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+              title="Toggle theme"
+            >
+              {theme === 'light' ? <LuMoon /> : <LuSun />}
             </button>
             <button className="topbar-logout" onClick={logout}>
-              <span>→</span> Logout
+              <LuLogOut /> Logout
             </button>
           </div>
         </header>

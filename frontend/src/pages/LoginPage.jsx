@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { LuGraduationCap, LuBookOpen } from 'react-icons/lu';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
@@ -66,8 +67,8 @@ export default function LoginPage() {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
           {[
-            { label: '🎓 Student', email: 'taslim@uconnect.com' },
-            { label: '📚 Teacher', email: 'hasan@uconnect.com' },
+            { label: 'Student', icon: LuGraduationCap, email: 'taslim@uconnect.com' },
+            { label: 'Teacher', icon: LuBookOpen, email: 'hasan@uconnect.com' },
           ].map(demo => (
             <button
               key={demo.email}
@@ -75,7 +76,7 @@ export default function LoginPage() {
               style={{ justifyContent: 'center' }}
               onClick={() => setForm({ email: demo.email, password: 'password123' })}
             >
-              {demo.label}
+              <demo.icon /> {demo.label}
             </button>
           ))}
         </div>

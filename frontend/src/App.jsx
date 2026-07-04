@@ -19,6 +19,11 @@ import ResumePage from './pages/ResumePage';
 import MessagesPage from './pages/MessagesPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import MentorsPage from './pages/MentorsPage';
+import LandingPage from './pages/LandingPage';
+import CertificatesPage from './pages/CertificatesPage';
+import HelpPage from './pages/HelpPage';
+import ShowcasePage from './pages/ShowcasePage';
+import SkillMapPage from './pages/SkillMapPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -46,27 +51,31 @@ function AppRoutes() {
   return (
     <Routes>
       {/* Public */}
+      <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
       <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
       <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+      <Route path="/help" element={<HelpPage />} />
+      <Route path="/showcase" element={<ShowcasePage />} />
 
       {/* Protected — wrapped in AppLayout (sidebar + navbar) */}
-      <Route path="/" element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
-        <Route index element={<Navigate to="/dashboard" replace />} />
-        <Route path="dashboard" element={<DashboardPage />} />
-        <Route path="profile" element={<ProfilePage />} />
-        <Route path="profile/:id" element={<ProfilePage />} />
-        <Route path="projects" element={<ProjectsPage />} />
-        <Route path="projects/:id" element={<ProjectDetailPage />} />
-        <Route path="teams" element={<TeamsPage />} />
-        <Route path="opportunities" element={<OpportunitiesPage />} />
-        <Route path="resume" element={<ResumePage />} />
-        <Route path="messages" element={<MessagesPage />} />
-        <Route path="messages/:userId" element={<MessagesPage />} />
-        <Route path="mentors" element={<MentorsPage />} />
-        <Route path="leaderboard" element={<LeaderboardPage />} />
+      <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/profile/:id" element={<ProfilePage />} />
+        <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/projects/:id" element={<ProjectDetailPage />} />
+        <Route path="/teams" element={<TeamsPage />} />
+        <Route path="/opportunities" element={<OpportunitiesPage />} />
+        <Route path="/resume" element={<ResumePage />} />
+        <Route path="/messages" element={<MessagesPage />} />
+        <Route path="/messages/:userId" element={<MessagesPage />} />
+        <Route path="/mentors" element={<MentorsPage />} />
+        <Route path="/leaderboard" element={<LeaderboardPage />} />
+        <Route path="/certificates" element={<CertificatesPage />} />
+        <Route path="/skillmap" element={<SkillMapPage />} />
       </Route>
 
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

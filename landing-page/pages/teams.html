@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teams - UConnect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="layout.css">
+    
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Sidebar Toggle Handle -->
+            <div class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="sidebar-header">
+                <a href="../index.html" class="logo">
+                    <div class="logo-icon">U</div>
+                    <div class="logo-text">
+                        <span class="logo-title">UConnect</span>
+                        <span class="logo-subtitle">University Ecosystem</span>
+                    </div>
+                </a>
+                <button class="sidebar-collapse-btn" id="sidebarCollapse">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="projects.html" class="nav-item">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Projects</span>
+                    </a>
+                    <a href="teams.html" class="nav-item active">
+                        <i class="fas fa-users"></i>
+                        <span>Teams</span>
+                    </a>
+                    <a href="opportunities.html" class="nav-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Opportunities</span>
+                        <span class="nav-badge">24</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Career Tools</div>
+                    <a href="profile.html" class="nav-item">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                    <a href="resume.html" class="nav-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>U-Resume</span>
+                    </a>
+                    <a href="skillmap.html" class="nav-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>U-SkillMap</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Community</div>
+                    <a href="showcase.html" class="nav-item">
+                        <i class="fas fa-desktop"></i>
+                        <span>Showcase</span>
+                    </a>
+                    <a href="leaderboard.html" class="nav-item">
+                        <i class="fas fa-trophy"></i>
+                        <span>Leaderboard</span>
+                    </a>
+                    <a href="mentors.html" class="nav-item">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>Mentors</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Support</div>
+                    <a href="messages.html" class="nav-item">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Messages</span>
+                        <span class="nav-badge">3</span>
+                    </a>
+                    <a href="help.html" class="nav-item">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Help Board</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <div class="main-wrapper">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-title">
+                        <h1>Teams</h1>
+                        <p>Find teammates and collaborate on projects</p>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-magic"></i>
+                        AI Suggest Team
+                    </button>
+                    <a href="#" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Create Team
+                    </a>
+                </div>
+
+                <div class="header-right">
+                    <button class="icon-btn theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="icon-btn notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <button class="user-btn">
+                            <div class="user-avatar">JD</div>
+                            <span class="user-name">John Doe</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="profile.html" class="dropdown-item">
+                                <i class="fas fa-user-circle"></i>
+                                My Profile
+                            </a>
+                            <a href="resume.html" class="dropdown-item">
+                                <i class="fas fa-file-alt"></i>
+                                U-Resume
+                            </a>
+                            <a href="skillmap.html" class="dropdown-item">
+                                <i class="fas fa-layer-group"></i>
+                                U-SkillMap
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="login.html" class="dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Log Out
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <!-- My Teams -->
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">My Teams</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+                        <!-- Team 1 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
+                                    <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.25rem;">
+                                        UC
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <h3 style="font-size: 1.125rem; margin-bottom: 0.25rem;">UConnect Core</h3>
+                                        <p style="font-size: 0.875rem; color: var(--text-secondary);">Building the future of university collaboration</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                                    <span class="badge badge-primary">Web Dev</span>
+                                    <span class="badge badge-success">Active</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div class="project-members">
+                                        <div class="avatar avatar-sm">TT</div>
+                                        <div class="avatar avatar-sm" style="background: var(--success);">SK</div>
+                                        <div class="avatar avatar-sm" style="background: var(--accent);">MI</div>
+                                    </div>
+                                    <span style="font-size: 0.75rem; color: var(--text-secondary);">3 members</span>
+                                </div>
+                            </div>
+                            <div class="card-footer" style="display: flex; gap: 0.5rem; padding: 1rem; border-top: 1px solid var(--border-color);">
+                                <a href="#" class="btn btn-sm btn-primary" style="flex: 1;">View Team</a>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-comment"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Team 2 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
+                                    <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--success), #059669); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.25rem;">
+                                        AI
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <h3 style="font-size: 1.125rem; margin-bottom: 0.25rem;">AI Research Lab</h3>
+                                        <p style="font-size: 0.875rem; color: var(--text-secondary);">Machine learning and NLP projects</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                                    <span class="badge" style="background: rgba(139, 92, 246, 0.1); color: var(--accent);">ML/AI</span>
+                                    <span class="badge badge-success">Active</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div class="project-members">
+                                        <div class="avatar avatar-sm">TT</div>
+                                        <div class="avatar avatar-sm" style="background: var(--accent);">MI</div>
+                                    </div>
+                                    <span style="font-size: 0.75rem; color: var(--text-secondary);">2 members</span>
+                                </div>
+                            </div>
+                            <div class="card-footer" style="display: flex; gap: 0.5rem; padding: 1rem; border-top: 1px solid var(--border-color);">
+                                <a href="#" class="btn btn-sm btn-primary" style="flex: 1;">View Team</a>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-comment"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Find Teammates -->
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style="font-size: 1.25rem;">Find Teammates</h2>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <select class="form-input" style="width: auto; padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                <option value="">All Skills</option>
+                                <option value="react">React</option>
+                                <option value="python">Python</option>
+                                <option value="ml">Machine Learning</option>
+                                <option value="design">UI/UX Design</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+                        <!-- User Card 1 -->
+                        <div class="card">
+                            <div class="card-body" style="text-align: center; padding: 1.5rem;">
+                                <div class="avatar avatar-lg" style="margin: 0 auto 1rem; width: 64px; height: 64px; font-size: 1.25rem;">SK</div>
+                                <h3 style="font-size: 1rem; margin-bottom: 0.25rem;">Salman Kabir Sany</h3>
+                                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Backend Developer</p>
+                                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <span style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; color: var(--text-secondary);">
+                                        <i class="fas fa-star" style="color: var(--warning);"></i>
+                                        U-Score: 780
+                                    </span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-bottom: 1rem;">
+                                    <span class="project-tag">Node.js</span>
+                                    <span class="project-tag">Python</span>
+                                    <span class="project-tag">PostgreSQL</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-sm btn-primary" style="flex: 1;">Invite</button>
+                                    <button class="btn btn-sm btn-outline-primary">Profile</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- User Card 2 -->
+                        <div class="card">
+                            <div class="card-body" style="text-align: center; padding: 1.5rem;">
+                                <div class="avatar avatar-lg" style="margin: 0 auto 1rem; width: 64px; height: 64px; font-size: 1.25rem; background: var(--accent);">MI</div>
+                                <h3 style="font-size: 1rem; margin-bottom: 0.25rem;">Majharul Islam</h3>
+                                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem;">AI/ML Engineer</p>
+                                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <span style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; color: var(--text-secondary);">
+                                        <i class="fas fa-star" style="color: var(--warning);"></i>
+                                        U-Score: 820
+                                    </span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-bottom: 1rem;">
+                                    <span class="project-tag">Python</span>
+                                    <span class="project-tag">TensorFlow</span>
+                                    <span class="project-tag">NLP</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-sm btn-primary" style="flex: 1;">Invite</button>
+                                    <button class="btn btn-sm btn-outline-primary">Profile</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- User Card 3 -->
+                        <div class="card">
+                            <div class="card-body" style="text-align: center; padding: 1.5rem;">
+                                <div class="avatar avatar-lg" style="margin: 0 auto 1rem; width: 64px; height: 64px; font-size: 1.25rem; background: var(--warning);">RK</div>
+                                <h3 style="font-size: 1rem; margin-bottom: 0.25rem;">Rafiq Khan</h3>
+                                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Frontend Developer</p>
+                                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <span style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; color: var(--text-secondary);">
+                                        <i class="fas fa-star" style="color: var(--warning);"></i>
+                                        U-Score: 650
+                                    </span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-bottom: 1rem;">
+                                    <span class="project-tag">React</span>
+                                    <span class="project-tag">Vue.js</span>
+                                    <span class="project-tag">CSS</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-sm btn-primary" style="flex: 1;">Invite</button>
+                                    <button class="btn btn-sm btn-outline-primary">Profile</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- User Card 4 -->
+                        <div class="card">
+                            <div class="card-body" style="text-align: center; padding: 1.5rem;">
+                                <div class="avatar avatar-lg" style="margin: 0 auto 1rem; width: 64px; height: 64px; font-size: 1.25rem; background: var(--danger);">NA</div>
+                                <h3 style="font-size: 1rem; margin-bottom: 0.25rem;">Nadia Ahmed</h3>
+                                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem;">UI/UX Designer</p>
+                                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <span style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; color: var(--text-secondary);">
+                                        <i class="fas fa-star" style="color: var(--warning);"></i>
+                                        U-Score: 720
+                                    </span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; justify-content: center; margin-bottom: 1rem;">
+                                    <span class="project-tag">Figma</span>
+                                    <span class="project-tag">Adobe XD</span>
+                                    <span class="project-tag">Sketch</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-sm btn-primary" style="flex: 1;">Invite</button>
+                                    <button class="btn btn-sm btn-outline-primary">Profile</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-bubble" id="chatBubble">
+            <div class="chat-bubble-content">
+                <span class="wave-emoji">👋</span>
+                <span>Hi! How can we help?</span>
+            </div>
+            <div class="chat-bubble-actions">
+                <button class="chat-action-btn">I have a question</button>
+                <button class="chat-action-btn">Tell me more</button>
+            </div>
+        </div>
+        <button class="chat-toggle-btn" id="chatToggle">
+            <i class="fas fa-comment-dots"></i>
+            <span class="notification-badge">1</span>
+        </button>
+    </div>
+
+    <script src="layout.js"></script>
+</body>
+</html>

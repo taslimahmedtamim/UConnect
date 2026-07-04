@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { LuGraduationCap, LuBookOpen, LuBriefcase } from 'react-icons/lu';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
 const roles = [
-  { value: 'STUDENT', icon: '🎓', label: 'Student' },
-  { value: 'TEACHER', icon: '📚', label: 'Teacher' },
-  { value: 'RECRUITER', icon: '💼', label: 'Recruiter' },
+  { value: 'STUDENT', icon: LuGraduationCap, label: 'Student' },
+  { value: 'TEACHER', icon: LuBookOpen, label: 'Teacher' },
+  { value: 'RECRUITER', icon: LuBriefcase, label: 'Recruiter' },
 ];
 
 export default function RegisterPage() {
@@ -24,7 +25,7 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await register(form);
-      toast.success('Account created! Welcome to UConnect 🎉');
+      toast.success('Account created — welcome to UConnect');
       navigate('/dashboard');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Registration failed');
@@ -54,7 +55,7 @@ export default function RegisterPage() {
                   className={`role-option${form.role === r.value ? ' selected' : ''}`}
                   onClick={() => setForm(f => ({ ...f, role: r.value }))}
                 >
-                  <div className="role-option-icon">{r.icon}</div>
+                  <div className="role-option-icon"><r.icon /></div>
                   <div className="role-option-label">{r.label}</div>
                 </div>
               ))}

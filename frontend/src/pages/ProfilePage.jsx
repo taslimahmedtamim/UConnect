@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { LuGraduationCap, LuBookOpen, LuBriefcase, LuLandmark, LuShapes, LuPencil, LuX, LuTriangleAlert, LuFolderGit2 } from 'react-icons/lu';
 import { useAuth } from '../context/AuthContext';
 import { usersAPI } from '../services/api';
 import toast from 'react-hot-toast';
+
+const roleIcon = { STUDENT: LuGraduationCap, TEACHER: LuBookOpen, RECRUITER: LuBriefcase };
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -56,7 +59,7 @@ export default function ProfilePage() {
   const initials = profileUser?.name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
   if (isLoading) return <div className="flex-center" style={{ height: 300 }}><div className="spinner" /></div>;
-  if (!profileUser) return <div className="empty-state"><div className="empty-state-icon">⚠</div><h3>User not found</h3></div>;
+  if (!profileUser) return <div className="empty-state"><div className="empty-state-icon"><LuTriangleAlert /></div><h3>User not found</h3></div>;
 
   return (
     <div>
@@ -67,25 +70,25 @@ export default function ProfilePage() {
           <div style={{ flex: 1 }}>
             <div className="flex-between">
               <div>
-                <h1 style={{ fontSize: '1.4rem', fontWeight: 700 }}>{profileUser.name}</h1>
+                <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 600 }}>{profileUser.name}</h1>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: 2 }}>
                   {profileUser.profile?.headline || 'No headline set'}
                 </p>
                 <div style={{ display: 'flex', gap: 8, marginTop: 8, flexWrap: 'wrap' }}>
                   <span className={`badge badge-${profileUser.role === 'STUDENT' ? 'primary' : profileUser.role === 'TEACHER' ? 'success' : 'accent'}`}>
-                    {profileUser.role === 'STUDENT' ? '🎓' : profileUser.role === 'TEACHER' ? '📚' : '💼'} {profileUser.role}
+                    {(() => { const RoleIcon = roleIcon[profileUser.role] || LuGraduationCap; return <RoleIcon size={12} />; })()} {profileUser.role}
                   </span>
                   {profileUser.profile?.university && (
-                    <span className="badge badge-secondary">🏛 {profileUser.profile.university}</span>
+                    <span className="badge badge-secondary"><LuLandmark size={12} /> {profileUser.profile.university}</span>
                   )}
                   {profileUser.profile?.department && (
-                    <span className="badge badge-secondary">📐 {profileUser.profile.department}</span>
+                    <span className="badge badge-secondary"><LuShapes size={12} /> {profileUser.profile.department}</span>
                   )}
                 </div>
               </div>
               {isOwn && (
                 <button className="btn btn-outline btn-sm" onClick={() => setEditing(!editing)}>
-                  {editing ? '✕ Cancel' : '✏ Edit Profile'}
+                  {editing ? <><LuX size={14} /> Cancel</> : <><LuPencil size={14} /> Edit Profile</>}
                 </button>
               )}
             </div>
@@ -216,7 +219,7 @@ export default function ProfilePage() {
             </div>
           ) : (
             <div className="empty-state" style={{ padding: '24px 0' }}>
-              <div className="empty-state-icon">◈</div>
+              <div className="empty-state-icon"><LuFolderGit2 /></div>
               <p>No projects yet</p>
             </div>
           )}
