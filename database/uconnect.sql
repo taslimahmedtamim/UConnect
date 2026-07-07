@@ -8,6 +8,7 @@
 --  SECTION 1: DROP EXISTING TABLES (Clean Slate)
 -- ============================================================
 
+
 DROP TABLE IF EXISTS "messages" CASCADE;
 DROP TABLE IF EXISTS "mentor_connections" CASCADE;
 DROP TABLE IF EXISTS "achievements" CASCADE;
