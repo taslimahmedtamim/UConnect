@@ -1,824 +1,231 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { LuArrowRight, LuSparkles, LuBrainCircuit, LuTarget, LuUsers, LuFileText, LuTrendingUp } from 'react-icons/lu';
 
 export default function LandingPage() {
+  // Ensure we are in dark mode for the landing page to look its best
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }, []);
+
   return (
-    <div className="landing-page">
+    <div className="landing-page" style={{ position: 'relative', overflow: 'hidden' }}>
       
-    {/*  Navigation  */}
-    <nav className="navbar">
-        <div className="container nav-container">
-            <a href="index.html" className="logo">
-                <span className="logo-icon">U</span>
-                <span className="logo-text">Connect</span>
+      {/* ── Background Mesh ──────────────────────── */}
+      <div className="auth-mesh" style={{ position: 'fixed', zIndex: 0, pointerEvents: 'none' }}>
+        <div className="auth-mesh-dot" style={{ width: '800px', height: '800px', opacity: 0.5 }} />
+      </div>
+
+      <div style={{ position: 'relative', zIndex: 10 }}>
+        {/* ── Navbar ────────────────────────────────── */}
+        <nav style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '20px 48px',
+          background: 'rgba(5, 8, 16, 0.7)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid var(--border)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 100
+        }}>
+          <div className="auth-logo" style={{ marginBottom: 0 }}>
+            <div className="auth-logo-icon" style={{ width: 32, height: 32, fontSize: '0.9rem' }}>U</div>
+            <span className="auth-logo-text" style={{ fontSize: '1.2rem' }}>Connect</span>
+          </div>
+          
+          <div style={{ display: 'flex', gap: 16 }}>
+            <Link to="/login" className="btn btn-ghost">Sign In</Link>
+            <Link to="/register" className="btn btn-primary">
+              Get Started <LuArrowRight size={16} />
+            </Link>
+          </div>
+        </nav>
+
+        {/* ── Hero Section ──────────────────────────── */}
+        <section style={{ 
+          padding: '120px 20px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center',
+          textAlign: 'center',
+          maxWidth: 900,
+          margin: '0 auto'
+        }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '6px 14px',
+            background: 'rgba(99,102,241,0.1)',
+            border: '1px solid rgba(99,102,241,0.2)',
+            borderRadius: 99,
+            color: 'var(--indigo-light)',
+            fontWeight: 600,
+            fontSize: '0.85rem',
+            marginBottom: 32,
+            animation: 'fadeSlideUp 0.5s ease both'
+          }}>
+            <LuSparkles size={14} /> The Next-Gen Academic Network
+          </div>
+
+          <h1 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+            fontWeight: 800,
+            lineHeight: 1.1,
+            letterSpacing: '-1px',
+            marginBottom: 24,
+            animation: 'fadeSlideUp 0.6s ease both',
+            animationDelay: '100ms'
+          }}>
+            Turn Academic Work Into <br />
+            <span className="gradient-text">Career Assets</span>
+          </h1>
+
+          <p style={{
+            fontSize: '1.1rem',
+            color: 'var(--text-2)',
+            lineHeight: 1.6,
+            maxWidth: 600,
+            marginBottom: 40,
+            animation: 'fadeSlideUp 0.7s ease both',
+            animationDelay: '200ms'
+          }}>
+            UConnect brings students, teachers, and recruiters together. Build verifiable portfolios, form AI-balanced teams, and discover real career opportunities.
+          </p>
+
+          <div style={{ 
+            display: 'flex', 
+            gap: 16, 
+            animation: 'fadeSlideUp 0.8s ease both',
+            animationDelay: '300ms'
+          }}>
+            <Link to="/register" className="btn btn-primary btn-lg" style={{ gap: 10 }}>
+              Start Free Today <LuArrowRight size={18} />
+            </Link>
+            <a href="#features" className="btn btn-outline btn-lg">
+              Explore Features
             </a>
-            <ul className="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#how-it-works">How It Works</a></li>
-                <li><a href="#certificates">Certificates</a></li>
-                <li><a href="#testimonials">Testimonials</a></li>
-                <li><a href="#team">Team</a></li>
-            </ul>
-            <div className="nav-actions">
-                <button className="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                    <svg className="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                    </svg>
-                    <svg className="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <line x1="12" y1="1" x2="12" y2="3"/>
-                        <line x1="12" y1="21" x2="12" y2="23"/>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                        <line x1="1" y1="12" x2="3" y2="12"/>
-                        <line x1="21" y1="12" x2="23" y2="12"/>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                    </svg>
-                </button>
-                <a href="pages/login.html" className="btn btn-ghost">Login</a>
-                <a href="pages/register.html" className="btn btn-primary">Get Started</a>
-            </div>
-            <button className="mobile-menu-btn" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-    </nav>
+          </div>
+        </section>
 
-    {/*  Hero Section  */}
-    <section className="hero">
-        <div className="container">
-            <div className="hero-content">
-                <span className="hero-badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{"marginRight":"0.35rem"}}>
-                        <path d="M4 13a8 8 0 0 1 9-9l3 3-9 9-3-3z" />
-                        <path d="M13 5l6 6" />
-                        <path d="M9 15l-2 6 6-2 9-9-6-6-9 9z" />
-                    </svg>
-                    AI-Powered Platform
-                </span>
-                <h1 className="hero-title">
-                    Turn Academic Work Into
-                    <span className="gradient-text">Career Assets</span>
-                </h1>
-                <p className="hero-subtitle">
-                    UConnect connects students, teachers, and recruiters to collaborate on projects, 
-                    form balanced teams, build verified portfolios, and discover opportunities.
-                </p>
-                <div className="hero-actions">
-                    <a href="pages/register.html" className="btn btn-primary btn-lg">
-                        Start Free Today
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                    <a href="#how-it-works" className="btn btn-outline btn-lg">
-                        See How It Works
-                    </a>
-                </div>
-                <div className="hero-stats">
-                    <div className="stat">
-                        <span className="stat-number">10K+</span>
-                        <span className="stat-label">Students</span>
-                    </div>
-                    <div className="stat">
-                        <span className="stat-number">500+</span>
-                        <span className="stat-label">Projects</span>
-                    </div>
-                    <div className="stat">
-                        <span className="stat-number">95%</span>
-                        <span className="stat-label">Placement Rate</span>
-                    </div>
-                </div>
+        {/* ── Stats Section ─────────────────────────── */}
+        <section style={{ maxWidth: 1000, margin: '0 auto 100px', padding: '0 20px' }}>
+          <div className="stats-grid">
+            <div className="stat-card purple">
+              <div className="stat-icon purple"><LuUsers /></div>
+              <div>
+                <div className="stat-value">10k+</div>
+                <div className="stat-label">Active Students</div>
+              </div>
             </div>
-            <div className="hero-visual">
-                <div className="hero-card card-1">
-                    <div className="card-icon">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                            <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                        </svg>
-                    </div>
-                    <span>AI Team Formation</span>
-                </div>
-                <div className="hero-card card-2">
-                    <div className="card-icon">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                            <line x1="16" y1="13" x2="8" y2="13" />
-                            <line x1="16" y1="17" x2="8" y2="17" />
-                        </svg>
-                    </div>
-                    <span>Smart Resume</span>
-                </div>
-                <div className="hero-card card-3">
-                    <div className="card-icon">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <rect x="2" y="7" width="20" height="13" rx="2" ry="2" />
-                            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                        </svg>
-                    </div>
-                    <span>Job Matching</span>
-                </div>
-                <div className="hero-image">
-                    <div className="placeholder-dashboard">
-                        <div className="dash-header"></div>
-                        <div className="dash-sidebar"></div>
-                        <div className="dash-content">
-                            <div className="dash-card"></div>
-                            <div className="dash-card"></div>
-                            <div className="dash-card"></div>
-                        </div>
-                    </div>
-                </div>
+            <div className="stat-card blue">
+              <div className="stat-icon blue"><LuTarget /></div>
+              <div>
+                <div className="stat-value">500+</div>
+                <div className="stat-label">Projects Built</div>
+              </div>
             </div>
-        </div>
-    </section>
+            <div className="stat-card green">
+              <div className="stat-icon green"><LuTrendingUp /></div>
+              <div>
+                <div className="stat-value">95%</div>
+                <div className="stat-label">Placement Rate</div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-    {/*  Feature Highlights (At a Glance)  */}
-    <section id="highlights" className="features">
-        <div className="container">
-            <div className="section-header">
-                <span className="section-badge">Highlights</span>
-                <h2 className="section-title">Feature Highlights (At a Glance)</h2>
-                <p className="section-subtitle">
-                    Frontend overview of core modules and employability features. Quick links to pages.
-                </p>
-            </div>
-            <div className="features-grid">
-                {/*  Core Modules  */}
-                <div className="feature-card">
-                    <div className="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <circle cx="12" cy="12" r="9"/>
-                            <path d="M12 7v10M7 12h10"/>
-                        </svg>
-                    </div>
-                    <h3>Core Modules</h3>
-                    <ul className="feature-list">
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Profile → evolving skill graph (<a href="pages/profile.html">Profile</a>)
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            AI team formation (<a href="pages/teams.html">Teams</a>)
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Teacher supervision
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Project lifecycle & realtime comms (<a href="pages/projects.html">Projects</a>)
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Project Showcase
-                        </li>
-                    </ul>
-                </div>
+        {/* ── Features Section ──────────────────────── */}
+        <section id="features" style={{ 
+          maxWidth: 1200, 
+          margin: '0 auto 120px', 
+          padding: '0 20px' 
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: 64 }}>
+            <h2 style={{ 
+              fontFamily: 'var(--font-display)', 
+              fontSize: '2.5rem', 
+              fontWeight: 700,
+              marginBottom: 16
+            }}>Everything You Need to Succeed</h2>
+            <p style={{ color: 'var(--text-2)', fontSize: '1.1rem' }}>
+              Powerful tools designed specifically for the university ecosystem.
+            </p>
+          </div>
 
-                {/*  Career & Employability  */}
-                <div className="feature-card">
-                    <div className="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <rect x="3" y="4" width="18" height="16" rx="2"/>
-                            <path d="M7 8h10M7 12h6M7 16h8"/>
-                        </svg>
-                    </div>
-                    <h3>Career & Employability</h3>
-                    <ul className="feature-list">
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            AI Resume (U‑Resume) (<a href="pages/resume.html">Resume</a>)
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Job/Internship matching (<a href="pages/opportunities.html">Opportunities</a>)
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Skill gap insights
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Personalized roadmaps
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Recruiter dashboard & verified certificates
-                        </li>
-                    </ul>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+            gap: 24 
+          }}>
+            {[
+              { 
+                icon: LuBrainCircuit, title: 'AI Team Formation', 
+                desc: 'Intelligent matching based on skills, interests, and availability. Build balanced, diverse teams automatically.',
+                color: 'purple'
+              },
+              { 
+                icon: LuFileText, title: 'U-Resume Builder', 
+                desc: 'Generate polished, ATS-friendly resumes from your profile with AI-powered bullet point optimization.',
+                color: 'blue'
+              },
+              { 
+                icon: LuTarget, title: 'Job Matching', 
+                desc: 'AI-powered job recommendations with skill gap analysis and personalized career roadmaps.',
+                color: 'amber'
+              },
+              { 
+                icon: LuTrendingUp, title: 'U-Score Reputation', 
+                desc: 'Build verifiable reputation through project outcomes, peer reviews, and mentor endorsements.',
+                color: 'green'
+              }
+            ].map((f, i) => (
+              <div key={i} className="card card-glass" style={{ padding: 32 }}>
+                <div className={`stat-icon ${f.color}`} style={{ marginBottom: 24 }}>
+                  <f.icon size={24} />
                 </div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: 12 }}>{f.title}</h3>
+                <p style={{ color: 'var(--text-2)', lineHeight: 1.6 }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
-                {/*  AI & Analytics  */}
-                <div className="feature-card">
-                    <div className="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M3 3h18v6H3z"/>
-                            <path d="M3 15h18v6H3z"/>
-                            <path d="M7 9v6M12 9v6M17 9v6"/>
-                        </svg>
-                    </div>
-                    <h3>AI & Analytics</h3>
-                    <ul className="feature-list">
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Skill Graph & Knowledge Map
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Hybrid recommender system
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            NLP job parsing & matching
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Career predictor & growth analytics
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            AI interview coach & campus chatbot
-                        </li>
-                    </ul>
-                </div>
-
-                {/*  Collaboration & Community  */}
-                <div className="feature-card">
-                    <div className="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <circle cx="12" cy="12" r="3"/>
-                            <path d="M19.4 15A7 7 0 1 0 8.6 4.6"/>
-                        </svg>
-                    </div>
-                    <h3>Collaboration & Community</h3>
-                    <ul className="feature-list">
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Help board & issue conversion
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Open collaboration & mentorship
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Voice/Video + auto‑scheduler
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Cross‑university challenges
-                        </li>
-                    </ul>
-                </div>
-
-                {/*  Engagement & Gamification  */}
-                <div className="feature-card">
-                    <div className="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                        </svg>
-                    </div>
-                    <h3>Engagement & Gamification</h3>
-                    <ul className="feature-list">
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Badges & achievements
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Leaderboards & challenges
-                        </li>
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5"/></svg>
-                            Streaks & XP
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {/*  Features Section  */}
-    <section id="features" className="features">
-        <div className="container">
-            <div className="section-header">
-                <span className="section-badge">Features</span>
-                <h2 className="section-title">Everything You Need to Succeed</h2>
-                <p className="section-subtitle">
-                    From team formation to job placement, UConnect provides all the tools 
-                    you need to accelerate your career journey.
-                </p>
-            </div>
-            <div className="features-grid">
-                <div className="feature-card">
-                    <div className="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                        </svg>
-                    </div>
-                    <h3>AI Team Formation</h3>
-                    <p>Intelligent matching based on skills, interests, and availability. Build balanced, diverse teams automatically.</p>
-                </div>
-                <div className="feature-card">
-                    <div className="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                            <line x1="16" y1="13" x2="8" y2="13"/>
-                            <line x1="16" y1="17" x2="8" y2="17"/>
-                            <polyline points="10 9 9 9 8 9"/>
-                        </svg>
-                    </div>
-                    <h3>U-Resume Builder</h3>
-                    <p>Generate polished, ATS-friendly resumes from your profile with AI-powered bullet point optimization.</p>
-                </div>
-                <div className="feature-card">
-                    <div className="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
-                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-                        </svg>
-                    </div>
-                    <h3>Job Matching</h3>
-                    <p>AI-powered job recommendations with skill gap analysis and personalized career roadmaps.</p>
-                </div>
-                <div className="feature-card">
-                    <div className="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                        </svg>
-                    </div>
-                    <h3>U-Score Reputation</h3>
-                    <p>Build verifiable reputation through project outcomes, peer reviews, and mentor endorsements.</p>
-                </div>
-                <div className="feature-card">
-                    <div className="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                        </svg>
-                    </div>
-                    <h3>Skill Graph</h3>
-                    <p>Visual skill tracking with prerequisites, related skills, and growth analytics over time.</p>
-                </div>
-                <div className="feature-card">
-                    <div className="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                        </svg>
-                    </div>
-                    <h3>Real-time Collaboration</h3>
-                    <p>Project channels, DMs, file sharing, and voice/video calls all in one place.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {/*  How It Works Section  */}
-    <section id="how-it-works" className="how-it-works">
-        <div className="container">
-            <div className="section-header">
-                <span className="section-badge">Process</span>
-                <h2 className="section-title">How UConnect Works</h2>
-                <p className="section-subtitle">
-                    From profile creation to job placement in four simple steps.
-                </p>
-            </div>
-            <div className="steps-container">
-                <div className="step">
-                    <div className="step-number">1</div>
-                    <div className="step-content">
-                        <h3>Create Your Profile</h3>
-                        <p>Build a progressive profile with skills, projects, and achievements that evolves with you.</p>
-                    </div>
-                </div>
-                <div className="step-connector"></div>
-                <div className="step">
-                    <div className="step-number">2</div>
-                    <div className="step-content">
-                        <h3>Form or Join Teams</h3>
-                        <p>AI suggests balanced teams or join existing projects that match your interests.</p>
-                    </div>
-                </div>
-                <div className="step-connector"></div>
-                <div className="step">
-                    <div className="step-number">3</div>
-                    <div className="step-content">
-                        <h3>Build & Showcase</h3>
-                        <p>Collaborate on projects, track progress, and showcase your work to the university.</p>
-                    </div>
-                </div>
-                <div className="step-connector"></div>
-                <div className="step">
-                    <div className="step-number">4</div>
-                    <div className="step-content">
-                        <h3>Get Hired</h3>
-                        <p>Generate AI resumes, match with jobs, and apply with verified credentials.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {/*  Stats Section  */}
-    <section className="stats-section">
-        <div className="container">
-            <div className="stats-grid">
-                <div className="stat-card">
-                    <div className="stat-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M4 7l8-3 8 3-8 3-8-3z" />
-                            <path d="M4 11l8 3 8-3" />
-                            <path d="M4 15l8 3 8-3" />
-                        </svg>
-                    </div>
-                    <div className="stat-value">50+</div>
-                    <div className="stat-name">Universities</div>
-                </div>
-                <div className="stat-card">
-                    <div className="stat-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                            <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                        </svg>
-                    </div>
-                    <div className="stat-value">10,000+</div>
-                    <div className="stat-name">Active Students</div>
-                </div>
-                <div className="stat-card">
-                    <div className="stat-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <rect x="2" y="7" width="20" height="13" rx="2" ry="2" />
-                            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                        </svg>
-                    </div>
-                    <div className="stat-value">2,500+</div>
-                    <div className="stat-name">Jobs Posted</div>
-                </div>
-                <div className="stat-card">
-                    <div className="stat-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 7.7l5.4-.8L12 2z" />
-                        </svg>
-                    </div>
-                    <div className="stat-value">95%</div>
-                    <div className="stat-name">Success Rate</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {/*  Testimonials Section  */}
-    <section id="testimonials" className="testimonials">
-        <div className="container">
-            <div className="section-header">
-                <span className="section-badge">Testimonials</span>
-                <h2 className="section-title">What Our Users Say</h2>
-                <p className="section-subtitle">
-                    Hear from students and recruiters who've transformed their experience with UConnect.
-                </p>
-            </div>
-            <div className="testimonials-grid">
-                <div className="testimonial-card">
-                    <div className="testimonial-content">
-                        <p>"UConnect helped me find the perfect team for my capstone project. The AI matching was spot on!"</p>
-                    </div>
-                    <div className="testimonial-author">
-                        <div className="author-avatar">SA</div>
-                        <div className="author-info">
-                            <span className="author-name">Sarah Ahmed</span>
-                            <span className="author-role">Computer Science Student</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="testimonial-card">
-                    <div className="testimonial-content">
-                        <p>"The U-Resume feature saved me hours. It automatically highlighted my best achievements."</p>
-                    </div>
-                    <div className="testimonial-author">
-                        <div className="author-avatar">MR</div>
-                        <div className="author-info">
-                            <span className="author-name">Mohammad Rahman</span>
-                            <span className="author-role">Software Engineering Graduate</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="testimonial-card">
-                    <div className="testimonial-content">
-                        <p>"As a recruiter, I can easily find verified talent with real project experience. Game changer!"</p>
-                    </div>
-                    <div className="testimonial-author">
-                        <div className="author-avatar">JK</div>
-                        <div className="author-info">
-                            <span className="author-name">Jennifer Kim</span>
-                            <span className="author-role">HR Manager, TechCorp</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {/*  Certificates Section  */}
-    <section id="certificates" className="certificates">
-        <div className="container">
-            <div className="section-header">
-                <span className="section-badge">Achievements</span>
-                <h2 className="section-title">Certificate Showcase</h2>
-                <p className="section-subtitle">
-                    Store, organize, and showcase all your certificates and achievements in one verified portfolio.
-                </p>
-            </div>
-            <div className="certificates-features">
-                <div className="cert-feature">
-                    <div className="cert-feature-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-                            <path d="M12 6v4M10 8h4"/>
-                        </svg>
-                    </div>
-                    <h4>Upload & Store</h4>
-                    <p>Securely upload certificates from courses, competitions, and workshops</p>
-                </div>
-                <div className="cert-feature">
-                    <div className="cert-feature-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M9 12l2 2 4-4"/>
-                            <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c2.12 0 4.07.74 5.61 1.97"/>
-                            <path d="M21 3v4h-4"/>
-                        </svg>
-                    </div>
-                    <h4>Verify & Validate</h4>
-                    <p>Get your certificates verified by issuing authorities automatically</p>
-                </div>
-                <div className="cert-feature">
-                    <div className="cert-feature-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                            <circle cx="8.5" cy="8.5" r="1.5"/>
-                            <polyline points="21 15 16 10 5 21"/>
-                        </svg>
-                    </div>
-                    <h4>Showcase & Share</h4>
-                    <p>Display achievements on your profile and share with recruiters</p>
-                </div>
-                <div className="cert-feature">
-                    <div className="cert-feature-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                            <line x1="12" y1="18" x2="12" y2="12"/>
-                            <line x1="9" y1="15" x2="15" y2="15"/>
-                        </svg>
-                    </div>
-                    <h4>Auto-Add to Resume</h4>
-                    <p>Certificates automatically populate your U-Resume</p>
-                </div>
-            </div>
-            <div className="certificates-showcase">
-                <h3 className="showcase-title">Sample Certificate Gallery</h3>
-                <div className="certificates-grid">
-                    <div className="certificate-card">
-                        <div className="cert-badge verified">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M20 6L9 17l-5-5"/>
-                            </svg>
-                            Verified
-                        </div>
-                        <div className="cert-icon">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                <path d="M12 15l-2 5 2-1 2 1-2-5z"/>
-                                <circle cx="12" cy="8" r="6"/>
-                                <path d="M9 8l2 2 4-4"/>
-                            </svg>
-                        </div>
-                        <h4>AWS Cloud Practitioner</h4>
-                        <p className="cert-issuer">Amazon Web Services</p>
-                        <span className="cert-date">Issued: Dec 2025</span>
-                    </div>
-                    <div className="certificate-card">
-                        <div className="cert-badge verified">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M20 6L9 17l-5-5"/>
-                            </svg>
-                            Verified
-                        </div>
-                        <div className="cert-icon">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                <path d="M12 15l-2 5 2-1 2 1-2-5z"/>
-                                <circle cx="12" cy="8" r="6"/>
-                                <path d="M9 8l2 2 4-4"/>
-                            </svg>
-                        </div>
-                        <h4>Google Data Analytics</h4>
-                        <p className="cert-issuer">Google Career Certificates</p>
-                        <span className="cert-date">Issued: Nov 2025</span>
-                    </div>
-                    <div className="certificate-card">
-                        <div className="cert-badge pending">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <polyline points="12 6 12 12 16 14"/>
-                            </svg>
-                            Pending
-                        </div>
-                        <div className="cert-icon">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                <path d="M12 15l-2 5 2-1 2 1-2-5z"/>
-                                <circle cx="12" cy="8" r="6"/>
-                                <path d="M9 8l2 2 4-4"/>
-                            </svg>
-                        </div>
-                        <h4>Meta Frontend Developer</h4>
-                        <p className="cert-issuer">Meta (Coursera)</p>
-                        <span className="cert-date">Issued: Oct 2025</span>
-                    </div>
-                    <div className="certificate-card add-new">
-                        <div className="add-cert-icon">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                <circle cx="12" cy="12" r="10"/>
-                                <line x1="12" y1="8" x2="12" y2="16"/>
-                                <line x1="8" y1="12" x2="16" y2="12"/>
-                            </svg>
-                        </div>
-                        <h4>Add Certificate</h4>
-                        <p>Upload your achievement</p>
-                    </div>
-                </div>
-            </div>
-            <div className="certificates-cta">
-                <a href="pages/certificates.html" className="btn btn-primary btn-lg">
-                    Manage My Certificates
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    {/*  CTA Section  */}
-    <section className="cta-section">
-        <div className="container">
-            <div className="cta-content">
-                <h2>Ready to Accelerate Your Career?</h2>
-                <p>Join thousands of students who are building their future with UConnect.</p>
-                <div className="cta-actions">
-                    <a href="pages/register.html" className="btn btn-white btn-lg">Get Started Free</a>
-                    <a href="#features" className="btn btn-ghost-white btn-lg">Learn More</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {/*  Team Section  */}
-    <section id="team" className="team">
-        <div className="container">
-            <div className="section-header">
-                <span className="section-badge">Team</span>
-                <h2 className="section-title">Meet Our Team</h2>
-                <p className="section-subtitle">
-                    The passionate developers behind UConnect.
-                </p>
-            </div>
-            <div className="team-grid">
-                <div className="team-card">
-                    <div className="team-avatar">TT</div>
-                    <h3>Taslim Ahmed Tamim</h3>
-                    <p className="team-role">Full Stack Developer</p>
-                    <div className="team-links">
-                        <a href="mailto:taslimahmedtamim4u@gmail.com" title="Email">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                                <polyline points="22,6 12,13 2,6"/>
-                            </svg>
-                        </a>
-                        <a href="https://github.com/taslimahmedtamim" target="_blank" title="GitHub">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-                <div className="team-card">
-                    <div className="team-avatar">SK</div>
-                    <h3>Salman Kabir Sany</h3>
-                    <p className="team-role">Backend Developer</p>
-                    <div className="team-links">
-                        <a href="mailto:salmankabirsany@gmail.com" title="Email">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                                <polyline points="22,6 12,13 2,6"/>
-                            </svg>
-                        </a>
-                        <a href="https://github.com/salmankabirsany" target="_blank" title="GitHub">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-                <div className="team-card">
-                    <div className="team-avatar">MI</div>
-                    <h3>Majharul Islam</h3>
-                    <p className="team-role">AI/ML Engineer</p>
-                    <div className="team-links">
-                        <a href="mailto:majharul.cs@gmail.com" title="Email">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                                <polyline points="22,6 12,13 2,6"/>
-                            </svg>
-                        </a>
-                        <a href="https://github.com/MrMajharul" target="_blank" title="GitHub">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {/*  Footer  */}
-    <footer className="footer">
-        <div className="container">
-            <div className="footer-grid">
-                <div className="footer-brand">
-                    <a href="index.html" className="logo">
-                        <span className="logo-icon">U</span>
-                        <span className="logo-text">Connect</span>
-                    </a>
-                    <p>Transforming academic work into career assets through AI-powered collaboration.</p>
-                </div>
-                <div className="footer-links">
-                    <h4>Platform</h4>
-                    <ul>
-                        <li><a href="pages/dashboard.html">Dashboard</a></li>
-                        <li><a href="pages/projects.html">Projects</a></li>
-                        <li><a href="pages/teams.html">Teams</a></li>
-                        <li><a href="pages/opportunities.html">Opportunities</a></li>
-                    </ul>
-                </div>
-                <div className="footer-links">
-                    <h4>Features</h4>
-                    <ul>
-                        <li><a href="pages/resume.html">U-Resume</a></li>
-                        <li><a href="#">Skill Graph</a></li>
-                        <li><a href="#">AI Matching</a></li>
-                        <li><a href="#">Career Paths</a></li>
-                    </ul>
-                </div>
-                <div className="footer-links">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="#team">Team</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div className="footer-bottom">
-                <p>&copy; 2025 UConnect. All rights reserved.</p>
-                <div className="footer-social">
-                    <a href="#" aria-label="Twitter">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
-                        </svg>
-                    </a>
-                    <a href="https://github.com/taslimahmedtamim" aria-label="GitHub">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                    </a>
-                    <a href="#" aria-label="LinkedIn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-
+        {/* ── CTA / Footer Section ──────────────────── */}
+        <section style={{
+          background: 'linear-gradient(180deg, transparent, rgba(99,102,241,0.05))',
+          padding: '100px 20px',
+          textAlign: 'center',
+          borderTop: '1px solid var(--border)'
+        }}>
+          <h2 style={{ 
+            fontFamily: 'var(--font-display)', 
+            fontSize: '3rem', 
+            fontWeight: 800,
+            marginBottom: 24
+          }}>Ready to accelerate?</h2>
+          <p style={{ color: 'var(--text-2)', fontSize: '1.1rem', marginBottom: 40 }}>
+            Join thousands of students who are building their future with UConnect.
+          </p>
+          <Link to="/register" className="btn btn-primary btn-lg">
+            Create Your Free Account
+          </Link>
+          
+          <div style={{ 
+            marginTop: 100, 
+            paddingTop: 40, 
+            borderTop: '1px solid var(--border)',
+            color: 'var(--text-3)',
+            fontSize: '0.85rem'
+          }}>
+            © {new Date().getFullYear()} UConnect. Designed for the future of education.
+          </div>
+        </section>
+        
+      </div>
     </div>
   );
 }

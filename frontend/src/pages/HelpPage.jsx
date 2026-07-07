@@ -436,7 +436,7 @@ export default function HelpPage() {
         </button>
     </div>
 
-    <script src="layout.js"></script>
+
 
     </div>
   );

@@ -424,7 +424,7 @@ export default function ShowcasePage() {
         </button>
     </div>
 
-    <script src="layout.js"></script>
+
 
     </div>
   );

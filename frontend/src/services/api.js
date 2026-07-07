@@ -14,14 +14,19 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle 401 — auto logout on expired token
+// Handle 401 — auto logout on expired token, but NOT on auth pages
 api.interceptors.response.use(
   (res) => res,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('uconnect_token');
-      localStorage.removeItem('uconnect_user');
-      window.location.href = '/login';
+      const isAuthPage = ['/login', '/register'].some(p =>
+        window.location.pathname.startsWith(p)
+      );
+      if (!isAuthPage) {
+        localStorage.removeItem('uconnect_token');
+        localStorage.removeItem('uconnect_user');
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }

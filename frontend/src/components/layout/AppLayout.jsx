@@ -3,27 +3,44 @@ import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import {
   LuLayoutGrid, LuUserRound, LuFolderGit2, LuUsers, LuBriefcase, LuFileText,
   LuMessageCircle, LuGraduationCap, LuTrophy, LuMenu, LuSun, LuMoon, LuLogOut,
+  LuAward, LuMap, LuSearch, LuBell, LuX, LuChevronRight,
 } from 'react-icons/lu';
 import { useAuth } from '../../context/AuthContext';
 
 const navItems = [
-  { to: '/dashboard', icon: LuLayoutGrid, label: 'Dashboard' },
-  { to: '/profile', icon: LuUserRound, label: 'My Profile' },
-  { to: '/projects', icon: LuFolderGit2, label: 'Projects' },
-  { to: '/teams', icon: LuUsers, label: 'Teams' },
-  { to: '/opportunities', icon: LuBriefcase, label: 'Opportunities' },
-  { to: '/resume', icon: LuFileText, label: 'Resume' },
+  { to: '/dashboard',    icon: LuLayoutGrid,   label: 'Dashboard' },
+  { to: '/profile',      icon: LuUserRound,    label: 'My Profile' },
+  { to: '/projects',     icon: LuFolderGit2,   label: 'Projects' },
+  { to: '/teams',        icon: LuUsers,        label: 'Teams' },
+  { to: '/opportunities',icon: LuBriefcase,    label: 'Opportunities' },
+  { to: '/resume',       icon: LuFileText,     label: 'Resume' },
+  { to: '/certificates', icon: LuAward,        label: 'Certificates' },
+  { to: '/skillmap',     icon: LuMap,          label: 'Skill Map' },
 ];
 
 const communityItems = [
-  { to: '/messages', icon: LuMessageCircle, label: 'Messages' },
-  { to: '/mentors', icon: LuGraduationCap, label: 'Mentors' },
-  { to: '/leaderboard', icon: LuTrophy, label: 'Leaderboard' },
+  { to: '/messages',   icon: LuMessageCircle, label: 'Messages' },
+  { to: '/mentors',    icon: LuGraduationCap, label: 'Mentors' },
+  { to: '/leaderboard',icon: LuTrophy,        label: 'Leaderboard' },
 ];
+
+const pageTitles = {
+  '/dashboard':    'Dashboard',
+  '/profile':      'My Profile',
+  '/projects':     'Projects',
+  '/teams':        'Teams',
+  '/opportunities':'Opportunities',
+  '/resume':       'Resume Builder',
+  '/messages':     'Messages',
+  '/mentors':      'Mentors',
+  '/leaderboard':  'Leaderboard',
+  '/certificates': 'Certificates',
+  '/skillmap':     'Skill Map',
+};
 
 export default function AppLayout() {
   const { user, logout } = useAuth();
-  const [theme, setTheme] = useState(() => localStorage.getItem('uc_theme') || 'light');
+  const [theme, setTheme]       = useState(() => localStorage.getItem('uc_theme') || 'dark');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
 
@@ -33,18 +50,6 @@ export default function AppLayout() {
   }, [theme]);
 
   const toggleTheme = () => setTheme(t => t === 'light' ? 'dark' : 'light');
-
-  const pageTitles = {
-    '/dashboard': 'Dashboard',
-    '/profile': 'My Profile',
-    '/projects': 'Projects',
-    '/teams': 'Teams',
-    '/opportunities': 'Opportunities',
-    '/resume': 'Resume Builder',
-    '/messages': 'Messages',
-    '/mentors': 'Mentors',
-    '/leaderboard': 'Leaderboard',
-  };
 
   const currentTitle = Object.entries(pageTitles).find(([path]) =>
     location.pathname.startsWith(path)
@@ -56,11 +61,13 @@ export default function AppLayout() {
     <div className="app-shell">
       {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+        {/* Logo */}
         <div className="sidebar-logo">
           <div className="sidebar-logo-icon">U</div>
           <span className="sidebar-logo-text">Connect</span>
         </div>
 
+        {/* Nav */}
         <nav className="sidebar-nav">
           <div className="sidebar-section-label">Main</div>
           {navItems.map(item => (
@@ -89,7 +96,7 @@ export default function AppLayout() {
           ))}
         </nav>
 
-        {/* Sidebar User */}
+        {/* Footer */}
         <div className="sidebar-footer">
           <div className="sidebar-user">
             <div className="sidebar-avatar">{initials}</div>
@@ -97,11 +104,15 @@ export default function AppLayout() {
               <div className="sidebar-user-name">{user?.name}</div>
               <div className="sidebar-user-role">{user?.role?.toLowerCase()}</div>
             </div>
+            <LuChevronRight
+              size={14}
+              style={{ color: 'var(--text-3)', flexShrink: 0 }}
+            />
           </div>
         </div>
       </aside>
 
-      {/* Main Content */}
+      {/* Main */}
       <div className="main-content">
         {/* Topbar */}
         <header className="topbar">
@@ -110,26 +121,72 @@ export default function AppLayout() {
               className="theme-btn mobile-menu-btn"
               onClick={() => setSidebarOpen(o => !o)}
               aria-label="Toggle sidebar"
-            ><LuMenu /></button>
-            <span className="topbar-title">{currentTitle}</span>
+            >
+              {sidebarOpen ? <LuX /> : <LuMenu />}
+            </button>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span className="topbar-title">{currentTitle}</span>
+            </div>
           </div>
+
           <div className="topbar-actions">
+            {/* Search */}
+            <button
+              className="theme-btn"
+              title="Search"
+              aria-label="Search"
+            >
+              <LuSearch />
+            </button>
+
+            {/* Notifications */}
+            <button
+              className="theme-btn"
+              title="Notifications"
+              aria-label="Notifications"
+              style={{ position: 'relative' }}
+            >
+              <LuBell />
+              {/* Notification dot */}
+              <span style={{
+                position: 'absolute',
+                top: 8, right: 8,
+                width: 7, height: 7,
+                borderRadius: '50%',
+                background: 'var(--indigo)',
+                border: '1.5px solid var(--bg-base)',
+              }} />
+            </button>
+
+            {/* Theme toggle */}
             <button
               className="theme-btn"
               onClick={toggleTheme}
-              aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               title="Toggle theme"
             >
-              {theme === 'light' ? <LuMoon /> : <LuSun />}
+              {theme === 'dark' ? <LuSun /> : <LuMoon />}
             </button>
+
+            {/* Avatar */}
+            <div
+              className="avatar avatar-md"
+              style={{ cursor: 'pointer' }}
+              title={user?.name}
+            >
+              {initials}
+            </div>
+
+            {/* Logout */}
             <button className="topbar-logout" onClick={logout}>
-              <LuLogOut /> Logout
+              <LuLogOut />
+              <span style={{ display: 'none' }}>Logout</span>
             </button>
           </div>
         </header>
 
         {/* Page */}
-        <main className="page-content">
+        <main className="page-content" key={location.pathname}>
           <Outlet />
         </main>
       </div>
@@ -137,7 +194,12 @@ export default function AppLayout() {
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 199 }}
+          style={{
+            position: 'fixed', inset: 0,
+            background: 'rgba(0,0,0,0.65)',
+            zIndex: 199,
+            backdropFilter: 'blur(4px)',
+          }}
           onClick={() => setSidebarOpen(false)}
         />
       )}

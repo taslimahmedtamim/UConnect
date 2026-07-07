@@ -472,7 +472,7 @@ export default function SkillMapPage() {
         </button>
     </div>
 
-    <script src="layout.js"></script>
+
 
     </div>
   );

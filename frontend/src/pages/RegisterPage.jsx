@@ -1,19 +1,26 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LuGraduationCap, LuBookOpen, LuBriefcase } from 'react-icons/lu';
+import { LuGraduationCap, LuBookOpen, LuBriefcase, LuArrowRight, LuCheck } from 'react-icons/lu';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
 const roles = [
-  { value: 'STUDENT', icon: LuGraduationCap, label: 'Student' },
-  { value: 'TEACHER', icon: LuBookOpen, label: 'Teacher' },
-  { value: 'RECRUITER', icon: LuBriefcase, label: 'Recruiter' },
+  { value: 'STUDENT',   icon: LuGraduationCap, label: 'Student',   desc: 'Build your portfolio' },
+  { value: 'TEACHER',   icon: LuBookOpen,      label: 'Teacher',   desc: 'Guide your students' },
+  { value: 'RECRUITER', icon: LuBriefcase,     label: 'Recruiter', desc: 'Find top talent' },
+];
+
+const perks = [
+  '✦ Verified academic credentials',
+  '✦ Gamified XP & achievements',
+  '✦ Direct recruiter connections',
+  '✦ AI-powered skill mapping',
 ];
 
 export default function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'STUDENT' });
+  const [form, setForm]     = useState({ name: '', email: '', password: '', role: 'STUDENT' });
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -25,84 +32,218 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await register(form);
-      toast.success('Account created — welcome to UConnect');
+      toast.success('Account created — welcome to UConnect 🎉');
       navigate('/dashboard');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Registration failed');
+      console.error('Registration error:', err);
+      const message =
+        err.response?.data?.message ||
+        err.message ||
+        'Registration failed — check console for details';
+      toast.error(message, { duration: 6000 });
     } finally {
       setLoading(false);
     }
   };
 
+  const set = (key) => (e) => setForm(f => ({ ...f, [key]: e.target.value }));
+
   return (
     <div className="auth-page">
-      <div className="auth-card">
-        <div className="auth-logo">
-          <div className="auth-logo-icon">U</div>
-          <span className="auth-logo-text">Connect</span>
+      {/* ── Left Panel ─────────────────────────────── */}
+      <div className="auth-left">
+        <div className="auth-mesh">
+          <div className="auth-mesh-dot" />
         </div>
-        <h1 className="auth-title">Create an account</h1>
-        <p className="auth-subtitle">Join the UConnect university ecosystem</p>
 
-        <form onSubmit={handleSubmit}>
-          {/* Role selector */}
-          <div className="form-group">
-            <label className="form-label">I am a</label>
-            <div className="role-selector">
-              {roles.map(r => (
-                <div
-                  key={r.value}
-                  className={`role-option${form.role === r.value ? ' selected' : ''}`}
-                  onClick={() => setForm(f => ({ ...f, role: r.value }))}
-                >
-                  <div className="role-option-icon"><r.icon /></div>
-                  <div className="role-option-label">{r.label}</div>
+        <div className="auth-left-inner">
+          <div className="auth-logo" style={{ marginBottom: 40 }}>
+            <div className="auth-logo-icon">U</div>
+            <span className="auth-logo-text" style={{ fontSize: '1.3rem' }}>Connect</span>
+          </div>
+
+          <h1 className="auth-left-title">
+            Start building<br />
+            your academic<br />
+            legacy today.
+          </h1>
+          <p className="auth-left-subtitle">
+            Join thousands of students turning their university work into a verified career portfolio that speaks for itself.
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 8 }}>
+            {perks.map(p => (
+              <div key={p} style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                color: 'rgba(255,255,255,0.7)',
+                fontSize: '0.9rem',
+                fontWeight: 500,
+              }}>
+                <div style={{
+                  width: 22, height: 22,
+                  borderRadius: '50%',
+                  background: 'rgba(99,102,241,0.2)',
+                  border: '1px solid rgba(99,102,241,0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  <LuCheck size={12} style={{ color: '#818cf8' }} />
                 </div>
-              ))}
+                {p.replace('✦ ', '')}
+              </div>
+            ))}
+          </div>
+
+          {/* Gradient divider */}
+          <div style={{
+            marginTop: 48,
+            height: 1,
+            background: 'linear-gradient(90deg, transparent, rgba(99,102,241,0.4), rgba(139,92,246,0.4), transparent)',
+          }} />
+
+          <p style={{ marginTop: 24, fontSize: '0.82rem', color: 'rgba(255,255,255,0.35)' }}>
+            Free forever for students. No credit card required.
+          </p>
+        </div>
+      </div>
+
+      {/* ── Right Panel — Form ──────────────────────── */}
+      <div className="auth-right">
+        <div className="auth-card">
+          <div className="auth-logo">
+            <div className="auth-logo-icon">U</div>
+            <span className="auth-logo-text">Connect</span>
+          </div>
+
+          <h1 className="auth-title">Create account</h1>
+          <p className="auth-subtitle">Join the UConnect university ecosystem</p>
+
+          <form onSubmit={handleSubmit}>
+            {/* Role Selector */}
+            <div className="form-group">
+              <label className="form-label">I am a</label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 }}>
+                {roles.map(r => (
+                  <button
+                    type="button"
+                    key={r.value}
+                    onClick={() => setForm(f => ({ ...f, role: r.value }))}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: 6,
+                      padding: '12px 8px',
+                      borderRadius: 'var(--r-md)',
+                      border: form.role === r.value
+                        ? '1.5px solid var(--indigo)'
+                        : '1.5px solid var(--border-strong)',
+                      background: form.role === r.value
+                        ? 'rgba(99,102,241,0.1)'
+                        : 'var(--bg-input)',
+                      cursor: 'pointer',
+                      transition: 'all var(--t-fast)',
+                      color: form.role === r.value ? 'var(--indigo-light)' : 'var(--text-2)',
+                      boxShadow: form.role === r.value
+                        ? '0 0 0 3px rgba(99,102,241,0.12)'
+                        : 'none',
+                    }}
+                  >
+                    <r.icon size={18} />
+                    <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>{r.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div className="form-group">
-            <label className="form-label">Full Name</label>
-            <input
-              className="form-input"
-              placeholder="Your full name"
-              value={form.name}
-              onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Email</label>
-            <input
-              type="email"
-              className="form-input"
-              placeholder="you@university.edu"
-              value={form.email}
-              onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Password</label>
-            <input
-              type="password"
-              className="form-input"
-              placeholder="Min. 8 characters"
-              value={form.password}
-              onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
-              required minLength={8}
-            />
-          </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="reg-name">Full Name</label>
+              <input
+                id="reg-name"
+                className="form-input"
+                placeholder="Your full name"
+                value={form.name}
+                onChange={set('name')}
+                required
+                autoComplete="name"
+              />
+            </div>
 
-          <button type="submit" className="btn btn-primary w-full" style={{ justifyContent: 'center', marginTop: 8 }} disabled={loading}>
-            {loading ? 'Creating account…' : 'Create Account'}
-          </button>
-        </form>
+            <div className="form-group">
+              <label className="form-label" htmlFor="reg-email">Email</label>
+              <input
+                id="reg-email"
+                type="email"
+                className="form-input"
+                placeholder="you@university.edu"
+                value={form.email}
+                onChange={set('email')}
+                required
+                autoComplete="email"
+              />
+            </div>
 
-        <p className="auth-footer">
-          Already have an account? <Link to="/login">Sign in</Link>
-        </p>
+            <div className="form-group">
+              <label className="form-label" htmlFor="reg-password">Password</label>
+              <input
+                id="reg-password"
+                type="password"
+                className="form-input"
+                placeholder="Min. 8 characters"
+                value={form.password}
+                onChange={set('password')}
+                required
+                minLength={8}
+                autoComplete="new-password"
+              />
+              {/* Password strength indicator */}
+              {form.password.length > 0 && (
+                <div style={{ display: 'flex', gap: 4, marginTop: 8 }}>
+                  {[1,2,3,4].map(i => (
+                    <div
+                      key={i}
+                      style={{
+                        flex: 1, height: 3, borderRadius: 99,
+                        background: form.password.length >= i * 2
+                          ? i <= 1 ? 'var(--rose)'
+                          : i <= 2 ? 'var(--amber)'
+                          : i <= 3 ? 'var(--emerald)'
+                          : 'var(--indigo)'
+                          : 'var(--border-strong)',
+                        transition: 'background 0.2s ease',
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary w-full"
+              style={{ marginTop: 8, padding: '12px 18px', fontSize: '0.9rem', gap: 10 }}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} />
+                  Creating account…
+                </>
+              ) : (
+                <>Create Account <LuArrowRight size={16} /></>
+              )}
+            </button>
+          </form>
+
+          <p className="auth-footer">
+            Already have an account?{' '}
+            <Link to="/login">Sign in</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -9,6 +9,9 @@ export const AuthProvider = ({ children }) => {
 
   // On mount, try to restore session from localStorage
   useEffect(() => {
+    const isAuthPage = ['/login', '/register'].some(p =>
+      window.location.pathname.startsWith(p)
+    );
     const token = localStorage.getItem('uconnect_token');
     const savedUser = localStorage.getItem('uconnect_user');
     if (token && savedUser) {
@@ -17,11 +20,15 @@ export const AuthProvider = ({ children }) => {
       } catch {
         localStorage.removeItem('uconnect_user');
       }
-      // Re-verify with backend
-      authAPI.me()
-        .then((res) => setUser(res.data.data))
-        .catch(() => logout())
-        .finally(() => setLoading(false));
+      // Skip re-verification on auth pages to avoid interfering with login/register
+      if (!isAuthPage) {
+        authAPI.me()
+          .then((res) => setUser(res.data.data))
+          .catch(() => logout())
+          .finally(() => setLoading(false));
+      } else {
+        setLoading(false);
+      }
     } else {
       setLoading(false);
     }

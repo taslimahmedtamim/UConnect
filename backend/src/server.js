@@ -27,9 +27,21 @@ const PORT = process.env.PORT || 4000;
 // Security headers
 app.use(helmet());
 
-// CORS
+// CORS Configuration
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
+  .split(',')
+  .map(o => o.trim());
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // Allow curl / postman
+    const isLocalhost = /^http:\/\/localhost:\d+$/.test(origin);
+    if (allowedOrigins.includes(origin) || isLocalhost) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 
