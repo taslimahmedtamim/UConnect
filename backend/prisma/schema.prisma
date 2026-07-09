@@ -1,0 +1,301 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ==========================================
+// Enums
+// ==========================================
+
+enum Role {
+  STUDENT
+  TEACHER
+  RECRUITER
+}
+
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  COMPLETED
+  ARCHIVED
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+// ==========================================
+// Core Entities (from ER Diagram)
+// ==========================================
+
+/// USER entity — central to all relationships
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(STUDENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 1:1 — User HAS PROFILE
+  profile Profile?
+
+  // 1:N — User CREATES projects
+  projects Project[]
+
+  // M:N — User HAS SKILLS (via join table)
+  skills UserSkill[]
+
+  // 1:N — User BUILDS resumes
+  resumes Resume[]
+
+  // M:N — User APPLIES TO opportunities
+  applications Application[]
+
+  // M:N — User EARNS achievements
+  achievements Achievement[]
+
+  // M:N — User SENDS/RECEIVES messages
+  sentMessages     Message[] @relation("MessageSender")
+  receivedMessages Message[] @relation("MessageReceiver")
+
+  // M:N — User is a team member
+  teamMembers TeamMember[]
+
+  // M:N — User CONNECTS WITH mentors
+  mentorshipsAsMentee MentorConnection[] @relation("Mentee")
+  mentorshipsAsMentor MentorConnection[] @relation("Mentor")
+
+  // 1:N — Recruiter POSTS opportunities
+  postedOpportunities Opportunity[]
+
+  @@map("users")
+}
+
+/// PROFILE entity — 1:1 with User
+model Profile {
+  id          String  @id @default(uuid())
+  headline    String?
+  bio         String?
+  university  String?
+  department  String?
+  yearOfStudy Int?
+  phone       String?
+  avatarUrl   String?
+
+  // Foreign key to User
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("profiles")
+}
+
+/// SKILL entity
+model Skill {
+  id       String  @id @default(uuid())
+  name     String  @unique
+  category String?
+
+  // M:N with User
+  users UserSkill[]
+
+  // M:N with Project (USES)
+  projects ProjectSkill[]
+
+  createdAt DateTime @default(now())
+
+  @@map("skills")
+}
+
+/// Join table: User HAS SKILLS (M:N)
+model UserSkill {
+  id    String @id @default(uuid())
+  level Int?   @default(50) // 0-100 proficiency
+
+  userId  String
+  skillId String
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill   Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skillId])
+  @@map("user_skills")
+}
+
+/// PROJECT entity
+model Project {
+  id          String        @id @default(uuid())
+  title       String
+  description String?
+  status      ProjectStatus @default(PLANNING)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // 1:N — User CREATES project
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  // M:N — Project USES skills
+  skills ProjectSkill[]
+
+  // M:N — Project has TEAM MEMBERS
+  teamMembers TeamMember[]
+
+  @@map("projects")
+}
+
+/// Join table: Project USES Skills (M:N)
+model ProjectSkill {
+  id String @id @default(uuid())
+
+  projectId String
+  skillId   String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  skill     Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, skillId])
+  @@map("project_skills")
+}
+
+/// TEAM entity
+model Team {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // N — Team has members
+  members TeamMember[]
+
+  @@map("teams")
+}
+
+/// TEAM_MEMBER entity — junction between User, Team, and optionally Project
+model TeamMember {
+  id       String   @id @default(uuid())
+  role     String?  @default("member")
+  joinedAt DateTime @default(now())
+
+  userId    String
+  teamId    String
+  projectId String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, teamId])
+  @@map("team_members")
+}
+
+/// RESUME entity
+model Resume {
+  id            String   @id @default(uuid())
+  fileUrl       String?
+  templateName  String?  @default("professional")
+  generatedDate DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("resumes")
+}
+
+/// OPPORTUNITY entity
+model Opportunity {
+  id          String  @id @default(uuid())
+  type        String  // "job", "internship", "hackathon", "event"
+  title       String
+  description String?
+  company     String?
+  location    String?
+  isRemote    Boolean @default(false)
+  deadline    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 1:N — Recruiter POSTS opportunity
+  postedById String?
+  postedBy   User?   @relation(fields: [postedById], references: [id], onDelete: SetNull)
+
+  // N — Opportunity receives applications
+  applications Application[]
+
+  @@map("opportunities")
+}
+
+/// APPLICATION entity — junction between User and Opportunity
+model Application {
+  id        String            @id @default(uuid())
+  status    ApplicationStatus @default(PENDING)
+  appliedAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  userId        String
+  opportunityId String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, opportunityId])
+  @@map("applications")
+}
+
+/// ACHIEVEMENT entity
+model Achievement {
+  id       String @id @default(uuid())
+  type     String // "badge", "certificate", "milestone"
+  title    String
+  xpPoints Int    @default(0)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  awardedAt DateTime @default(now())
+
+  @@map("achievements")
+}
+
+/// MENTOR entity — M:N connection between Users
+model MentorConnection {
+  id        String  @id @default(uuid())
+  expertise String?
+  status    String  @default("active") // "active", "completed", "paused"
+
+  menteeId String
+  mentorId String
+  mentee   User   @relation("Mentee", fields: [menteeId], references: [id], onDelete: Cascade)
+  mentor   User   @relation("Mentor", fields: [mentorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([menteeId, mentorId])
+  @@map("mentor_connections")
+}
+
+/// MESSAGE entity
+model Message {
+  id      String @id @default(uuid())
+  content String
+  sentAt  DateTime @default(now())
+  isRead  Boolean  @default(false)
+
+  senderId   String
+  receiverId String
+  sender     User @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User @relation("MessageReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
