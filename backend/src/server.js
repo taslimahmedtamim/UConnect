@@ -90,8 +90,9 @@ app.use(errorHandler);
 // Start Server
 // ==========================================
 
-app.listen(PORT, () => {
-  console.log(`
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`
   ╔══════════════════════════════════════╗
   ║     UConnect API Server Started      ║
   ╠══════════════════════════════════════╣
@@ -99,7 +100,8 @@ app.listen(PORT, () => {
   ║  Environment: ${(process.env.NODE_ENV || 'development').padEnd(20)}║
   ║  API:         http://localhost:${PORT}/api ║
   ╚══════════════════════════════════════╝
-  `);
-});
+    `);
+  });
+}
 
 module.exports = app;
