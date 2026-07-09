@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { LuArrowRight, LuSparkles, LuBrainCircuit, LuTarget, LuUsers, LuFileText, LuTrendingUp } from 'react-icons/lu';
+import { LuArrowRight, LuSparkles, LuBrainCircuit, LuTarget, LuUsers, LuFileText, LuTrendingUp, LuSun, LuMoon } from 'react-icons/lu';
+import logoIcon from '../assets/UConnect.png';
+import { useTheme } from '../context/ThemeContext';
 
 export default function LandingPage() {
-  // Ensure we are in dark mode for the landing page to look its best
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', 'dark');
-  }, []);
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className="landing-page" style={{ position: 'relative', overflow: 'hidden' }}>
@@ -31,11 +30,21 @@ export default function LandingPage() {
           zIndex: 100
         }}>
           <div className="auth-logo" style={{ marginBottom: 0 }}>
-            <div className="auth-logo-icon" style={{ width: 32, height: 32, fontSize: '0.9rem' }}>U</div>
+            <div className="auth-logo-icon" style={{ width: 32, height: 32 }}>
+              <img src={logoIcon} alt="UConnect Logo" />
+            </div>
             <span className="auth-logo-text" style={{ fontSize: '1.2rem' }}>Connect</span>
           </div>
           
-          <div style={{ display: 'flex', gap: 16 }}>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+            <button
+              onClick={toggleTheme}
+              className="theme-btn"
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? <LuSun /> : <LuMoon />}
+            </button>
             <Link to="/login" className="btn btn-ghost">Sign In</Link>
             <Link to="/register" className="btn btn-primary">
               Get Started <LuArrowRight size={16} />

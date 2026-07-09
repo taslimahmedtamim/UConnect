@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LuGraduationCap, LuBookOpen, LuShield, LuZap, LuUsers, LuArrowRight } from 'react-icons/lu';
+import { LuGraduationCap, LuBookOpen, LuShield, LuZap, LuUsers, LuArrowRight, LuSun, LuMoon } from 'react-icons/lu';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import toast from 'react-hot-toast';
+import logoIcon from '../assets/UConnect.png';
+import fullLogo from '../assets/UConnect(512 x 512 px).png';
 
 const features = [
   { icon: '🎓', title: 'Verified Credentials', desc: 'Every skill, project, and achievement — verified and trusted' },
@@ -12,6 +15,7 @@ const features = [
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
@@ -42,9 +46,8 @@ export default function LoginPage() {
 
         <div className="auth-left-inner">
           {/* Logo */}
-          <div className="auth-logo" style={{ marginBottom: 40 }}>
-            <div className="auth-logo-icon">U</div>
-            <span className="auth-logo-text" style={{ fontSize: '1.3rem' }}>Connect</span>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginBottom: 48 }}>
+            <img src={fullLogo} alt="UConnect Logo" style={{ width: '130px', height: '130px', objectFit: 'contain', marginLeft: '-15px' }} />
           </div>
 
           <h1 className="auth-left-title">
@@ -106,10 +109,23 @@ export default function LoginPage() {
       </div>
 
       {/* ── Right Panel — Form ──────────────────────── */}
-      <div className="auth-right">
+      <div className="auth-right" style={{ position: 'relative' }}>
+        {/* Theme Toggle — pinned top-right */}
+        <button
+          onClick={toggleTheme}
+          className="theme-btn"
+          style={{ position: 'absolute', top: 20, right: 20 }}
+          title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {theme === 'dark' ? <LuSun /> : <LuMoon />}
+        </button>
+
         <div className="auth-card">
           <div className="auth-logo">
-            <div className="auth-logo-icon">U</div>
+            <div className="auth-logo-icon">
+              <img src={logoIcon} alt="UConnect Logo" />
+            </div>
             <span className="auth-logo-text">Connect</span>
           </div>
 

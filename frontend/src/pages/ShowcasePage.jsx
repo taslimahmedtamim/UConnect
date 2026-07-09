@@ -1,5 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
+import logoIcon from '../assets/UConnect.png';
 
 export default function ShowcasePage() {
   return (
@@ -13,13 +13,15 @@ export default function ShowcasePage() {
                 <i className="fas fa-chevron-left"></i>
             </div>
             <div className="sidebar-header">
-                <a href="../index.html" className="logo">
-                    <div className="logo-icon">U</div>
+                <Link to="/" className="logo">
+                    <div className="logo-icon">
+                        <img src={logoIcon} alt="UConnect Logo" />
+                    </div>
                     <div className="logo-text">
                         <span className="logo-title">UConnect</span>
                         <span className="logo-subtitle">University Ecosystem</span>
                     </div>
-                </a>
+                </Link>
                 <button className="sidebar-collapse-btn" id="sidebarCollapse">
                     <i className="fas fa-chevron-left"></i>
                 </button>

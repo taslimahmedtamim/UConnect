@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import {
   LuLayoutGrid, LuUserRound, LuFolderGit2, LuUsers, LuBriefcase, LuFileText,
@@ -6,6 +6,8 @@ import {
   LuAward, LuMap, LuSearch, LuBell, LuX, LuChevronRight,
 } from 'react-icons/lu';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import logoIcon from '../../assets/UConnect.png';
 
 const navItems = [
   { to: '/dashboard',    icon: LuLayoutGrid,   label: 'Dashboard' },
@@ -40,16 +42,9 @@ const pageTitles = {
 
 export default function AppLayout() {
   const { user, logout } = useAuth();
-  const [theme, setTheme]       = useState(() => localStorage.getItem('uc_theme') || 'dark');
+  const { theme, toggleTheme } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('uc_theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => setTheme(t => t === 'light' ? 'dark' : 'light');
 
   const currentTitle = Object.entries(pageTitles).find(([path]) =>
     location.pathname.startsWith(path)
@@ -63,7 +58,9 @@ export default function AppLayout() {
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         {/* Logo */}
         <div className="sidebar-logo">
-          <div className="sidebar-logo-icon">U</div>
+          <div className="sidebar-logo-icon">
+            <img src={logoIcon} alt="UConnect Logo" />
+          </div>
           <span className="sidebar-logo-text">Connect</span>
         </div>
 
