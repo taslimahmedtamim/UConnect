@@ -47,7 +47,9 @@ export default function LoginPage() {
         <div className="auth-left-inner">
           {/* Logo */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginBottom: 48 }}>
-            <img src={fullLogo} alt="UConnect Logo" style={{ width: '130px', height: '130px', objectFit: 'contain', marginLeft: '-15px' }} />
+            <div style={{ backgroundColor: '#ffffff', borderRadius: '50%', padding: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '200px', height: '200px', marginLeft: '-15px' }}>
+              <img src={fullLogo} alt="UConnect Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            </div>
           </div>
 
           <h1 className="auth-left-title">
