@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — UConnect</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/dashboard-modules.css">
+</head>
+<body class="dashboard">
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="sidebar__logo">
+      <img src="../assets/logo.svg" alt="UConnect" width="36" height="36">
+      <span>UConnect</span>
+    </a>
+    <nav class="sidebar__nav">
+      <a href="#home" class="sidebar__link active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Overview
+      </a>
+      <a href="#users" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        Users
+      </a>
+      <a href="#jobs" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/></svg>
+        Jobs
+      </a>
+      <a href="#events" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/></svg>
+        Events
+      </a>
+      <a href="#moderation" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+        Moderation
+        <span class="sidebar__badge" id="sidebarModBadge">7</span>
+      </a>
+      <a href="#reports" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Reports
+        <span class="sidebar__badge" id="sidebarRepBadge">3</span>
+      </a>
+    </nav>
+    <div class="sidebar__bottom">
+      <button class="sidebar__logout" id="logoutBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/></svg>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <div class="dashboard__main">
+    <header class="topbar">
+      <button class="topbar__menu" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/></svg>
+      </button>
+      <div class="topbar__search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/></svg>
+        <input type="search" placeholder="Search users, posts, jobs...">
+      </div>
+      <div class="topbar__actions">
+        <div class="topbar__profile">
+          <div class="topbar__avatar" id="userAvatar">A</div>
+          <div class="topbar__user">
+            <strong id="userName">Admin</strong>
+            <span>Administrator</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="dashboard__content">
+      <!-- Home View -->
+      <div id="view-home" class="dashboard-view active" style="display:flex; width:100%; gap:24px;">
+      <div class="dashboard__center">
+        <section class="welcome">
+          <h1>Admin Panel</h1>
+          <p>Platform overview, user management, and content moderation.</p>
+        </section>
+
+        <div class="dashboard-stats">
+          <div class="stat-card stat-card--green">
+            <div class="stat-card__value">12,847</div>
+            <div class="stat-card__label">Total Users</div>
+          </div>
+          <div class="stat-card stat-card--blue">
+            <div class="stat-card__value">3,421</div>
+            <div class="stat-card__label">Daily Active Users</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">8,932</div>
+            <div class="stat-card__label">Total Posts</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">156</div>
+            <div class="stat-card__label">Active Jobs</div>
+          </div>
+        </div>
+
+        <h2 class="section-label">Pending Verifications</h2>
+        <div class="dashboard-table">
+          <table>
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Maria Khan</strong></td>
+                <td>Student</td>
+                <td>maria.k@university.edu</td>
+                <td><span class="status-pill status-pill--warning">Pending</span></td>
+              </tr>
+              <tr>
+                <td><strong>TechCorp Ltd.</strong></td>
+                <td>Recruiter</td>
+                <td>hr@techcorp.com</td>
+                <td><span class="status-pill status-pill--warning">Pending</span></td>
+              </tr>
+              <tr>
+                <td><strong>Dr. Samiul Hoque</strong></td>
+                <td>Teacher</td>
+                <td>samiul.h@university.edu</td>
+                <td><span class="status-pill status-pill--warning">Pending</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 class="section-label" style="margin-top:32px">Recent Reports</h2>
+        <div class="dashboard-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Report</th>
+                <th>Type</th>
+                <th>Reported By</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Spam post in CSE group</td>
+                <td>Post</td>
+                <td>student_42</td>
+                <td><span class="status-pill status-pill--info">Review</span></td>
+              </tr>
+              <tr>
+                <td>Fake recruiter profile</td>
+                <td>User</td>
+                <td>admin_auto</td>
+                <td><span class="status-pill status-pill--warning">Open</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <aside class="dashboard__sidebar">
+        <div class="widget">
+          <h3 class="widget__title">User Breakdown</h3>
+          <ul class="profile-tips">
+            <li class="done">Students: 11,200</li>
+            <li class="done">Teachers: 420</li>
+            <li>Recruiters: 187</li>
+            <li>Admins: 40</li>
+          </ul>
+        </div>
+        <div class="widget">
+          <h3 class="widget__title">Platform Health</h3>
+          <div class="profile-progress">
+            <div class="profile-progress__bar">
+              <div class="profile-progress__fill" style="width: 98%"></div>
+            </div>
+            <span class="profile-progress__label">98% uptime this month</span>
+          </div>
+        </div>
+        <div class="widget">
+          <h3 class="widget__title">Quick Actions</h3>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
+            <a href="#" class="btn btn--primary btn--sm" style="width:100%">Verify Accounts</a>
+            <a href="#" class="btn btn--outline btn--sm" style="width:100%">View Analytics</a>
+            <a href="#" class="btn btn--dark btn--sm" style="width:100%">Moderate Posts</a>
+          </div>
+        </div>
+      </aside>
+      </div> <!-- End Home View -->
+
+      <!-- Users View -->
+      <div id="view-users" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Jobs View -->
+      <div id="view-jobs" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Events View -->
+      <div id="view-events" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Moderation View -->
+      <div id="view-moderation" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Reports View -->
+      <div id="view-reports" class="dashboard-view" style="width:100%;"></div>
+    </div>
+  </div>
+
+  <script src="../js/state.js"></script>
+  <script src="../js/dashboard-controllers.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

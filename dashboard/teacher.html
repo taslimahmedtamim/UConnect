@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Dashboard — UConnect</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/dashboard-modules.css">
+</head>
+<body class="dashboard">
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="sidebar__logo">
+      <img src="../assets/logo.svg" alt="UConnect" width="36" height="36">
+      <span>UConnect</span>
+    </a>
+    <nav class="sidebar__nav">
+      <a href="#home" class="sidebar__link active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Dashboard
+      </a>
+      <a href="#courses" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        My Courses
+      </a>
+      <a href="#resources" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+        Resources
+      </a>
+      <a href="#office" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+        Office Hours
+      </a>
+      <a href="#messages" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Messages
+        <span class="sidebar__badge" id="sidebarMsgBadge">3</span>
+      </a>
+      <a href="#notices" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+        Notices
+      </a>
+    </nav>
+    <div class="sidebar__bottom">
+      <a href="#settings" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>
+        Settings
+      </a>
+      <button class="sidebar__logout" id="logoutBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/></svg>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <div class="dashboard__main">
+    <header class="topbar">
+      <button class="topbar__menu" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar__search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" placeholder="Search courses, students...">
+      </div>
+      <div class="topbar__actions">
+        <div class="topbar__profile">
+          <div class="topbar__avatar" id="userAvatar">T</div>
+          <div class="topbar__user">
+            <strong id="userName">Teacher</strong>
+            <span>Faculty</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="dashboard__content">
+      <!-- Home View -->
+      <div id="view-home" class="dashboard-view active" style="display:flex; width:100%; gap:24px;">
+      <div class="dashboard__center">
+        <section class="welcome">
+          <h1>Welcome, <span id="welcomeName">Professor</span> 👨‍🏫</h1>
+          <p>Manage your courses, office hours, and student communications.</p>
+        </section>
+
+        <div class="dashboard-stats">
+          <div class="stat-card stat-card--green">
+            <div class="stat-card__value">4</div>
+            <div class="stat-card__label">Active Courses</div>
+          </div>
+          <div class="stat-card stat-card--blue">
+            <div class="stat-card__value">186</div>
+            <div class="stat-card__label">Total Students</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">12</div>
+            <div class="stat-card__label">Pending Assignments</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">3</div>
+            <div class="stat-card__label">Unread Messages</div>
+          </div>
+        </div>
+
+        <h2 class="section-label">My Courses</h2>
+        <div class="dashboard-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Course</th>
+                <th>Students</th>
+                <th>Next Class</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>CSE-301</strong> Data Structures</td>
+                <td>52</td>
+                <td>Mon, 10:00 AM</td>
+                <td><span class="status-pill status-pill--success">Active</span></td>
+              </tr>
+              <tr>
+                <td><strong>CSE-401</strong> Algorithms</td>
+                <td>48</td>
+                <td>Tue, 2:00 PM</td>
+                <td><span class="status-pill status-pill--success">Active</span></td>
+              </tr>
+              <tr>
+                <td><strong>CSE-450</strong> Machine Learning</td>
+                <td>38</td>
+                <td>Wed, 11:00 AM</td>
+                <td><span class="status-pill status-pill--success">Active</span></td>
+              </tr>
+              <tr>
+                <td><strong>CSE-499</strong> Thesis Supervision</td>
+                <td>8</td>
+                <td>By appointment</td>
+                <td><span class="status-pill status-pill--info">Ongoing</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <aside class="dashboard__sidebar">
+        <div class="widget">
+          <h3 class="widget__title">Office Hours</h3>
+          <ul class="event-list">
+            <li class="event-item">
+              <div class="event-item__date"><strong>Mon</strong><span>2-4PM</span></div>
+              <div class="event-item__info"><strong>Room 405</strong><span>CSE Building</span></div>
+            </li>
+            <li class="event-item">
+              <div class="event-item__date"><strong>Wed</strong><span>10-12</span></div>
+              <div class="event-item__info"><strong>Room 405</strong><span>CSE Building</span></div>
+            </li>
+          </ul>
+        </div>
+        <div class="widget">
+          <h3 class="widget__title">Recent Publications</h3>
+          <ul class="profile-tips">
+            <li>Deep Learning for NLP (2025)</li>
+            <li>Graph Algorithms Survey (2024)</li>
+            <li>Distributed Systems (2024)</li>
+          </ul>
+        </div>
+      </aside>
+      </div> <!-- End Home View -->
+
+      <!-- My Courses View -->
+      <div id="view-courses" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Resources View -->
+      <div id="view-resources" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Office Hours View -->
+      <div id="view-office" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Messages View -->
+      <div id="view-messages" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Notices View -->
+      <div id="view-notices" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Settings View -->
+      <div id="view-settings" class="dashboard-view" style="width:100%;"></div>
+    </div>
+  </div>
+
+  <script src="../js/state.js"></script>
+  <script src="../js/dashboard-controllers.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

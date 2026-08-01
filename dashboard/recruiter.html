@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recruiter Dashboard — UConnect</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/dashboard-modules.css">
+</head>
+<body class="dashboard">
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="sidebar__logo">
+      <img src="../assets/logo.svg" alt="UConnect" width="36" height="36">
+      <span>UConnect</span>
+    </a>
+    <nav class="sidebar__nav">
+      <a href="#home" class="sidebar__link active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Dashboard
+      </a>
+      <a href="#jobs" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/></svg>
+        Post Job
+      </a>
+      <a href="#candidates" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        Candidates
+      </a>
+      <a href="#interviews" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+        Interviews
+      </a>
+      <a href="#messages" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Messages
+        <span class="sidebar__badge" id="sidebarMsgBadge">3</span>
+      </a>
+    </nav>
+    <div class="sidebar__bottom">
+      <a href="#settings" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>
+        Company Profile
+      </a>
+      <button class="sidebar__logout" id="logoutBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/></svg>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <div class="dashboard__main">
+    <header class="topbar">
+      <button class="topbar__menu" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/></svg>
+      </button>
+      <div class="topbar__search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/></svg>
+        <input type="search" placeholder="Search students by skill...">
+      </div>
+      <div class="topbar__actions">
+        <a href="#" class="btn btn--primary btn--sm">+ Post New Job</a>
+        <div class="topbar__profile">
+          <div class="topbar__avatar" id="userAvatar">R</div>
+          <div class="topbar__user">
+            <strong id="userName">Recruiter</strong>
+            <span>Recruiter</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="dashboard__content">
+      <!-- Home View -->
+      <div id="view-home" class="dashboard-view active" style="display:flex; width:100%; gap:24px;">
+      <div class="dashboard__center">
+        <section class="welcome">
+          <h1>Recruiter Dashboard</h1>
+          <p>Manage job postings, search talent, and track applications.</p>
+        </section>
+
+        <div class="dashboard-stats">
+          <div class="stat-card stat-card--green">
+            <div class="stat-card__value">8</div>
+            <div class="stat-card__label">Active Jobs</div>
+          </div>
+          <div class="stat-card stat-card--blue">
+            <div class="stat-card__value">247</div>
+            <div class="stat-card__label">Total Applicants</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">34</div>
+            <div class="stat-card__label">Shortlisted</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">12</div>
+            <div class="stat-card__label">Interviews Scheduled</div>
+          </div>
+        </div>
+
+        <h2 class="section-label">Active Job Listings</h2>
+        <div class="dashboard-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Position</th>
+                <th>Applicants</th>
+                <th>Posted</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Frontend Developer Intern</strong></td>
+                <td>64</td>
+                <td>Mar 1, 2026</td>
+                <td><span class="status-pill status-pill--success">Active</span></td>
+              </tr>
+              <tr>
+                <td><strong>Software Engineer</strong></td>
+                <td>89</td>
+                <td>Feb 20, 2026</td>
+                <td><span class="status-pill status-pill--success">Active</span></td>
+              </tr>
+              <tr>
+                <td><strong>Data Analyst</strong></td>
+                <td>42</td>
+                <td>Feb 15, 2026</td>
+                <td><span class="status-pill status-pill--warning">Closing Soon</span></td>
+              </tr>
+              <tr>
+                <td><strong>UI/UX Designer</strong></td>
+                <td>31</td>
+                <td>Mar 5, 2026</td>
+                <td><span class="status-pill status-pill--success">Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <aside class="dashboard__sidebar">
+        <div class="widget">
+          <h3 class="widget__title">Top Candidates</h3>
+          <ul class="job-list">
+            <li class="job-item">
+              <div class="job-item__logo">A</div>
+              <div class="job-item__info">
+                <strong>Ayesha Rahman</strong>
+                <span>React, Node.js</span>
+              </div>
+              <span class="job-item__match">95%</span>
+            </li>
+            <li class="job-item">
+              <div class="job-item__logo" style="background:#0078D4;">K</div>
+              <div class="job-item__info">
+                <strong>Karim Hassan</strong>
+                <span>Python, ML</span>
+              </div>
+              <span class="job-item__match">91%</span>
+            </li>
+            <li class="job-item">
+              <div class="job-item__logo" style="background:#FF9900;">S</div>
+              <div class="job-item__info">
+                <strong>Sara Islam</strong>
+                <span>Java, Spring</span>
+              </div>
+              <span class="job-item__match">88%</span>
+            </li>
+          </ul>
+        </div>
+        <div class="widget">
+          <h3 class="widget__title">Upcoming Interviews</h3>
+          <ul class="event-list">
+            <li class="event-item">
+              <div class="event-item__date"><strong>10</strong><span>Mar</span></div>
+              <div class="event-item__info"><strong>Ayesha Rahman</strong><span>Frontend Intern · 10 AM</span></div>
+            </li>
+            <li class="event-item">
+              <div class="event-item__date"><strong>11</strong><span>Mar</span></div>
+              <div class="event-item__info"><strong>Karim Hassan</strong><span>SWE · 2 PM</span></div>
+            </li>
+          </ul>
+        </div>
+      </aside>
+      </div> <!-- End Home View -->
+
+      <!-- Jobs View -->
+      <div id="view-jobs" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Candidates View -->
+      <div id="view-candidates" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Interviews View -->
+      <div id="view-interviews" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Messages View -->
+      <div id="view-messages" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Settings (Company Profile) View -->
+      <div id="view-settings" class="dashboard-view" style="width:100%;"></div>
+    </div>
+  </div>
+
+  <script src="../js/state.js"></script>
+  <script src="../js/dashboard-controllers.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

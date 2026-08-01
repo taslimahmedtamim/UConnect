@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — UConnect</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/dashboard-modules.css">
+</head>
+<body class="dashboard">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="sidebar__logo">
+      <img src="../assets/logo.svg" alt="UConnect" width="36" height="36">
+      <span>UConnect</span>
+    </a>
+    <nav class="sidebar__nav">
+      <a href="#home" class="sidebar__link active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </a>
+      <a href="#network" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Network
+      </a>
+      <a href="#messages" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Messages
+        <span class="sidebar__badge" id="sidebarMsgBadge">3</span>
+      </a>
+      <a href="#jobs" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        Jobs
+      </a>
+      <a href="#resources" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Resources
+      </a>
+      <a href="#courses" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        Courses
+      </a>
+      <a href="#events" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Events
+      </a>
+      <a href="#ai" class="sidebar__link sidebar__link--ai">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        AI Assistant
+      </a>
+    </nav>
+    <div class="sidebar__bottom">
+      <a href="#notifications" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        Notifications
+        <span class="sidebar__badge" id="sidebarNotifBadge">5</span>
+      </a>
+      <a href="#settings" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Settings
+      </a>
+      <button class="sidebar__logout" id="logoutBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="dashboard__main">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <button class="topbar__menu" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar__search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" placeholder="Search students, jobs, resources...">
+      </div>
+      <div class="topbar__actions">
+        <button class="topbar__icon-btn" aria-label="Notifications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="topbar__dot"></span>
+        </button>
+        <div class="topbar__profile">
+          <div class="topbar__avatar" id="userAvatar">M</div>
+          <div class="topbar__user">
+            <strong id="userName">Student</strong>
+            <span>Student</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard__content">
+      <!-- Home View -->
+      <div id="view-home" class="dashboard-view active" style="display:flex; width:100%; gap:24px;">
+      <div class="dashboard__center">
+        <!-- Welcome -->
+        <section class="welcome">
+          <h1>Welcome back, <span id="welcomeName">Student</span> 👋</h1>
+          <p>Here's what's happening in your university community today.</p>
+        </section>
+
+        <!-- Quick Access -->
+        <section class="quick-access">
+          <h2 class="section-label">Quick Access</h2>
+          <div class="quick-access__grid">
+            <a href="#" class="quick-card">
+              <div class="quick-card__icon quick-card__icon--green">💼</div>
+              <span>Jobs</span>
+            </a>
+            <a href="#" class="quick-card">
+              <div class="quick-card__icon quick-card__icon--blue">📄</div>
+              <span>Resume Builder</span>
+            </a>
+            <a href="#" class="quick-card">
+              <div class="quick-card__icon quick-card__icon--green">📚</div>
+              <span>Resources</span>
+            </a>
+            <a href="#" class="quick-card">
+              <div class="quick-card__icon quick-card__icon--purple">🤖</div>
+              <span>AI Assistant</span>
+            </a>
+            <a href="#" class="quick-card">
+              <div class="quick-card__icon quick-card__icon--orange">📅</div>
+              <span>Events</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Create Post -->
+        <section class="create-post">
+          <div class="create-post__avatar" id="postAvatar">M</div>
+          <input type="text" placeholder="Share something with your network..." class="create-post__input">
+          <div class="create-post__actions">
+            <button aria-label="Add photo">📷</button>
+            <button aria-label="Add video">🎬</button>
+            <button aria-label="Add poll">📊</button>
+            <button class="btn btn--primary btn--sm">Post</button>
+          </div>
+        </section>
+
+        <!-- Feed -->
+        <section class="feed">
+          <h2 class="section-label">Recent Posts</h2>
+
+          <article class="post-card">
+            <div class="post-card__header">
+              <div class="post-card__avatar" style="background: linear-gradient(135deg, #2563EB, #7C3AED);">A</div>
+              <div class="post-card__meta">
+                <strong>Ayesha Rahman</strong>
+                <span>Computer Science · 2h ago</span>
+              </div>
+              <button class="post-card__more" aria-label="More options">⋯</button>
+            </div>
+            <p class="post-card__text">Excited to announce our team won 2nd place at the National Hackathon 2026! 🏆 Huge thanks to everyone who supported us. #hackathon #coding #teamwork</p>
+            <div class="post-card__image post-card__image--placeholder">
+              <span>🏆 Hackathon Winners 2026</span>
+            </div>
+            <div class="post-card__tags">
+              <span>#hackathon</span>
+              <span>#coding</span>
+              <span>#teamwork</span>
+            </div>
+            <div class="post-card__stats">
+              <span>❤️ 48 likes</span>
+              <span>12 comments · 5 shares</span>
+            </div>
+            <div class="post-card__actions">
+              <button class="post-action"><span>👍</span> Like</button>
+              <button class="post-action"><span>💬</span> Comment</button>
+              <button class="post-action"><span>↗️</span> Share</button>
+              <button class="post-action"><span>🔖</span> Save</button>
+            </div>
+          </article>
+
+          <article class="post-card">
+            <div class="post-card__header">
+              <div class="post-card__avatar" style="background: linear-gradient(135deg, #16A34A, #059669);">R</div>
+              <div class="post-card__meta">
+                <strong>Dr. Rashid Ahmed</strong>
+                <span>Faculty · CSE Department · 5h ago</span>
+              </div>
+              <button class="post-card__more" aria-label="More options">⋯</button>
+            </div>
+            <p class="post-card__text">📢 Reminder: Mid-term exam for Data Structures (CSE-301) is scheduled for March 15. Review sessions will be held this week during office hours. Good luck!</p>
+            <div class="post-card__stats">
+              <span>❤️ 23 likes</span>
+              <span>8 comments</span>
+            </div>
+            <div class="post-card__actions">
+              <button class="post-action"><span>👍</span> Like</button>
+              <button class="post-action"><span>💬</span> Comment</button>
+              <button class="post-action"><span>↗️</span> Share</button>
+              <button class="post-action"><span>🔖</span> Save</button>
+            </div>
+          </article>
+
+          <article class="post-card">
+            <div class="post-card__header">
+              <div class="post-card__avatar" style="background: linear-gradient(135deg, #F59E0B, #EF4444);">T</div>
+              <div class="post-card__meta">
+                <strong>Tech Club UConnect</strong>
+                <span>Club · 1d ago</span>
+              </div>
+              <button class="post-card__more" aria-label="More options">⋯</button>
+            </div>
+            <p class="post-card__text">🚀 Looking for 2 more members for our hackathon team! We need a frontend dev and a UI/UX designer. DM if interested. Skills: React, Figma #hackathon #teamfinder</p>
+            <div class="post-card__poll">
+              <p class="post-card__poll-q">Which stack are you most comfortable with?</p>
+              <div class="post-card__poll-option">
+                <div class="post-card__poll-bar" style="width: 45%"></div>
+                <span>React / Next.js</span>
+                <strong>45%</strong>
+              </div>
+              <div class="post-card__poll-option">
+                <div class="post-card__poll-bar" style="width: 30%"></div>
+                <span>Vue / Nuxt</span>
+                <strong>30%</strong>
+              </div>
+              <div class="post-card__poll-option">
+                <div class="post-card__poll-bar" style="width: 25%"></div>
+                <span>Angular</span>
+                <strong>25%</strong>
+              </div>
+              <span class="post-card__poll-votes">32 votes</span>
+            </div>
+            <div class="post-card__actions">
+              <button class="post-action"><span>👍</span> Like</button>
+              <button class="post-action"><span>💬</span> Comment</button>
+              <button class="post-action"><span>↗️</span> Share</button>
+              <button class="post-action"><span>🔖</span> Save</button>
+            </div>
+          </article>
+        </section>
+      </div>
+
+      <!-- Right Sidebar -->
+      <aside class="dashboard__sidebar">
+        <div class="widget">
+          <h3 class="widget__title">Upcoming Events</h3>
+          <ul class="event-list">
+            <li class="event-item">
+              <div class="event-item__date">
+                <strong>15</strong>
+                <span>Mar</span>
+              </div>
+              <div class="event-item__info">
+                <strong>Tech Career Fair 2026</strong>
+                <span>10:00 AM · Main Auditorium</span>
+              </div>
+            </li>
+            <li class="event-item">
+              <div class="event-item__date">
+                <strong>18</strong>
+                <span>Mar</span>
+              </div>
+              <div class="event-item__info">
+                <strong>AI/ML Workshop</strong>
+                <span>2:00 PM · Lab 301</span>
+              </div>
+            </li>
+            <li class="event-item">
+              <div class="event-item__date">
+                <strong>22</strong>
+                <span>Mar</span>
+              </div>
+              <div class="event-item__info">
+                <strong>Cultural Fest</strong>
+                <span>All Day · Campus Ground</span>
+              </div>
+            </li>
+          </ul>
+          <a href="#" class="widget__link">View all events →</a>
+        </div>
+
+        <div class="widget">
+          <h3 class="widget__title">Job Recommendations</h3>
+          <p class="widget__sub">Based on your skills</p>
+          <ul class="job-list">
+            <li class="job-item">
+              <div class="job-item__logo">G</div>
+              <div class="job-item__info">
+                <strong>Frontend Developer Intern</strong>
+                <span>Google · Remote</span>
+              </div>
+              <span class="job-item__match">92%</span>
+            </li>
+            <li class="job-item">
+              <div class="job-item__logo" style="background:#0078D4;">M</div>
+              <div class="job-item__info">
+                <strong>Software Engineer</strong>
+                <span>Microsoft · Dhaka</span>
+              </div>
+              <span class="job-item__match">87%</span>
+            </li>
+            <li class="job-item">
+              <div class="job-item__logo" style="background:#FF9900;">A</div>
+              <div class="job-item__info">
+                <strong>Cloud Intern</strong>
+                <span>AWS · Hybrid</span>
+              </div>
+              <span class="job-item__match">84%</span>
+            </li>
+          </ul>
+          <a href="#" class="widget__link">Browse all jobs →</a>
+        </div>
+
+        <div class="widget widget--profile">
+          <h3 class="widget__title">Profile Completion</h3>
+          <div class="profile-progress">
+            <div class="profile-progress__bar">
+              <div class="profile-progress__fill" style="width: 72%"></div>
+            </div>
+            <span class="profile-progress__label">72% complete</span>
+          </div>
+          <ul class="profile-tips">
+            <li class="done">✓ Add profile photo</li>
+            <li class="done">✓ Add skills</li>
+            <li>Add GitHub link</li>
+            <li>Upload resume</li>
+          </ul>
+          <a href="#" class="btn btn--primary btn--sm" style="width:100%">Complete Profile</a>
+        </div>
+      </aside>
+      </div> <!-- End Home View -->
+
+      <!-- Network View -->
+      <div id="view-network" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Messages View -->
+      <div id="view-messages" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Jobs View -->
+      <div id="view-jobs" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Resources View -->
+      <div id="view-resources" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Courses View -->
+      <div id="view-courses" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Events View -->
+      <div id="view-events" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- AI Assistant View -->
+      <div id="view-ai" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Notifications View -->
+      <div id="view-notifications" class="dashboard-view" style="width:100%;"></div>
+
+      <!-- Settings View -->
+      <div id="view-settings" class="dashboard-view" style="width:100%;"></div>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-nav">
+    <a href="#home" class="mobile-nav__link active">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Home
+    </a>
+    <a href="#network" class="mobile-nav__link">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      Network
+    </a>
+    <a href="#home" class="mobile-nav__create">+</a>
+    <a href="#messages" class="mobile-nav__link">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Messages
+    </a>
+    <a href="#settings" class="mobile-nav__link">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </a>
+  </nav>
+
+  <script src="../js/state.js"></script>
+  <script src="../js/dashboard-controllers.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>
