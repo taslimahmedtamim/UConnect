@@ -19,18 +19,25 @@ document.addEventListener('DOMContentLoaded', function() {
    ========================================== */
 function initTheme() {
     const themeToggle = document.getElementById('themeToggle');
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    
-    // Apply saved theme
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        if (themeToggle) {
+            const moon = themeToggle.querySelector('.moon-icon');
+            const sun = themeToggle.querySelector('.sun-icon');
+            if (moon) moon.style.display = (theme === 'dark') ? 'block' : 'none';
+            if (sun)  sun.style.display  = (theme === 'dark') ? 'none'  : 'block';
+        }
+    }
+
+    applyTheme(savedTheme);
+
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
         });
     }
 }
@@ -310,71 +317,92 @@ function clearError(e) {
     input.style.borderColor = '';
 }
 
-function handleLogin(e) {
+async function handleLogin(e) {
     e.preventDefault();
     
     const form = e.target;
-    const email = form.querySelector('input[name="email"]').value;
-    const password = form.querySelector('input[name="password"]').value;
+    const emailInput = form.querySelector('input[type="email"], input[name="email"]');
+    const passwordInput = form.querySelector('input[type="password"], input[name="password"]');
 
-    // Validate all inputs
-    let isValid = true;
-    form.querySelectorAll('.form-input').forEach(input => {
-        if (!validateInput({ target: input })) {
-            isValid = false;
-        }
-    });
+    if (!emailInput || !passwordInput) return;
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
 
-    if (!isValid) return;
-
-    // Simulate login (replace with actual API call)
     const submitBtn = form.querySelector('button[type="submit"]');
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner"></span> Signing in...';
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Signing in...';
+    }
 
-    setTimeout(() => {
-        // Simulate successful login
-        localStorage.setItem('uconnect_user', JSON.stringify({
-            email: email,
-            name: email.split('@')[0],
-            avatar: email.substring(0, 2).toUpperCase()
-        }));
-        window.location.href = 'dashboard.html';
-    }, 1500);
+    try {
+        if (window.UConnectAPI) {
+            const response = await window.UConnectAPI.login({ email, password });
+            if (response.success) {
+                const inPagesDir = window.location.pathname.includes('/pages/');
+                window.location.href = inPagesDir ? 'dashboard.html' : 'pages/dashboard.html';
+                return;
+            }
+        }
+    } catch (err) {
+        console.warn('Login error:', err);
+    }
+
+    // Fallback simulation
+    localStorage.setItem('uconnect_user', JSON.stringify({
+        email: email,
+        fullName: email.split('@')[0],
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+    }));
+    const inPagesDir = window.location.pathname.includes('/pages/');
+    window.location.href = inPagesDir ? 'dashboard.html' : 'pages/dashboard.html';
 }
 
-function handleRegister(e) {
+async function handleRegister(e) {
     e.preventDefault();
     
     const form = e.target;
+    const fullName = form.querySelector('input[name="fullName"]')?.value?.trim() || 'User';
+    const email = form.querySelector('input[name="email"]')?.value?.trim() || '';
+    const role = form.querySelector('select[name="role"]')?.value || 'student';
+    const university = form.querySelector('input[name="university"]')?.value?.trim() || '';
+    const password = form.querySelector('input[name="password"]')?.value || 'password123';
 
-    // Validate all inputs
-    let isValid = true;
-    form.querySelectorAll('.form-input').forEach(input => {
-        if (!validateInput({ target: input })) {
-            isValid = false;
-        }
-    });
-
-    if (!isValid) return;
-
-    // Simulate registration
     const submitBtn = form.querySelector('button[type="submit"]');
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner"></span> Creating account...';
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Creating account...';
+    }
 
-    setTimeout(() => {
-        // Simulate successful registration
-        const formData = new FormData(form);
-        localStorage.setItem('uconnect_user', JSON.stringify({
-            email: formData.get('email'),
-            name: formData.get('fullName'),
-            role: formData.get('role'),
-            avatar: formData.get('fullName').substring(0, 2).toUpperCase()
-        }));
-        window.location.href = 'dashboard.html';
-    }, 1500);
+    try {
+        if (window.UConnectAPI) {
+            const response = await window.UConnectAPI.register({
+                fullName,
+                email,
+                password,
+                role,
+                university
+            });
+            if (response.success) {
+                const inPagesDir = window.location.pathname.includes('/pages/');
+                window.location.href = inPagesDir ? 'dashboard.html' : 'pages/dashboard.html';
+                return;
+            }
+        }
+    } catch (err) {
+        console.warn('Registration error:', err);
+    }
+
+    // Fallback simulation
+    localStorage.setItem('uconnect_user', JSON.stringify({
+        email: email,
+        fullName: fullName,
+        role: role,
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+    }));
+    const inPagesDir = window.location.pathname.includes('/pages/');
+    window.location.href = inPagesDir ? 'dashboard.html' : 'pages/dashboard.html';
 }
+
 
 /* ==========================================
    Dashboard Functions

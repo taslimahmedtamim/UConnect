@@ -192,41 +192,53 @@ UConnect/
 
 ### Prerequisites
 
-- A modern web browser (Chrome, Firefox, Safari, Edge)
-- A local development server (optional, for best experience)
+- Node.js (v16 or higher)
+- npm (Node Package Manager)
 
-### Installation
+### Local Development Setup
 
 1. **Clone the repository**
    ```bash
    git clone https://github.com/taslimahmedtamim/UConnect.git
-   cd UConnect
+   cd UConnect/UConnect_raw1
    ```
 
-2. **Open directly in browser**
+2. **Install dependencies**
    ```bash
-   # Simply open index.html in your browser
-   start index.html        # Windows
-   open index.html         # macOS
-   xdg-open index.html     # Linux
+   npm install
    ```
 
-3. **Or use a local server (recommended)**
+3. **Set up Environment Variables (Optional)**
+   Copy `.env.example` to `.env`:
    ```bash
-   # Using Python
-   python -m http.server 8000
-   
-   # Using Node.js (http-server)
-   npx http-server
-   
-   # Using VS Code Live Server extension
-   # Right-click index.html → "Open with Live Server"
+   # Add your MongoDB Atlas connection string to .env if available
+   MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.xxx.mongodb.net/uconnect
+   JWT_SECRET=your_jwt_secret_key
+   ```
+   *(Note: If `MONGODB_URI` is omitted, UConnect automatically runs in local memory store mode).*
+
+4. **Start the backend server & frontend**
+   ```bash
+   npm start
    ```
 
-4. **Visit in browser**
-   ```
-   http://localhost:8000
-   ```
+5. **Visit in browser**
+   - Main App: `http://localhost:3000`
+   - Login Page: `http://localhost:3000/pages/login.html`
+   - API Endpoint: `http://localhost:3000/api`
+
+---
+
+## ☁️ Free Vercel Deployment Guide
+
+1. Push your code to GitHub.
+2. Sign in to [Vercel](https://vercel.com).
+3. Click **Add New Project** and select your GitHub repository.
+4. Set **Environment Variables** in Vercel project settings:
+   - `MONGODB_URI`: Your MongoDB Atlas Connection URI
+   - `JWT_SECRET`: Random secure string
+5. Click **Deploy**. Vercel will automatically build the static frontend and serverless API functions!
+
 
 ---
 

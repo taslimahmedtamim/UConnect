@@ -52,6 +52,45 @@ document.addEventListener('DOMContentLoaded', function() {
         userDropdown?.classList.remove('open');
     });
 
+    // Logout handling
+    const logoutBtns = document.querySelectorAll('.logout-btn, a[href*="login.html"]');
+    logoutBtns.forEach(btn => {
+        if (btn.classList.contains('logout-btn') || btn.textContent.toLowerCase().includes('log out') || btn.textContent.toLowerCase().includes('sign out')) {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (window.UConnectAPI) {
+                    window.UConnectAPI.logout();
+                } else {
+                    localStorage.removeItem('uconnect_token');
+                    localStorage.removeItem('uconnect_user');
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+    });
+
+    // Populate user profile info from API or LocalStorage
+    async function syncUserProfile() {
+        if (!window.UConnectAPI) return;
+        try {
+            const user = await window.UConnectAPI.getCurrentUser();
+            if (user) {
+                const nameEls = document.querySelectorAll('.user-name, .profile-name, .user-info .name');
+                const emailEls = document.querySelectorAll('.user-email, .profile-email, .user-info .email');
+                const roleEls = document.querySelectorAll('.user-role, .profile-role');
+                const avatarEls = document.querySelectorAll('.user-avatar img, .profile-avatar img, .user-btn img');
+
+                nameEls.forEach(el => { if (user.fullName) el.textContent = user.fullName; });
+                emailEls.forEach(el => { if (user.email) el.textContent = user.email; });
+                roleEls.forEach(el => { if (user.role) el.textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1); });
+                avatarEls.forEach(img => { if (user.avatar) img.src = user.avatar; });
+            }
+        } catch (e) {
+            console.log('[Layout] User sync notice:', e.message);
+        }
+    }
+    syncUserProfile();
+
     // Chat Widget
     const chatWidget = document.getElementById('chatWidget');
     const chatToggle = document.getElementById('chatToggle');
@@ -70,19 +109,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Theme Toggle
     const themeToggle = document.getElementById('themeToggle');
-    
-    // Check for saved theme preference
-    const savedTheme = localStorage.getItem('uconnect-theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-        updateThemeIcon(true);
+
+    // Sync with script.js key ('theme') and layout key ('uconnect-theme')
+    // Default to dark if nothing is saved
+    function getTheme() {
+        return localStorage.getItem('theme') || localStorage.getItem('uconnect-theme') || 'dark';
     }
 
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+        } else {
+            document.body.classList.remove('dark-theme');
+        }
+        // Keep both keys in sync
+        localStorage.setItem('theme', theme);
+        localStorage.setItem('uconnect-theme', theme);
+        updateThemeIcon(theme === 'dark');
+    }
+
+    // Apply immediately on load
+    applyTheme(getTheme());
+
     themeToggle?.addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme');
         const isDark = document.body.classList.contains('dark-theme');
-        localStorage.setItem('uconnect-theme', isDark ? 'dark' : 'light');
-        updateThemeIcon(isDark);
+        applyTheme(isDark ? 'light' : 'dark');
     });
 
     function updateThemeIcon(isDark) {
@@ -111,3 +162,4 @@ document.addEventListener('DOMContentLoaded', function() {
         sidebar.scrollTop = 0;
     }
 });
+
