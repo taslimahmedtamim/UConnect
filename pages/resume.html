@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder - UConnect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="layout.css">
+    
+    <script>
+        // Apply dark theme immediately to prevent flash of light content
+        (function() {
+            var theme = localStorage.getItem('theme') || localStorage.getItem('uconnect-theme') || 'dark';
+            if (theme === 'dark') { document.documentElement.classList.add('dark-theme-init'); document.body && document.body.classList.add('dark-theme'); }
+            localStorage.setItem('theme', theme);
+            localStorage.setItem('uconnect-theme', theme);
+        })();
+    </script></head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Sidebar Toggle Handle -->
+            <div class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="sidebar-header">
+                <a href="../index.html" class="logo">
+                    <div class="logo-icon">U</div>
+                    <div class="logo-text">
+                        <span class="logo-title">UConnect</span>
+                        <span class="logo-subtitle">University Ecosystem</span>
+                    </div>
+                </a>
+                <button class="sidebar-collapse-btn" id="sidebarCollapse">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="projects.html" class="nav-item">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Projects</span>
+                    </a>
+                    <a href="teams.html" class="nav-item">
+                        <i class="fas fa-users"></i>
+                        <span>Teams</span>
+                    </a>
+                    <a href="opportunities.html" class="nav-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Opportunities</span>
+                        <span class="nav-badge">24</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Career Tools</div>
+                    <a href="profile.html" class="nav-item">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                    <a href="resume.html" class="nav-item active">
+                        <i class="fas fa-file-alt"></i>
+                        <span>U-Resume</span>
+                    </a>
+                    <a href="skillmap.html" class="nav-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span>U-SkillMap</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Community</div>
+                    <a href="showcase.html" class="nav-item">
+                        <i class="fas fa-desktop"></i>
+                        <span>Showcase</span>
+                    </a>
+                    <a href="leaderboard.html" class="nav-item">
+                        <i class="fas fa-trophy"></i>
+                        <span>Leaderboard</span>
+                    </a>
+                    <a href="mentors.html" class="nav-item">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>Mentors</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Support</div>
+                    <a href="messages.html" class="nav-item">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Messages</span>
+                        <span class="nav-badge">3</span>
+                    </a>
+                    <a href="help.html" class="nav-item">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Help Board</span>
+                    </a>
+                </div>
+            </nav>
+                    <div class="sidebar-footer">
+                <div class="sidebar-user-wrapper">
+                    <a href="profile.html" class="sidebar-user" title="View Profile">
+                        <div class="sidebar-user-avatar">TT</div>
+                        <div class="sidebar-user-info">
+                            <span class="sidebar-user-name">Taslim Ahmed</span>
+                            <span class="sidebar-user-role">Student</span>
+                        </div>
+                    </a>
+                    <div class="sidebar-actions">
+                        <button class="icon-btn theme-toggle" id="themeToggle" title="Toggle dark/light mode">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <a href="login.html" class="icon-btn logout-btn" title="Sign Out">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="main-wrapper">
+            <main class="main-content">
+<div class="page-header-banner">
+                    <div class="page-title-group">
+                        <h1>U-Resume</h1>
+                        <p>AI-powered resume builder for students</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-outline-primary">
+                        <i class="fas fa-magic"></i>
+                        AI Enhance
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-download"></i>
+                        Export PDF
+                    </button>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.5rem;">
+                    <!-- Resume Editor -->
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <!-- Personal Information -->
+                        <div class="card">
+                            <div class="card-header" style="padding: 1rem; border-bottom: 1px solid var(--border-color);">
+                                <h3 style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-user" style="color: var(--primary);"></i>
+                                    Personal Information
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <div style="display: grid; gap: 1rem;">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                        <div>
+                                            <label class="form-label">First Name</label>
+                                            <input type="text" class="form-input" value="Taslim Ahmed">
+                                        </div>
+                                        <div>
+                                            <label class="form-label">Last Name</label>
+                                            <input type="text" class="form-input" value="Tamim">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-input" value="tamim@university.edu">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Phone</label>
+                                        <input type="tel" class="form-input" value="+880 1234-567890">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">LinkedIn</label>
+                                        <input type="url" class="form-input" value="linkedin.com/in/taslinahmedtamim">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Education -->
+                        <div class="card">
+                            <div class="card-header" style="padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                                <h3 style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-graduation-cap" style="color: var(--primary);"></i>
+                                    Education
+                                </h3>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div style="padding: 0.75rem; background: var(--surface-elevated); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                                        <div>
+                                            <h4 style="font-size: 0.875rem; font-weight: 600;">BSc in Computer Science</h4>
+                                            <p style="font-size: 0.75rem; color: var(--text-secondary);">United International University</p>
+                                            <p style="font-size: 0.75rem; color: var(--text-secondary);">2021 - Present • CGPA: 3.85</p>
+                                        </div>
+                                        <div style="display: flex; gap: 0.25rem;">
+                                            <button class="icon-btn" style="width: 28px; height: 28px;"><i class="fas fa-edit" style="font-size: 0.75rem;"></i></button>
+                                            <button class="icon-btn" style="width: 28px; height: 28px;"><i class="fas fa-trash" style="font-size: 0.75rem; color: var(--danger);"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Skills -->
+                        <div class="card">
+                            <div class="card-header" style="padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                                <h3 style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-code" style="color: var(--primary);"></i>
+                                    Skills
+                                </h3>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-magic"></i> Auto-fill from Projects
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                    <span class="project-tag" style="padding: 0.5rem 0.75rem;">JavaScript <i class="fas fa-times" style="margin-left: 0.5rem; cursor: pointer; opacity: 0.6;"></i></span>
+                                    <span class="project-tag" style="padding: 0.5rem 0.75rem;">React <i class="fas fa-times" style="margin-left: 0.5rem; cursor: pointer; opacity: 0.6;"></i></span>
+                                    <span class="project-tag" style="padding: 0.5rem 0.75rem;">Node.js <i class="fas fa-times" style="margin-left: 0.5rem; cursor: pointer; opacity: 0.6;"></i></span>
+                                    <span class="project-tag" style="padding: 0.5rem 0.75rem;">Python <i class="fas fa-times" style="margin-left: 0.5rem; cursor: pointer; opacity: 0.6;"></i></span>
+                                    <span class="project-tag" style="padding: 0.5rem 0.75rem;">PostgreSQL <i class="fas fa-times" style="margin-left: 0.5rem; cursor: pointer; opacity: 0.6;"></i></span>
+                                    <span class="project-tag" style="padding: 0.5rem 0.75rem;">Git <i class="fas fa-times" style="margin-left: 0.5rem; cursor: pointer; opacity: 0.6;"></i></span>
+                                    <button class="project-tag" style="padding: 0.5rem 0.75rem; border: 2px dashed var(--border-color); background: transparent; cursor: pointer;">
+                                        <i class="fas fa-plus"></i> Add Skill
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Projects -->
+                        <div class="card">
+                            <div class="card-header" style="padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                                <h3 style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-folder-open" style="color: var(--primary);"></i>
+                                    Projects
+                                </h3>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-link"></i> Import from UConnect
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div style="padding: 0.75rem; background: var(--surface-elevated); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                                        <div>
+                                            <h4 style="font-size: 0.875rem; font-weight: 600;">UConnect Platform</h4>
+                                            <p style="font-size: 0.75rem; color: var(--text-secondary);">Full-stack university collaboration platform with React, Node.js, PostgreSQL</p>
+                                        </div>
+                                        <div style="display: flex; gap: 0.25rem;">
+                                            <button class="icon-btn" style="width: 28px; height: 28px;"><i class="fas fa-edit" style="font-size: 0.75rem;"></i></button>
+                                            <button class="icon-btn" style="width: 28px; height: 28px;"><i class="fas fa-trash" style="font-size: 0.75rem; color: var(--danger);"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="padding: 0.75rem; background: var(--surface-elevated); border-radius: 0.5rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                                        <div>
+                                            <h4 style="font-size: 0.875rem; font-weight: 600;">AI Chatbot</h4>
+                                            <p style="font-size: 0.75rem; color: var(--text-secondary);">NLP-based chatbot using Python, TensorFlow, and Transformers</p>
+                                        </div>
+                                        <div style="display: flex; gap: 0.25rem;">
+                                            <button class="icon-btn" style="width: 28px; height: 28px;"><i class="fas fa-edit" style="font-size: 0.75rem;"></i></button>
+                                            <button class="icon-btn" style="width: 28px; height: 28px;"><i class="fas fa-trash" style="font-size: 0.75rem; color: var(--danger);"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resume Preview -->
+                    <div class="card" style="position: sticky; top: 100px; height: fit-content;">
+                        <div class="card-header" style="padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="font-size: 1rem;">Resume Preview</h3>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-palette"></i>
+                                    Templates
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body" style="padding: 0;">
+                            <div style="background: white; aspect-ratio: 8.5/11; padding: 2rem; font-family: 'Times New Roman', serif; color: #333; font-size: 0.75rem; line-height: 1.4;">
+                                <!-- Resume Preview Content -->
+                                <div style="text-align: center; margin-bottom: 1rem; border-bottom: 2px solid var(--primary); padding-bottom: 0.75rem;">
+                                    <h1 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem; color: #1a1a1a;">TASLIM AHMED TAMIM</h1>
+                                    <p style="font-size: 0.65rem; color: #666;">tamim@university.edu | +880 1234-567890 | linkedin.com/in/taslimahmedtamim</p>
+                                </div>
+
+                                <div style="margin-bottom: 0.75rem;">
+                                    <h2 style="font-size: 0.8rem; font-weight: 700; color: var(--primary); border-bottom: 1px solid #ddd; padding-bottom: 0.25rem; margin-bottom: 0.5rem;">EDUCATION</h2>
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <strong>BSc in Computer Science</strong>
+                                            <span>2021 - Present</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <span>United International University</span>
+                                            <span>CGPA: 3.85</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="margin-bottom: 0.75rem;">
+                                    <h2 style="font-size: 0.8rem; font-weight: 700; color: var(--primary); border-bottom: 1px solid #ddd; padding-bottom: 0.25rem; margin-bottom: 0.5rem;">SKILLS</h2>
+                                    <p><strong>Programming:</strong> JavaScript, Python, Java, C++</p>
+                                    <p><strong>Frameworks:</strong> React, Node.js, Express, Django</p>
+                                    <p><strong>Tools:</strong> Git, Docker, PostgreSQL, MongoDB</p>
+                                </div>
+
+                                <div style="margin-bottom: 0.75rem;">
+                                    <h2 style="font-size: 0.8rem; font-weight: 700; color: var(--primary); border-bottom: 1px solid #ddd; padding-bottom: 0.25rem; margin-bottom: 0.5rem;">PROJECTS</h2>
+                                    <div style="margin-bottom: 0.5rem;">
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <strong>UConnect Platform</strong>
+                                            <span>2024</span>
+                                        </div>
+                                        <p style="font-size: 0.65rem; color: #666;">Full-stack university collaboration platform built with React, Node.js, and PostgreSQL. Features include project management, team collaboration, and AI-powered recommendations.</p>
+                                    </div>
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <strong>AI Chatbot</strong>
+                                            <span>2023</span>
+                                        </div>
+                                        <p style="font-size: 0.65rem; color: #666;">NLP-based intelligent chatbot using Python, TensorFlow, and Transformer architecture for customer support automation.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-bubble" id="chatBubble">
+            <div class="chat-bubble-content">
+                <span class="wave-emoji">👋</span>
+                <span>Hi! How can we help?</span>
+            </div>
+            <div class="chat-bubble-actions">
+                <button class="chat-action-btn">I have a question</button>
+                <button class="chat-action-btn">Tell me more</button>
+            </div>
+        </div>
+        <button class="chat-toggle-btn" id="chatToggle">
+            <i class="fas fa-comment-dots"></i>
+            <span class="notification-badge">1</span>
+        </button>
+    </div>
+
+    <script src="layout.js"></script>
+</body>
+</html>

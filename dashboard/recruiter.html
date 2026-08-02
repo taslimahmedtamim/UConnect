@@ -23,6 +23,10 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
         Dashboard
       </a>
+      <a href="#network" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Network
+      </a>
       <a href="#jobs" class="sidebar__link">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/></svg>
         Post Job
@@ -39,6 +43,26 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
         Messages
         <span class="sidebar__badge" id="sidebarMsgBadge">3</span>
+      </a>
+      <a href="#resources" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+        Resources
+      </a>
+      <a href="#courses" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        Courses
+      </a>
+      <a href="#events" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Events
+      </a>
+      <a href="#ai" class="sidebar__link sidebar__link--ai">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        AI Assistant
+      </a>
+      <a href="#notifications" class="sidebar__link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        Notifications
       </a>
     </nav>
     <div class="sidebar__bottom">
@@ -76,7 +100,7 @@
 
     <div class="dashboard__content">
       <!-- Home View -->
-      <div id="view-home" class="dashboard-view active" style="display:flex; width:100%; gap:24px;">
+      <div id="view-home" class="dashboard-view dashboard-view--home active">
       <div class="dashboard__center">
         <section class="welcome">
           <h1>Recruiter Dashboard</h1>
@@ -190,24 +214,51 @@
       </div> <!-- End Home View -->
 
       <!-- Jobs View -->
-      <div id="view-jobs" class="dashboard-view" style="width:100%;"></div>
+      <div id="view-jobs" class="dashboard-view dashboard-view--full"></div>
+
+      <!-- Network View -->
+      <div id="view-network" class="dashboard-view dashboard-view--full"></div>
 
       <!-- Candidates View -->
-      <div id="view-candidates" class="dashboard-view" style="width:100%;"></div>
+      <div id="view-candidates" class="dashboard-view dashboard-view--full"></div>
 
       <!-- Interviews View -->
-      <div id="view-interviews" class="dashboard-view" style="width:100%;"></div>
+      <div id="view-interviews" class="dashboard-view dashboard-view--full"></div>
 
       <!-- Messages View -->
-      <div id="view-messages" class="dashboard-view" style="width:100%;"></div>
+      <div id="view-messages" class="dashboard-view dashboard-view--full"></div>
+
+      <!-- Resources View -->
+      <div id="view-resources" class="dashboard-view dashboard-view--full"></div>
+
+      <!-- Courses View -->
+      <div id="view-courses" class="dashboard-view dashboard-view--full"></div>
+
+      <!-- Events View -->
+      <div id="view-events" class="dashboard-view dashboard-view--full"></div>
+
+      <!-- AI View -->
+      <div id="view-ai" class="dashboard-view dashboard-view--full"></div>
+
+      <!-- Notifications View -->
+      <div id="view-notifications" class="dashboard-view dashboard-view--full"></div>
 
       <!-- Settings (Company Profile) View -->
-      <div id="view-settings" class="dashboard-view" style="width:100%;"></div>
+      <div id="view-settings" class="dashboard-view dashboard-view--full"></div>
     </div>
   </div>
 
   <script src="../js/state.js"></script>
   <script src="../js/dashboard-controllers.js"></script>
+  <script src="../js/dashboard/network.js"></script>
+  <script src="../js/dashboard/messages.js"></script>
+  <script src="../js/dashboard/jobs.js"></script>
+  <script src="../js/dashboard/resources.js"></script>
+  <script src="../js/dashboard/courses.js"></script>
+  <script src="../js/dashboard/events.js"></script>
+  <script src="../js/dashboard/ai.js"></script>
+  <script src="../js/dashboard/notifications.js"></script>
+  <script src="../js/dashboard/settings.js"></script>
   <script src="../js/dashboard.js"></script>
 </body>
 </html>

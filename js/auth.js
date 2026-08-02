@@ -79,6 +79,9 @@ function initLoginForm() {
   const close2FA = document.getElementById('close2FAModal');
   const twoFactorForm = document.getElementById('twoFactorForm');
 
+  const openModal = (modal) => modal?.classList.add('active');
+  const closeModal = (modal) => modal?.classList.remove('active');
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -87,10 +90,10 @@ function initLoginForm() {
 
     // Show Two Factor Modal
     if (twoFactorModal) {
-      twoFactorModal.style.display = 'flex';
-      
+      openModal(twoFactorModal);
+
       close2FA.onclick = () => {
-        twoFactorModal.style.display = 'none';
+        closeModal(twoFactorModal);
       };
 
       twoFactorForm.onsubmit = (evt) => {
@@ -98,7 +101,7 @@ function initLoginForm() {
         const code = document.getElementById('twoFactorCode').value;
 
         if (code === '123456') {
-          twoFactorModal.style.display = 'none';
+          closeModal(twoFactorModal);
           const btn = document.getElementById('loginBtn');
           btn.textContent = 'Signing in...';
           btn.disabled = true;
@@ -153,6 +156,8 @@ function initSignupForm() {
   if (!form) return;
 
   const verifyModal = document.getElementById('emailVerifyModal');
+  const openModal = (modal) => modal?.classList.add('active');
+  const closeModal = (modal) => modal?.classList.remove('active');
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -174,13 +179,13 @@ function initSignupForm() {
 
     // Show Email Verification Modal
     if (verifyModal) {
-      verifyModal.style.display = 'flex';
+      openModal(verifyModal);
       
       const verifyForm = document.getElementById('emailVerifyForm');
       const closeVerify = document.getElementById('closeVerifyModal');
       
       closeVerify.onclick = () => {
-        verifyModal.style.display = 'none';
+        closeModal(verifyModal);
       };
       
       verifyForm.onsubmit = (evt) => {
@@ -188,7 +193,7 @@ function initSignupForm() {
         const code = document.getElementById('emailVerifyCode').value;
 
         if (code === '123456') {
-          verifyModal.style.display = 'none';
+          closeModal(verifyModal);
           const btn = document.getElementById('signupBtn');
           btn.textContent = 'Creating account...';
           btn.disabled = true;
@@ -231,20 +236,22 @@ function initForgotFlow() {
   const forgotModal = document.getElementById('forgotPasswordModal');
   const closeForgot = document.getElementById('closeForgotModal');
   const forgotForm = document.getElementById('forgotPasswordForm');
+  const openModal = (modal) => modal?.classList.add('active');
+  const closeModal = (modal) => modal?.classList.remove('active');
 
   if (forgotLink && forgotModal) {
     forgotLink.addEventListener('click', (e) => {
       e.preventDefault();
-      forgotModal.style.display = 'flex';
+      openModal(forgotModal);
     });
 
     closeForgot.addEventListener('click', () => {
-      forgotModal.style.display = 'none';
+      closeModal(forgotModal);
     });
 
     forgotForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      forgotModal.style.display = 'none';
+      closeModal(forgotModal);
       showToast('A simulation password reset link has been sent to your email.');
       forgotForm.reset();
     });

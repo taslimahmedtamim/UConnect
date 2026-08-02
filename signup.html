@@ -91,17 +91,17 @@
   </div>
 
   <!-- Email Verification Modal -->
-  <div class="modal-overlay" id="emailVerifyModal" style="position:fixed; inset:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:1000; display:none; align-items:center; justify-content:center;">
-    <div class="modal-content" style="background:#fff; border-radius:12px; padding:32px; width:100%; max-width:440px; box-shadow:0 12px 40px rgba(0,0,0,0.15); position:relative;">
-      <button class="modal-close" id="closeVerifyModal" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:1.5rem; cursor:pointer; color:#94A3B8;">&times;</button>
-      <h3 style="font-family:'Sora',sans-serif; font-size:1.25rem; font-weight:700; margin-bottom:12px; color:#0F172A;">Verify Your Email 📧</h3>
-      <p style="font-size:0.875rem; color:#64748B; margin-bottom:24px; line-height:1.5;">We have simulated sending a verification link to your university email. To complete registration, please enter the 6-digit code: <strong>123456</strong>.</p>
-      <form id="emailVerifyForm">
-        <div class="form-group" style="margin-bottom:20px;">
-          <label style="display:block; font-size:0.8125rem; font-weight:600; margin-bottom:8px; color:#0F172A;">Verification Code</label>
-          <input type="text" id="emailVerifyCode" placeholder="Enter 6-digit code" required style="width:100%; padding:12px; border:1px solid #E2E8F0; border-radius:8px; font-size:1.25rem; letter-spacing:0.2em; text-align:center; font-weight:700; outline:none;" maxlength="6">
+  <div class="modal-overlay" id="emailVerifyModal">
+    <div class="modal-content auth-modal">
+      <button class="modal-close" id="closeVerifyModal" aria-label="Close verification modal">&times;</button>
+      <h3 class="auth-modal__title">Verify Your Email 📧</h3>
+      <p class="auth-modal__desc">We have simulated sending a verification link to your university email. To complete registration, please enter the 6-digit code: <strong>123456</strong>.</p>
+      <form id="emailVerifyForm" class="auth-modal__form">
+        <div class="form-group">
+          <label for="emailVerifyCode">Verification Code</label>
+          <input type="text" id="emailVerifyCode" class="auth-modal__code-input" placeholder="Enter 6-digit code" required maxlength="6">
         </div>
-        <button type="submit" class="btn btn--primary btn--lg" style="width:100%; padding:14px; background:#16A34A; color:#fff; border:none; border-radius:8px; font-weight:600; font-size:1rem; cursor:pointer;">Verify & Complete Registration</button>
+        <button type="submit" class="btn btn--primary btn--lg auth-modal__submit">Verify & Complete Registration</button>
       </form>
     </div>
   </div>

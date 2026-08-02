@@ -99,26 +99,33 @@ function handleHashChange() {
       break;
     case '#candidates':
       if (user.role === 'recruiter') renderCandidates();
+      else renderAccessDenied(viewElement, 'Candidate Management', 'Recruiters can review applicants, shortlist profiles, and schedule interviews here.');
       break;
     case '#interviews':
       if (user.role === 'recruiter') renderInterviewsScheduler();
+      else renderAccessDenied(viewElement, 'Interview Scheduler', 'Recruiters can manage interview slots for shortlisted candidates here.');
       break;
     // Teacher-specific routes
     case '#office':
       if (user.role === 'teacher') renderTeacherOfficeHours(user);
+      else renderAccessDenied(viewElement, 'Office Hours', 'Teachers can manage office hours, publications, and faculty visibility here.');
       break;
     case '#notices':
       if (user.role === 'teacher' || user.role === 'admin') renderResources();
+      else renderAccessDenied(viewElement, 'Notices', 'Teachers and admins can publish notices and resources here.');
       break;
     // Admin routes
     case '#users':
       if (user.role === 'admin') renderAdminUsers();
+      else renderAccessDenied(viewElement, 'User Administration', 'Admins can verify users and manage platform access here.');
       break;
     case '#moderation':
       if (user.role === 'admin') renderAdminModeration();
+      else renderAccessDenied(viewElement, 'Moderation Queue', 'Admins can review reported content and moderate posts here.');
       break;
     case '#reports':
       if (user.role === 'admin') renderAdminReports();
+      else renderAccessDenied(viewElement, 'Platform Reports', 'Admins can review analytics and system reports here.');
       break;
   }
 }
@@ -141,6 +148,22 @@ function showNotificationToast(msg, isError = false) {
     toast.style.opacity = '0';
     toast.style.transform = 'translateY(10px)';
   }, 3000);
+}
+
+function renderAccessDenied(view, title, message) {
+  if (!view) return;
+
+  view.innerHTML = `
+    <section class="welcome" style="margin-bottom:24px;">
+      <h1>${title}</h1>
+      <p>${message}</p>
+    </section>
+    <div class="dashboard-table">
+      <div style="padding:24px; text-align:center; color:var(--gray-500);">
+        This feature is visible in the menu, but it is restricted for your current role.
+      </div>
+    </div>
+  `;
 }
 
 /* ==========================================================================
