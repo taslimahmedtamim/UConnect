@@ -38,7 +38,7 @@ export default function ProfilePage() {
   const updateProfile = useMutation({
     mutationFn: (data) => usersAPI.updateProfile(targetId, data),
     onSuccess: () => {
-      qc.invalidateQueries(['user', targetId]);
+      qc.invalidateQueries({ queryKey: ['user', targetId] });
       setEditing(false);
       toast.success('Profile updated!');
     },
@@ -47,13 +47,13 @@ export default function ProfilePage() {
 
   const addSkillMut = useMutation({
     mutationFn: (skills) => usersAPI.addSkills(targetId, skills),
-    onSuccess: () => { qc.invalidateQueries(['user', targetId]); setNewSkill(''); toast.success('Skill added!'); },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['user', targetId] }); setNewSkill(''); toast.success('Skill added!'); },
     onError: (err) => toast.error(err.response?.data?.message || 'Failed'),
   });
 
   const removeSkillMut = useMutation({
     mutationFn: (skillId) => usersAPI.removeSkill(targetId, skillId),
-    onSuccess: () => { qc.invalidateQueries(['user', targetId]); toast.success('Skill removed'); },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['user', targetId] }); toast.success('Skill removed'); },
   });
 
   const initials = profileUser?.name?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
