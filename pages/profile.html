@@ -1158,42 +1158,7 @@
                     </div>
                     <div class="card-body">
                         <div class="platform-stats-grid" id="codingStatsGrid">
-                            <!-- Codeforces -->
-                            <div class="platform-stat-card" id="cfStatCard">
-                                <div class="platform-stat-icon" style="background: rgba(26, 115, 232, 0.1);">
-                                    <svg viewBox="0 0 24 24" fill="#1a73e8" width="24" height="24">
-                                        <path d="M4.5 7.5C5.328 7.5 6 8.172 6 9v10.5c0 .828-.672 1.5-1.5 1.5h-3C.672 21 0 20.328 0 19.5V9c0-.828.672-1.5 1.5-1.5h3zm9-4.5c.828 0 1.5.672 1.5 1.5v15c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5v-15c0-.828.672-1.5 1.5-1.5h3zm9 7.5c.828 0 1.5.672 1.5 1.5v7.5c0 .828-.672 1.5-1.5 1.5h-3c-.828 0-1.5-.672-1.5-1.5V12c0-.828.672-1.5 1.5-1.5h3z" />
-                                    </svg>
-                                </div>
-                                <div class="platform-stat-info">
-                                    <h4 style="color: var(--text-secondary); font-size: 1.1rem; font-weight: 500;">Not Linked</h4>
-                                    <p>Codeforces</p>
-                                </div>
-                            </div>
-
-                            <!-- LeetCode -->
-                            <div class="platform-stat-card" id="lcStatCard">
-                                <div class="platform-stat-icon" style="background: rgba(255, 161, 22, 0.1);">
-                                    <svg viewBox="0 0 24 24" fill="#ffa116" width="24" height="24">
-                                        <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z" />
-                                    </svg>
-                                </div>
-                                <div class="platform-stat-info">
-                                    <h4 style="color: var(--text-secondary); font-size: 1.1rem; font-weight: 500;">Not Linked</h4>
-                                    <p>LeetCode</p>
-                                </div>
-                            </div>
-
-                            <!-- GitHub -->
-                            <div class="platform-stat-card" id="ghStatCard">
-                                <div class="platform-stat-icon" style="background: rgba(51, 51, 51, 0.08);">
-                                    <i class="fab fa-github" style="font-size: 24px; color: #333;"></i>
-                                </div>
-                                <div class="platform-stat-info">
-                                    <h4 style="color: var(--text-secondary); font-size: 1.1rem; font-weight: 500;">Not Linked</h4>
-                                    <p>GitHub</p>
-                                </div>
-                            </div>
+                            <!-- Populated dynamically via JS -->
                         </div>
                     </div>
                 </div>
@@ -1447,43 +1412,6 @@
                             </div>
                         </div>
 
-                        <!-- Activity Heatmap -->
-                        <div class="card">
-                            <div class="card-header" style="padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-                                <h3 style="font-size: 1rem;"><i class="fas fa-calendar-alt" style="margin-right: 0.5rem;"></i>Activity Heatmap</h3>
-                                <span style="font-size: 0.75rem; color: var(--text-secondary);">921 contributions in the last year</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="heatmap-container" id="activityHeatmap">
-                                    <svg width="722" height="112" class="heatmap-svg">
-                                        <text x="25" y="10" class="heatmap-month">Jan</text>
-                                        <text x="85" y="10" class="heatmap-month">Feb</text>
-                                        <text x="140" y="10" class="heatmap-month">Mar</text>
-                                        <text x="200" y="10" class="heatmap-month">Apr</text>
-                                        <text x="255" y="10" class="heatmap-month">May</text>
-                                        <text x="315" y="10" class="heatmap-month">Jun</text>
-                                        <text x="370" y="10" class="heatmap-month">Jul</text>
-                                        <text x="430" y="10" class="heatmap-month">Aug</text>
-                                        <text x="485" y="10" class="heatmap-month">Sep</text>
-                                        <text x="545" y="10" class="heatmap-month">Oct</text>
-                                        <text x="600" y="10" class="heatmap-month">Nov</text>
-                                        <text x="660" y="10" class="heatmap-month">Dec</text>
-                                        <g class="heatmap-grid" transform="translate(10, 20)" id="heatmapGrid"></g>
-                                    </svg>
-                                </div>
-                                <div class="heatmap-legend">
-                                    <span>Less</span>
-                                    <div class="legend-boxes">
-                                        <div class="legend-box level-0"></div>
-                                        <div class="legend-box level-1"></div>
-                                        <div class="legend-box level-2"></div>
-                                        <div class="legend-box level-3"></div>
-                                        <div class="legend-box level-4"></div>
-                                    </div>
-                                    <span>More</span>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- Coding Journey Timeline -->
                         <div class="card">
@@ -1832,61 +1760,15 @@
 
                     <!-- Platform Linking -->
                     <div class="form-section">
-                        <div class="form-section-title">
-                            <i class="fas fa-link"></i>
-                            Link Platforms
+                        <div class="form-section-title" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div><i class="fas fa-link"></i> Connected Platforms</div>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="addPlatformInput()">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
                         </div>
                         
-                        <!-- GitHub -->
-                        <div class="platform-link-item">
-                            <div class="platform-link-header">
-                                <i class="fab fa-github"></i>
-                                <span>GitHub</span>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="toggleGithub" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <input type="text" class="form-input" id="editGithub" placeholder="Username" value="taslimahmedtamim">
-                        </div>
-
-                        <!-- Codeforces -->
-                        <div class="platform-link-item">
-                            <div class="platform-link-header">
-                                <i class="fas fa-code"></i>
-                                <span>Codeforces</span>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="toggleCodeforces" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <input type="text" class="form-input" id="editCodeforces" placeholder="Handle" value="tamim_cf">
-                        </div>
-
-                        <!-- LeetCode -->
-                        <div class="platform-link-item">
-                            <div class="platform-link-header">
-                                <i class="fas fa-laptop-code"></i>
-                                <span>LeetCode</span>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="toggleLeetcode" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <input type="text" class="form-input" id="editLeetcode" placeholder="Username" value="tamim_lc">
-                        </div>
-
-                        <!-- HackerRank -->
-                        <div class="platform-link-item">
-                            <div class="platform-link-header">
-                                <i class="fab fa-hackerrank"></i>
-                                <span>HackerRank</span>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="toggleHackerrank">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <input type="text" class="form-input" id="editHackerrank" placeholder="Username">
+                        <div id="platformInputsContainer" style="display: flex; flex-direction: column; gap: 1rem;">
+                            <!-- Dynamic inputs injected by JS -->
                         </div>
                     </div>
                 </form>
@@ -1918,32 +1800,18 @@
                     document.getElementById('profileName').innerHTML = `${currentUser.fullName} <span class="level-badge">Level ${Math.floor((currentUser.xp||0)/100)+1}</span>`;
                     document.getElementById('profileBio').textContent = currentUser.bio || 'Add a bio...';
                     
-                    if (currentUser.leetcodeHandle) {
-                        document.getElementById('editLeetcode').value = currentUser.leetcodeHandle;
-                        document.getElementById('toggleLeetcode').checked = true;
-                        fetchLeetCodeStats(currentUser.leetcodeHandle);
-                    } else {
-                        document.getElementById('editLeetcode').value = '';
-                        document.getElementById('toggleLeetcode').checked = false;
-                    }
-                    
-                    if (currentUser.codeforcesHandle) {
-                        document.getElementById('editCodeforces').value = currentUser.codeforcesHandle;
-                        document.getElementById('toggleCodeforces').checked = true;
-                        fetchCodeforcesStats(currentUser.codeforcesHandle);
-                    } else {
-                        document.getElementById('editCodeforces').value = '';
-                        document.getElementById('toggleCodeforces').checked = false;
+                    // Load platforms
+                    const container = document.getElementById('platformInputsContainer');
+                    if (container) {
+                        container.innerHTML = ''; // Clear
+                        if (currentUser.platforms && currentUser.platforms.length > 0) {
+                            currentUser.platforms.forEach(p => addPlatformInput(p.name, p.url));
+                        } else {
+                            addPlatformInput(); // Add one blank by default
+                        }
                     }
 
-                    if (currentUser.githubHandle) {
-                        document.getElementById('editGithub').value = currentUser.githubHandle;
-                        document.getElementById('toggleGithub').checked = true;
-                        fetchGithubStats(currentUser.githubHandle);
-                    } else {
-                        document.getElementById('editGithub').value = '';
-                        document.getElementById('toggleGithub').checked = false;
-                    }
+                    renderPlatformCards();
 
                     selectedSkills = currentUser.skills || [];
                     updateSkillsDisplay();
@@ -1954,81 +1822,56 @@
         }
 
         // ========================================
-        // Real-time API Integrations
+        // Connected Platforms Logic
         // ========================================
-        async function fetchLeetCodeStats(handle) {
-            try {
-                const res = await fetch(`https://leetcode-stats-api.herokuapp.com/${handle}`);
-                const data = await res.json();
-                if (data.status === 'success') {
-                    const lcContainer = document.querySelector('#lcStatCard .platform-stat-info');
-                    if (lcContainer) {
-                        lcContainer.innerHTML = `
-                            <h4>${data.totalSolved} <span style="font-size: 0.9rem; font-weight: normal; color: var(--text-secondary);">solved</span></h4>
-                            <p>Global Rank: ${data.ranking.toLocaleString()}</p>
-                            <span class="stat-badge" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; margin-top: 0.5rem; display: inline-block;">
-                                Medium: ${data.mediumSolved} / Hard: ${data.hardSolved}
-                            </span>
-                        `;
-                    }
-                }
-            } catch (err) {
-                console.error('Error fetching LeetCode stats:', err);
-            }
+        function addPlatformInput(name = '', url = '') {
+            const container = document.getElementById('platformInputsContainer');
+            if (!container) return;
+
+            const div = document.createElement('div');
+            div.className = 'platform-input-row';
+            div.style.display = 'flex';
+            div.style.gap = '0.5rem';
+
+            div.innerHTML = `
+                <input type="text" class="form-input platform-name" placeholder="Platform Name (e.g. TryHackMe)" value="${name}" style="flex: 1;" required>
+                <input type="url" class="form-input platform-url" placeholder="Profile URL" value="${url}" style="flex: 2;" required>
+                <button type="button" class="btn btn-sm btn-ghost" onclick="this.parentElement.remove()" style="padding: 0.5rem; color: var(--danger);">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            container.appendChild(div);
         }
 
-        async function fetchCodeforcesStats(handle) {
-            try {
-                const res = await fetch(`https://codeforces.com/api/user.info?handles=${handle}`);
-                const data = await res.json();
-                if (data.status === 'OK' && data.result.length > 0) {
-                    const cf = data.result[0];
-                    const cfContainer = document.querySelector('#cfStatCard .platform-stat-info');
-                    if (cfContainer) {
-                        const rankColor = cf.rating >= 1600 ? '#3b82f6' : (cf.rating >= 1400 ? '#10b981' : 'var(--text-secondary)');
-                        cfContainer.innerHTML = `
-                            <h4 style="color: ${rankColor}">${cf.rating || 'N/A'} <span style="font-size: 0.9rem; font-weight: normal; color: var(--text-secondary);">rating</span></h4>
-                            <p style="text-transform: capitalize;">${cf.rank || 'Unrated'}</p>
-                            <span class="stat-badge" style="background: rgba(59, 130, 246, 0.1); color: var(--primary); margin-top: 0.5rem; display: inline-block;">
-                                Max: ${cf.maxRating || 0}
-                            </span>
-                        `;
-                    }
-                }
-            } catch (err) {
-                console.error('Error fetching Codeforces stats:', err);
+        function renderPlatformCards() {
+            const container = document.getElementById('codingStatsGrid');
+            if (!container) return;
+            
+            container.innerHTML = '';
+
+            if (!currentUser || !currentUser.platforms || currentUser.platforms.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); font-size: 0.875rem;">No platforms connected yet. Edit your profile to add some!</p>';
+                return;
             }
-        }
 
-        async function fetchGithubStats(handle) {
-            try {
-                const res = await fetch(`https://api.github.com/users/${handle}`);
-                if (!res.ok) throw new Error('Github user not found');
-                const data = await res.json();
-                
-                const ghContainer = document.querySelector('#ghStatCard .platform-stat-info');
-                if (ghContainer) {
-                    ghContainer.innerHTML = `
-                        <h4>${data.public_repos || 0} <span style="font-size: 0.9rem; font-weight: normal; color: var(--text-secondary);">repos</span></h4>
-                        <p style="text-transform: capitalize;">${data.name || data.login || 'GitHub User'}</p>
-                        <span class="stat-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; margin-top: 0.5rem; display: inline-block;">
-                            Followers: ${data.followers || 0}
-                        </span>
-                    `;
-                }
-
-                // Render Heatmap dynamically!
-                const heatmapContainer = document.getElementById('activityHeatmap');
-                if (heatmapContainer) {
-                    heatmapContainer.innerHTML = `
-                        <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">
-                            <img src="https://ghchart.rshah.org/2563eb/${handle}" alt="${handle}'s Github chart" style="max-width: 100%;" />
+            currentUser.platforms.forEach(p => {
+                const icon = p.name.toLowerCase().includes('github') ? 'fa-github' : 
+                             p.name.toLowerCase().includes('code') ? 'fa-code' : 
+                             'fa-link';
+                             
+                const html = `
+                    <div class="platform-stat-card">
+                        <div class="platform-stat-icon" style="background: rgba(37, 99, 235, 0.1);">
+                            <i class="fas ${icon}" style="font-size: 24px; color: var(--primary);"></i>
                         </div>
-                    `;
-                }
-            } catch (err) {
-                console.error('Error fetching Github stats:', err);
-            }
+                        <div class="platform-stat-info" style="overflow: hidden;">
+                            <h4 style="font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.name}</h4>
+                            <a href="${p.url}" target="_blank" style="font-size: 0.8rem; color: var(--primary); text-decoration: none; word-break: break-all;">View Profile <i class="fas fa-external-link-alt" style="font-size: 0.7rem;"></i></a>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
         }
 
         // ========================================
@@ -2053,22 +1896,19 @@
             const newName = document.getElementById('editName')?.value;
             const newBio = document.getElementById('editBio')?.value;
             
-            const lcEnabled = document.getElementById('toggleLeetcode')?.checked;
-            const leetcodeHandle = lcEnabled ? document.getElementById('editLeetcode')?.value : '';
-            
-            const cfEnabled = document.getElementById('toggleCodeforces')?.checked;
-            const codeforcesHandle = cfEnabled ? document.getElementById('editCodeforces')?.value : '';
-
-            const ghEnabled = document.getElementById('toggleGithub')?.checked;
-            const githubHandle = ghEnabled ? document.getElementById('editGithub')?.value : '';
+            const platformRows = document.querySelectorAll('.platform-input-row');
+            const platforms = [];
+            platformRows.forEach(row => {
+                const name = row.querySelector('.platform-name').value.trim();
+                const url = row.querySelector('.platform-url').value.trim();
+                if (name && url) platforms.push({ name, url });
+            });
 
             const profileData = {
                 fullName: newName,
                 bio: newBio,
                 skills: selectedSkills,
-                leetcodeHandle: leetcodeHandle,
-                codeforcesHandle: codeforcesHandle,
-                githubHandle: githubHandle
+                platforms: platforms
             };
 
             try {

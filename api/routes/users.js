@@ -28,7 +28,7 @@ router.get('/profile', auth, async (req, res) => {
 // @desc    Update user profile
 router.put('/profile', auth, async (req, res) => {
     try {
-        const { fullName, bio, university, department, skills, leetcodeHandle, codeforcesHandle, githubHandle } = req.body;
+        const { fullName, bio, university, department, skills, platforms } = req.body;
 
         if (isDbConnected()) {
             const user = await User.findById(req.user.id);
@@ -39,9 +39,7 @@ router.put('/profile', auth, async (req, res) => {
             if (university) user.university = university;
             if (department) user.department = department;
             if (skills && Array.isArray(skills)) user.skills = skills;
-            if (leetcodeHandle !== undefined) user.leetcodeHandle = leetcodeHandle;
-            if (codeforcesHandle !== undefined) user.codeforcesHandle = codeforcesHandle;
-            if (githubHandle !== undefined) user.githubHandle = githubHandle;
+            if (platforms && Array.isArray(platforms)) user.platforms = platforms;
 
             await user.save();
             return res.json({ success: true, message: 'Profile updated successfully', user });
@@ -52,9 +50,7 @@ router.put('/profile', auth, async (req, res) => {
             if (university) user.university = university;
             if (department) user.department = department;
             if (skills && Array.isArray(skills)) user.skills = skills;
-            if (leetcodeHandle !== undefined) user.leetcodeHandle = leetcodeHandle;
-            if (codeforcesHandle !== undefined) user.codeforcesHandle = codeforcesHandle;
-            if (githubHandle !== undefined) user.githubHandle = githubHandle;
+            if (platforms && Array.isArray(platforms)) user.platforms = platforms;
 
             return res.json({ success: true, message: 'Profile updated successfully (Dev Mode)', user });
         }
