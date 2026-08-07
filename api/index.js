@@ -6,12 +6,16 @@ const connectDB = require('./config/db');
 // Load environment variables
 dotenv.config();
 
-// Connect Database asynchronously
-connectDB();
+// We will call connectDB in a middleware to ensure serverless functions wait for it
+// connectDB();
 
 const app = express();
 
 // Middleware
+app.use(async (req, res, next) => {
+    await connectDB();
+    next();
+});
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
