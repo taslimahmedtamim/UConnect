@@ -26,6 +26,8 @@ const memoryStore = {
             ],
             xp: 1420,
             streak: 12,
+            leetcodeHandle: '',
+            codeforcesHandle: '',
             badges: [
                 { name: 'First Project', icon: '🚀' },
                 { name: 'Team Player', icon: '🤝' },
