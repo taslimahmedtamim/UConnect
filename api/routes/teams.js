@@ -5,7 +5,10 @@ const { isDbConnected, memoryStore, Team } = require('../store');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'uconnect_secret_jwt_key_2025_safe_hash';
 
+const auth = require('../middleware/auth');
+
 const getOptionalUser = (req) => {
+    if (req.user) return req.user;
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
     try {
@@ -33,7 +36,7 @@ router.get('/', async (req, res) => {
 
 // @route   POST /api/teams
 // @desc    Create a new team
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     try {
         const user = getOptionalUser(req);
         const { name, description, domain, lookingFor, maxMembers } = req.body;
@@ -79,7 +82,7 @@ router.post('/', async (req, res) => {
 
 // @route   POST /api/teams/:id/join
 // @desc    Join a team
-router.post('/:id/join', async (req, res) => {
+router.post('/:id/join', auth, async (req, res) => {
     try {
         const user = getOptionalUser(req);
         const { id } = req.params;

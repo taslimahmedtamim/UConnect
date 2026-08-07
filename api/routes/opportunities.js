@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { isDbConnected, memoryStore, Opportunity } = require('../store');
 
+const auth = require('../middleware/auth');
+
 // @route   GET /api/opportunities
 // @desc    Get all opportunities / jobs / internships
 router.get('/', async (req, res) => {
@@ -19,7 +21,7 @@ router.get('/', async (req, res) => {
 
 // @route   POST /api/opportunities
 // @desc    Post a new opportunity
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     try {
         const { title, company, type, location, stipend, description, skills, deadline } = req.body;
 

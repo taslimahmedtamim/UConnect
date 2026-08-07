@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { isDbConnected, memoryStore, Project } = require('../store');
+const auth = require('../middleware/auth');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'uconnect_secret_jwt_key_2025_safe_hash';
 
-// Optional auth helper
 const getOptionalUser = (req) => {
+    // If auth middleware already set req.user, use it
+    if (req.user) return req.user;
+    
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
     try {
@@ -34,7 +37,7 @@ router.get('/', async (req, res) => {
 
 // @route   POST /api/projects
 // @desc    Create a new project
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     try {
         const user = getOptionalUser(req);
         const { title, description, category, tags, repoUrl, demoUrl } = req.body;
@@ -85,7 +88,7 @@ router.post('/', async (req, res) => {
 
 // @route   POST /api/projects/:id/like
 // @desc    Like a project
-router.post('/:id/like', async (req, res) => {
+router.post('/:id/like', auth, async (req, res) => {
     try {
         const { id } = req.params;
 

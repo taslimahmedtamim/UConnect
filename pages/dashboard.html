@@ -143,10 +143,10 @@
                         <p>Welcome back! Here's what's happening.</p>
                     </div>
                     <div class="page-actions">
-                        <button class="btn btn-primary">
+                        <a href="projects.html#new-project" class="btn btn-primary">
                         <i class="fas fa-plus"></i>
                         New Project
-                    </button>
+                        </a>
                     </div>
                 </div>
                 <style>
@@ -411,7 +411,7 @@
                             <i class="fas fa-folder-open"></i>
                         </div>
                         <div class="stat-info">
-                            <div class="stat-value">12</div>
+                            <div class="stat-value" id="stat-projects">0</div>
                             <div class="stat-label">Active Projects</div>
                         </div>
                     </div>
@@ -420,7 +420,7 @@
                             <i class="fas fa-users"></i>
                         </div>
                         <div class="stat-info">
-                            <div class="stat-value">3</div>
+                            <div class="stat-value" id="stat-teams">0</div>
                             <div class="stat-label">Team Members</div>
                         </div>
                     </div>
@@ -429,7 +429,7 @@
                             <i class="fas fa-star"></i>
                         </div>
                         <div class="stat-info">
-                            <div class="stat-value">850</div>
+                            <div class="stat-value" id="stat-score">0</div>
                             <div class="stat-label">U-Score</div>
                         </div>
                     </div>
@@ -438,7 +438,7 @@
                             <i class="fas fa-briefcase"></i>
                         </div>
                         <div class="stat-info">
-                            <div class="stat-value">24</div>
+                            <div class="stat-value" id="stat-matches">0</div>
                             <div class="stat-label">Job Matches</div>
                         </div>
                     </div>
@@ -463,55 +463,8 @@
                                             <th>Due Date</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <div style="font-weight: 500;">UConnect Platform</div>
-                                                <div style="font-size: 0.75rem; color: var(--text-secondary);">Web Development</div>
-                                            </td>
-                                            <td><span class="badge badge-primary">In Progress</span></td>
-                                            <td>
-                                                <div class="progress-mini">
-                                                    <div class="progress-mini-bar">
-                                                        <div class="progress-mini-fill" style="width: 65%; background: var(--primary);"></div>
-                                                    </div>
-                                                    <span class="progress-mini-text">65%</span>
-                                                </div>
-                                            </td>
-                                            <td>Dec 20, 2025</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div style="font-weight: 500;">AI Resume Builder</div>
-                                                <div style="font-size: 0.75rem; color: var(--text-secondary);">Machine Learning</div>
-                                            </td>
-                                            <td><span class="badge badge-success">Completed</span></td>
-                                            <td>
-                                                <div class="progress-mini">
-                                                    <div class="progress-mini-bar">
-                                                        <div class="progress-mini-fill" style="width: 100%; background: var(--success);"></div>
-                                                    </div>
-                                                    <span class="progress-mini-text">100%</span>
-                                                </div>
-                                            </td>
-                                            <td>Nov 15, 2025</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div style="font-weight: 500;">Mobile App Design</div>
-                                                <div style="font-size: 0.75rem; color: var(--text-secondary);">UI/UX Design</div>
-                                            </td>
-                                            <td><span class="badge badge-warning">Review</span></td>
-                                            <td>
-                                                <div class="progress-mini">
-                                                    <div class="progress-mini-bar">
-                                                        <div class="progress-mini-fill" style="width: 85%; background: var(--warning);"></div>
-                                                    </div>
-                                                    <span class="progress-mini-text">85%</span>
-                                                </div>
-                                            </td>
-                                            <td>Dec 10, 2025</td>
-                                        </tr>
+                                    <tbody id="recentProjectsList">
+                                        <!-- Populated via dashboard.js -->
                                     </tbody>
                                 </table>
                             </div>
@@ -641,6 +594,7 @@
     </div>
 
     <script src="../js/api-client.js"></script>
+    <script src="../js/dashboard.js"></script>
     <script src="layout.js"></script>
 </body>
 </html>

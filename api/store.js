@@ -3,6 +3,7 @@ const User = require('./models/User');
 const Project = require('./models/Project');
 const Team = require('./models/Team');
 const Opportunity = require('./models/Opportunity');
+const Message = require('./models/Message');
 
 // Seed / In-memory data store for offline / instant dev mode
 const memoryStore = {
@@ -135,5 +136,6 @@ module.exports = {
     User,
     Project,
     Team,
-    Opportunity
+    Opportunity,
+    Message
 };

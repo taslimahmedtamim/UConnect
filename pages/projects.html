@@ -136,7 +136,7 @@
                         <p>Manage and track all your projects</p>
                     </div>
                     <div class="page-actions">
-                        <a href="#" class="btn btn-primary">
+                        <a href="#" class="btn btn-primary" id="newProjectBtn">
                         <i class="fas fa-plus"></i>
                         New Project
                     </a>
@@ -167,215 +167,8 @@
                     </div>
                 </div>
 
-                <!-- Project Grid -->
-                <div class="project-grid">
-                    <!-- Project 1 -->
-                    <div class="project-card">
-                        <div class="project-card-header">
-                            <h3>UConnect Platform</h3>
-                            <p>AI-driven university ecosystem for collaboration</p>
-                        </div>
-                        <div class="project-card-body">
-                            <div class="project-tags">
-                                <span class="project-tag">React</span>
-                                <span class="project-tag">Node.js</span>
-                                <span class="project-tag">PostgreSQL</span>
-                            </div>
-                            <div class="project-meta">
-                                <span><i class="fas fa-calendar"></i> Dec 20, 2025</span>
-                                <span class="badge badge-primary">In Progress</span>
-                            </div>
-                            <div style="margin-top: 1rem;">
-                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.25rem;">
-                                    <span>Progress</span>
-                                    <span>65%</span>
-                                </div>
-                                <div style="height: 6px; background: var(--border-color); border-radius: 3px;">
-                                    <div style="width: 65%; height: 100%; background: var(--primary); border-radius: 3px;"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="project-card-footer">
-                            <div class="project-members">
-                                <div class="avatar avatar-sm">TT</div>
-                                <div class="avatar avatar-sm" style="background: var(--success);">SK</div>
-                                <div class="avatar avatar-sm" style="background: var(--accent);">MI</div>
-                            </div>
-                            <a href="#" class="btn btn-sm btn-ghost">View Details</a>
-                        </div>
-                    </div>
-
-                    <!-- Project 2 -->
-                    <div class="project-card">
-                        <div class="project-card-header">
-                            <h3>AI Resume Builder</h3>
-                            <p>Automated resume generation using ML</p>
-                        </div>
-                        <div class="project-card-body">
-                            <div class="project-tags">
-                                <span class="project-tag">Python</span>
-                                <span class="project-tag">TensorFlow</span>
-                                <span class="project-tag">FastAPI</span>
-                            </div>
-                            <div class="project-meta">
-                                <span><i class="fas fa-calendar"></i> Nov 15, 2025</span>
-                                <span class="badge badge-success">Completed</span>
-                            </div>
-                            <div style="margin-top: 1rem;">
-                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.25rem;">
-                                    <span>Progress</span>
-                                    <span>100%</span>
-                                </div>
-                                <div style="height: 6px; background: var(--border-color); border-radius: 3px;">
-                                    <div style="width: 100%; height: 100%; background: var(--success); border-radius: 3px;"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="project-card-footer">
-                            <div class="project-members">
-                                <div class="avatar avatar-sm">TT</div>
-                                <div class="avatar avatar-sm" style="background: var(--accent);">MI</div>
-                            </div>
-                            <a href="#" class="btn btn-sm btn-ghost">View Details</a>
-                        </div>
-                    </div>
-
-                    <!-- Project 3 -->
-                    <div class="project-card">
-                        <div class="project-card-header">
-                            <h3>Mobile App Design</h3>
-                            <p>UI/UX design for mobile applications</p>
-                        </div>
-                        <div class="project-card-body">
-                            <div class="project-tags">
-                                <span class="project-tag">Figma</span>
-                                <span class="project-tag">React Native</span>
-                            </div>
-                            <div class="project-meta">
-                                <span><i class="fas fa-calendar"></i> Dec 10, 2025</span>
-                                <span class="badge badge-warning">Review</span>
-                            </div>
-                            <div style="margin-top: 1rem;">
-                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.25rem;">
-                                    <span>Progress</span>
-                                    <span>85%</span>
-                                </div>
-                                <div style="height: 6px; background: var(--border-color); border-radius: 3px;">
-                                    <div style="width: 85%; height: 100%; background: var(--warning); border-radius: 3px;"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="project-card-footer">
-                            <div class="project-members">
-                                <div class="avatar avatar-sm" style="background: var(--success);">SK</div>
-                            </div>
-                            <a href="#" class="btn btn-sm btn-ghost">View Details</a>
-                        </div>
-                    </div>
-
-                    <!-- Project 4 -->
-                    <div class="project-card">
-                        <div class="project-card-header">
-                            <h3>E-commerce Dashboard</h3>
-                            <p>Analytics dashboard for online stores</p>
-                        </div>
-                        <div class="project-card-body">
-                            <div class="project-tags">
-                                <span class="project-tag">Vue.js</span>
-                                <span class="project-tag">D3.js</span>
-                                <span class="project-tag">MongoDB</span>
-                            </div>
-                            <div class="project-meta">
-                                <span><i class="fas fa-calendar"></i> Jan 15, 2026</span>
-                                <span class="badge badge-primary">In Progress</span>
-                            </div>
-                            <div style="margin-top: 1rem;">
-                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.25rem;">
-                                    <span>Progress</span>
-                                    <span>35%</span>
-                                </div>
-                                <div style="height: 6px; background: var(--border-color); border-radius: 3px;">
-                                    <div style="width: 35%; height: 100%; background: var(--primary); border-radius: 3px;"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="project-card-footer">
-                            <div class="project-members">
-                                <div class="avatar avatar-sm">TT</div>
-                                <div class="avatar avatar-sm" style="background: var(--warning);">RK</div>
-                            </div>
-                            <a href="#" class="btn btn-sm btn-ghost">View Details</a>
-                        </div>
-                    </div>
-
-                    <!-- Project 5 -->
-                    <div class="project-card">
-                        <div class="project-card-header">
-                            <h3>Chat Application</h3>
-                            <p>Real-time messaging platform</p>
-                        </div>
-                        <div class="project-card-body">
-                            <div class="project-tags">
-                                <span class="project-tag">Socket.io</span>
-                                <span class="project-tag">Express</span>
-                                <span class="project-tag">Redis</span>
-                            </div>
-                            <div class="project-meta">
-                                <span><i class="fas fa-calendar"></i> Oct 30, 2025</span>
-                                <span class="badge badge-success">Completed</span>
-                            </div>
-                            <div style="margin-top: 1rem;">
-                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.25rem;">
-                                    <span>Progress</span>
-                                    <span>100%</span>
-                                </div>
-                                <div style="height: 6px; background: var(--border-color); border-radius: 3px;">
-                                    <div style="width: 100%; height: 100%; background: var(--success); border-radius: 3px;"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="project-card-footer">
-                            <div class="project-members">
-                                <div class="avatar avatar-sm" style="background: var(--success);">SK</div>
-                                <div class="avatar avatar-sm" style="background: var(--accent);">MI</div>
-                            </div>
-                            <a href="#" class="btn btn-sm btn-ghost">View Details</a>
-                        </div>
-                    </div>
-
-                    <!-- Project 6 -->
-                    <div class="project-card">
-                        <div class="project-card-header">
-                            <h3>Portfolio Website</h3>
-                            <p>Personal portfolio with blog</p>
-                        </div>
-                        <div class="project-card-body">
-                            <div class="project-tags">
-                                <span class="project-tag">Next.js</span>
-                                <span class="project-tag">Tailwind</span>
-                                <span class="project-tag">MDX</span>
-                            </div>
-                            <div class="project-meta">
-                                <span><i class="fas fa-calendar"></i> Dec 25, 2025</span>
-                                <span class="badge" style="background: rgba(100, 116, 139, 0.1); color: var(--secondary);">Planning</span>
-                            </div>
-                            <div style="margin-top: 1rem;">
-                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.25rem;">
-                                    <span>Progress</span>
-                                    <span>10%</span>
-                                </div>
-                                <div style="height: 6px; background: var(--border-color); border-radius: 3px;">
-                                    <div style="width: 10%; height: 100%; background: var(--secondary); border-radius: 3px;"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="project-card-footer">
-                            <div class="project-members">
-                                <div class="avatar avatar-sm">TT</div>
-                            </div>
-                            <a href="#" class="btn btn-sm btn-ghost">View Details</a>
-                        </div>
-                    </div>
+                <div class="project-grid" id="projectsGrid">
+                    <!-- Populated via projects.js -->
                 </div>
             </main>
         </div>
@@ -399,7 +192,45 @@
         </button>
     </div>
 
+    <!-- Create Project Modal -->
+    <div id="createProjectModal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+        <div class="card" style="width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 1.25rem;">Create New Project</h3>
+                <button id="closeProjectModal" class="icon-btn" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--text);"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="card-body">
+                <form id="createProjectForm">
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Project Title</label>
+                        <input type="text" id="cpTitle" class="form-input" required placeholder="Enter project title" style="width: 100%; padding: 0.75rem; border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Description</label>
+                        <textarea id="cpDescription" class="form-input" required placeholder="Project description..." style="width: 100%; padding: 0.75rem; border-radius: 8px; min-height: 100px;"></textarea>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Category</label>
+                        <select id="cpCategory" class="form-input" required style="width: 100%; padding: 0.75rem; border-radius: 8px;">
+                            <option value="Web Development">Web Development</option>
+                            <option value="Mobile App">Mobile App</option>
+                            <option value="AI/ML">AI / Machine Learning</option>
+                            <option value="UI/UX Design">UI/UX Design</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Tags (comma separated)</label>
+                        <input type="text" id="cpTags" class="form-input" placeholder="React, Node.js, Design..." style="width: 100%; padding: 0.75rem; border-radius: 8px;">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;" id="cpSubmitBtn">Create Project</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/api-client.js"></script>
+    <script src="../js/projects.js"></script>
     <script src="layout.js"></script>
 </body>
 </html>

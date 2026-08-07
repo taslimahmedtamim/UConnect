@@ -75,15 +75,21 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const user = await window.UConnectAPI.getCurrentUser();
             if (user) {
-                const nameEls = document.querySelectorAll('.user-name, .profile-name, .user-info .name');
-                const emailEls = document.querySelectorAll('.user-email, .profile-email, .user-info .email');
-                const roleEls = document.querySelectorAll('.user-role, .profile-role');
-                const avatarEls = document.querySelectorAll('.user-avatar img, .profile-avatar img, .user-btn img');
+                const nameEls = document.querySelectorAll('.user-name, .profile-name, .user-info .name, .sidebar-user-name');
+                const emailEls = document.querySelectorAll('.user-email, .profile-email, .user-info .email, .sidebar-user-email');
+                const roleEls = document.querySelectorAll('.user-role, .profile-role, .sidebar-user-role');
+                const avatarEls = document.querySelectorAll('.user-avatar img, .profile-avatar img, .user-btn img, .sidebar-user-avatar img');
+                const sidebarAvatars = document.querySelectorAll('.sidebar-user-avatar'); // for non-img avatars (text initials)
 
                 nameEls.forEach(el => { if (user.fullName) el.textContent = user.fullName; });
                 emailEls.forEach(el => { if (user.email) el.textContent = user.email; });
                 roleEls.forEach(el => { if (user.role) el.textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1); });
                 avatarEls.forEach(img => { if (user.avatar) img.src = user.avatar; });
+                sidebarAvatars.forEach(av => { 
+                    if (user.fullName && !av.querySelector('img')) {
+                        av.textContent = user.fullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                    }
+                });
             }
         } catch (e) {
             console.log('[Layout] User sync notice:', e.message);

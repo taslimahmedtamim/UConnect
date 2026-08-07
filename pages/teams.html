@@ -140,7 +140,7 @@
                         <i class="fas fa-magic"></i>
                         AI Suggest Team
                     </button>
-                    <a href="#" class="btn btn-primary">
+                    <a href="#" class="btn btn-primary" id="newTeamBtn">
                         <i class="fas fa-plus"></i>
                         Create Team
                     </a>
@@ -149,71 +149,8 @@
                 <!-- My Teams -->
                 <div style="margin-bottom: 2rem;">
                     <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">My Teams</h2>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
-                        <!-- Team 1 -->
-                        <div class="card">
-                            <div class="card-body">
-                                <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
-                                    <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.25rem;">
-                                        UC
-                                    </div>
-                                    <div style="flex: 1;">
-                                        <h3 style="font-size: 1.125rem; margin-bottom: 0.25rem;">UConnect Core</h3>
-                                        <p style="font-size: 0.875rem; color: var(--text-secondary);">Building the future of university collaboration</p>
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
-                                    <span class="badge badge-primary">Web Dev</span>
-                                    <span class="badge badge-success">Active</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div class="project-members">
-                                        <div class="avatar avatar-sm">TT</div>
-                                        <div class="avatar avatar-sm" style="background: var(--success);">SK</div>
-                                        <div class="avatar avatar-sm" style="background: var(--accent);">MI</div>
-                                    </div>
-                                    <span style="font-size: 0.75rem; color: var(--text-secondary);">3 members</span>
-                                </div>
-                            </div>
-                            <div class="card-footer" style="display: flex; gap: 0.5rem; padding: 1rem; border-top: 1px solid var(--border-color);">
-                                <a href="#" class="btn btn-sm btn-primary" style="flex: 1;">View Team</a>
-                                <button class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-comment"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Team 2 -->
-                        <div class="card">
-                            <div class="card-body">
-                                <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
-                                    <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--success), #059669); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.25rem;">
-                                        AI
-                                    </div>
-                                    <div style="flex: 1;">
-                                        <h3 style="font-size: 1.125rem; margin-bottom: 0.25rem;">AI Research Lab</h3>
-                                        <p style="font-size: 0.875rem; color: var(--text-secondary);">Machine learning and NLP projects</p>
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
-                                    <span class="badge" style="background: rgba(139, 92, 246, 0.1); color: var(--accent);">ML/AI</span>
-                                    <span class="badge badge-success">Active</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div class="project-members">
-                                        <div class="avatar avatar-sm">TT</div>
-                                        <div class="avatar avatar-sm" style="background: var(--accent);">MI</div>
-                                    </div>
-                                    <span style="font-size: 0.75rem; color: var(--text-secondary);">2 members</span>
-                                </div>
-                            </div>
-                            <div class="card-footer" style="display: flex; gap: 0.5rem; padding: 1rem; border-top: 1px solid var(--border-color);">
-                                <a href="#" class="btn btn-sm btn-primary" style="flex: 1;">View Team</a>
-                                <button class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-comment"></i>
-                                </button>
-                            </div>
-                        </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;" id="myTeamsGrid">
+                        <!-- Populated via teams.js -->
                     </div>
                 </div>
 
@@ -352,7 +289,45 @@
         </button>
     </div>
 
+    <!-- Create Team Modal -->
+    <div id="createTeamModal" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+        <div class="card" style="width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 1.25rem;">Create New Team</h3>
+                <button id="closeTeamModal" class="icon-btn" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--text);"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="card-body">
+                <form id="createTeamForm">
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Team Name</label>
+                        <input type="text" id="ctName" class="form-input" required placeholder="Enter team name" style="width: 100%; padding: 0.75rem; border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Description</label>
+                        <textarea id="ctDescription" class="form-input" required placeholder="Team description..." style="width: 100%; padding: 0.75rem; border-radius: 8px; min-height: 100px;"></textarea>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Domain / Category</label>
+                        <select id="ctDomain" class="form-input" required style="width: 100%; padding: 0.75rem; border-radius: 8px;">
+                            <option value="Web Development">Web Development</option>
+                            <option value="Cybersecurity">Cybersecurity</option>
+                            <option value="AI & Machine Learning">AI & Machine Learning</option>
+                            <option value="Research">Research</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Looking For (comma separated roles)</label>
+                        <input type="text" id="ctRoles" class="form-input" placeholder="Frontend, Backend, Designer..." style="width: 100%; padding: 0.75rem; border-radius: 8px;">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;" id="ctSubmitBtn">Create Team</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/api-client.js"></script>
+    <script src="../js/teams.js"></script>
     <script src="layout.js"></script>
 </body>
 </html>
