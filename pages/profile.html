@@ -1220,7 +1220,7 @@
                             </div>
 
                             <!-- GitHub -->
-                            <div class="platform-stat-card">
+                            <div class="platform-stat-card" id="ghStatCard">
                                 <div class="platform-stat-icon" style="background: rgba(51, 51, 51, 0.08);">
                                     <i class="fab fa-github" style="font-size: 24px; color: #333;"></i>
                                 </div>
@@ -1971,6 +1971,15 @@
                         document.getElementById('toggleCodeforces').checked = false;
                     }
 
+                    if (currentUser.githubHandle) {
+                        document.getElementById('editGithub').value = currentUser.githubHandle;
+                        document.getElementById('toggleGithub').checked = true;
+                        fetchGithubStats(currentUser.githubHandle);
+                    } else {
+                        document.getElementById('editGithub').value = '';
+                        document.getElementById('toggleGithub').checked = false;
+                    }
+
                     selectedSkills = currentUser.skills || [];
                     updateSkillsDisplay();
                 }
@@ -2026,6 +2035,37 @@
             }
         }
 
+        async function fetchGithubStats(handle) {
+            try {
+                const res = await fetch(`https://api.github.com/users/${handle}`);
+                if (!res.ok) throw new Error('Github user not found');
+                const data = await res.json();
+                
+                const ghContainer = document.querySelector('#ghStatCard .platform-stat-info');
+                if (ghContainer) {
+                    ghContainer.innerHTML = `
+                        <h4>${data.public_repos || 0} <span style="font-size: 0.9rem; font-weight: normal; color: var(--text-secondary);">repos</span></h4>
+                        <p style="text-transform: capitalize;">${data.name || data.login || 'GitHub User'}</p>
+                        <span class="stat-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; margin-top: 0.5rem; display: inline-block;">
+                            Followers: ${data.followers || 0}
+                        </span>
+                    `;
+                }
+
+                // Render Heatmap dynamically!
+                const heatmapContainer = document.getElementById('activityHeatmap');
+                if (heatmapContainer) {
+                    heatmapContainer.innerHTML = `
+                        <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">
+                            <img src="https://ghchart.rshah.org/2563eb/${handle}" alt="${handle}'s Github chart" style="max-width: 100%;" />
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                console.error('Error fetching Github stats:', err);
+            }
+        }
+
         // ========================================
         // Modal Functions
         // ========================================
@@ -2054,12 +2094,16 @@
             const cfEnabled = document.getElementById('toggleCodeforces')?.checked;
             const codeforcesHandle = cfEnabled ? document.getElementById('editCodeforces')?.value : '';
 
+            const ghEnabled = document.getElementById('toggleGithub')?.checked;
+            const githubHandle = ghEnabled ? document.getElementById('editGithub')?.value : '';
+
             const profileData = {
                 fullName: newName,
                 bio: newBio,
                 skills: selectedSkills,
                 leetcodeHandle: leetcodeHandle,
-                codeforcesHandle: codeforcesHandle
+                codeforcesHandle: codeforcesHandle,
+                githubHandle: githubHandle
             };
 
             try {

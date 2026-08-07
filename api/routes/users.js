@@ -28,7 +28,7 @@ router.get('/profile', auth, async (req, res) => {
 // @desc    Update user profile
 router.put('/profile', auth, async (req, res) => {
     try {
-        const { fullName, bio, university, department, skills, leetcodeHandle, codeforcesHandle } = req.body;
+        const { fullName, bio, university, department, skills, leetcodeHandle, codeforcesHandle, githubHandle } = req.body;
 
         if (isDbConnected()) {
             const user = await User.findById(req.user.id);
@@ -41,6 +41,7 @@ router.put('/profile', auth, async (req, res) => {
             if (skills && Array.isArray(skills)) user.skills = skills;
             if (leetcodeHandle !== undefined) user.leetcodeHandle = leetcodeHandle;
             if (codeforcesHandle !== undefined) user.codeforcesHandle = codeforcesHandle;
+            if (githubHandle !== undefined) user.githubHandle = githubHandle;
 
             await user.save();
             return res.json({ success: true, message: 'Profile updated successfully', user });
@@ -53,6 +54,7 @@ router.put('/profile', auth, async (req, res) => {
             if (skills && Array.isArray(skills)) user.skills = skills;
             if (leetcodeHandle !== undefined) user.leetcodeHandle = leetcodeHandle;
             if (codeforcesHandle !== undefined) user.codeforcesHandle = codeforcesHandle;
+            if (githubHandle !== undefined) user.githubHandle = githubHandle;
 
             return res.json({ success: true, message: 'Profile updated successfully (Dev Mode)', user });
         }

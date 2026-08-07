@@ -42,6 +42,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    githubHandle: {
+        type: String,
+        default: ''
+    },
     codeforcesHandle: {
         type: String,
         default: ''
