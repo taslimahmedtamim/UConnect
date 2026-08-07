@@ -75,10 +75,10 @@ router.post('/register', async (req, res) => {
                 department: '',
                 bio: 'Student developer on UConnect.',
                 avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-                skills: [{ name: 'JavaScript', level: 80, category: 'Web' }],
-                xp: 500,
-                streak: 1,
-                badges: [{ name: 'New Member', icon: '🌟' }]
+                skills: [],
+                xp: 0,
+                streak: 0,
+                badges: []
             };
 
             memoryStore.users.push(newUser);
@@ -150,24 +150,13 @@ router.post('/login', async (req, res) => {
             // Memory Store Mode
             let user = memoryStore.users.find(u => u.email === normalizedEmail);
 
-            // Allow quick demo login if user password matches password123 or matches bcrypt
-            if (!user && normalizedEmail.includes('@')) {
-                // Auto-create user for frictionless testing in demo mode if requested
-                const hashedPassword = await bcrypt.hash(password, 10);
-                user = {
-                    _id: 'user_' + Date.now(),
-                    fullName: normalizedEmail.split('@')[0].replace('.', ' '),
-                    email: normalizedEmail,
-                    password: hashedPassword,
-                    role: 'student',
-                    university: 'University Student',
-                    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-                    xp: 1000,
-                    streak: 5,
-                    skills: [{ name: 'Web Dev', level: 85, category: 'Core' }],
-                    badges: [{ name: 'Pioneer', icon: '🚀' }]
-                };
-                memoryStore.users.push(user);
+            if (!user) {
+                return res.status(401).json({ success: false, message: 'Invalid credentials.' });
+            }
+
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                return res.status(401).json({ success: false, message: 'Invalid credentials.' });
             }
 
             const token = generateToken(user._id, user.email, user.role);

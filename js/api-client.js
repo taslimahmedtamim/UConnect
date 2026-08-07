@@ -81,133 +81,44 @@
             }
         },
 
-        // --- AUTH API ---
         async register(userData) {
-            try {
-                const res = await this.request('/auth/register', {
-                    method: 'POST',
-                    body: JSON.stringify(userData)
-                });
-                if (res.token) this.setToken(res.token);
-                if (res.user) this.setUser(res.user);
-                return res;
-            } catch (error) {
-                console.log('[Auth API] Backend unavailable, fallback to local registration');
-                // Client-side fallback if backend server isn't running locally yet
-                const mockToken = 'mock_jwt_token_' + Date.now();
-                const mockUser = {
-                    id: 'user_' + Date.now(),
-                    fullName: userData.fullName || 'User',
-                    email: userData.email,
-                    role: userData.role || 'student',
-                    university: userData.university || 'University Student',
-                    xp: 500,
-                    streak: 1,
-                    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
-                };
-
-                this.setToken(mockToken);
-                this.setUser(mockUser);
-
-                return {
-                    success: true,
-                    message: 'Registered successfully (Local Mode)',
-                    token: mockToken,
-                    user: mockUser
-                };
-            }
+            const res = await this.request('/auth/register', {
+                method: 'POST',
+                body: JSON.stringify(userData)
+            });
+            if (res.token) this.setToken(res.token);
+            if (res.user) this.setUser(res.user);
+            return res;
         },
 
         async login(credentials) {
-            try {
-                const res = await this.request('/auth/login', {
-                    method: 'POST',
-                    body: JSON.stringify(credentials)
-                });
-                if (res.token) this.setToken(res.token);
-                if (res.user) this.setUser(res.user);
-                return res;
-            } catch (error) {
-                console.log('[Auth API] Backend unavailable, fallback to local login');
-                // Client-side fallback if backend server isn't running locally yet
-                const email = credentials.email || 'user@university.edu';
-                const mockToken = 'mock_jwt_token_' + Date.now();
-                const nameFromEmail = email.split('@')[0].replace('.', ' ');
-                const formattedName = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
-
-                const mockUser = {
-                    id: 'user_' + Date.now(),
-                    fullName: formattedName || 'Alex Rivera',
-                    email: email,
-                    role: 'student',
-                    university: 'Stanford University',
-                    xp: 1250,
-                    streak: 7,
-                    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
-                };
-
-                this.setToken(mockToken);
-                this.setUser(mockUser);
-
-                return {
-                    success: true,
-                    message: 'Login successful (Local Mode)',
-                    token: mockToken,
-                    user: mockUser
-                };
-            }
+            const res = await this.request('/auth/login', {
+                method: 'POST',
+                body: JSON.stringify(credentials)
+            });
+            if (res.token) this.setToken(res.token);
+            if (res.user) this.setUser(res.user);
+            return res;
         },
 
         async googleLogin(role = 'student') {
-            try {
-                const res = await this.request('/auth/google', {
-                    method: 'POST',
-                    body: JSON.stringify({ email: 'google.user@university.edu', name: 'Google Student', role })
-                });
-                if (res.token) this.setToken(res.token);
-                if (res.user) this.setUser(res.user);
-                return res;
-            } catch (e) {
-                const mockUser = {
-                    id: 'user_google_' + Date.now(),
-                    fullName: 'Google User',
-                    email: 'google.user@university.edu',
-                    role,
-                    university: 'Verified Google Account',
-                    xp: 1200,
-                    streak: 5,
-                    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
-                };
-                this.setToken('google_token_' + Date.now());
-                this.setUser(mockUser);
-                return { success: true, user: mockUser };
-            }
+            const res = await this.request('/auth/google', {
+                method: 'POST',
+                body: JSON.stringify({ email: 'google.user@university.edu', name: 'Google Student', role })
+            });
+            if (res.token) this.setToken(res.token);
+            if (res.user) this.setUser(res.user);
+            return res;
         },
 
         async githubLogin(role = 'student') {
-            try {
-                const res = await this.request('/auth/github', {
-                    method: 'POST',
-                    body: JSON.stringify({ email: 'github.user@university.edu', name: 'GitHub Developer', role })
-                });
-                if (res.token) this.setToken(res.token);
-                if (res.user) this.setUser(res.user);
-                return res;
-            } catch (e) {
-                const mockUser = {
-                    id: 'user_github_' + Date.now(),
-                    fullName: 'GitHub Developer',
-                    email: 'github.user@university.edu',
-                    role,
-                    university: 'Verified GitHub Developer',
-                    xp: 1500,
-                    streak: 10,
-                    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
-                };
-                this.setToken('github_token_' + Date.now());
-                this.setUser(mockUser);
-                return { success: true, user: mockUser };
-            }
+            const res = await this.request('/auth/github', {
+                method: 'POST',
+                body: JSON.stringify({ email: 'github.user@university.edu', name: 'GitHub Developer', role })
+            });
+            if (res.token) this.setToken(res.token);
+            if (res.user) this.setUser(res.user);
+            return res;
         },
 
 

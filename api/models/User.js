@@ -45,11 +45,11 @@ const UserSchema = new mongoose.Schema({
     }],
     xp: {
         type: Number,
-        default: 1250
+        default: 0
     },
     streak: {
         type: Number,
-        default: 7
+        default: 0
     },
     badges: [{
         name: String,
