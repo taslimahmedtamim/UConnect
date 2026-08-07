@@ -501,13 +501,7 @@
             });
         });
 
-        // ── Social Login ──
-        document.getElementById('googleBtn').addEventListener('click', async () => {
-            try { const r = await window.UConnectAPI.googleLogin(selectedRole); if (r?.success) window.location.href = 'dashboard.html'; } catch(e) {}
-        });
-        document.getElementById('githubBtn').addEventListener('click', async () => {
-            try { const r = await window.UConnectAPI.githubLogin(selectedRole); if (r?.success) window.location.href = 'dashboard.html'; } catch(e) {}
-        });
+        // ── Social Login Removed ──
 
         // ── Form Submit ──
         const alertEl  = document.getElementById('authAlert');

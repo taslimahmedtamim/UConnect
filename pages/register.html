@@ -647,19 +647,7 @@
             pwLabel.textContent = l.label;
         });
 
-        // ── Social Logins ──
-        async function socialLogin(provider) {
-            try {
-                const btn = provider === 'google' ? document.getElementById('googleRegBtn') : document.getElementById('githubRegBtn');
-                btn.style.opacity = '0.6'; btn.disabled = true;
-                let res = provider === 'google'
-                    ? await window.UConnectAPI.googleLogin(selectedRole)
-                    : await window.UConnectAPI.githubLogin(selectedRole);
-                if (res?.success) window.location.href = 'dashboard.html';
-            } catch(e) { console.error(e); }
-        }
-        document.getElementById('googleRegBtn').addEventListener('click', () => socialLogin('google'));
-        document.getElementById('githubRegBtn').addEventListener('click', () => socialLogin('github'));
+        // ── Social Logins Removed ──
 
         // ── Form Submit ──
         const form      = document.getElementById('registerForm');
