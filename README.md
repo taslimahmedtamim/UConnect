@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 UConnect 2.0 | AI Career & Team Ecosystem
 
-## Getting Started
+Welcome to **UConnect 2.0**, an advanced, AI-powered platform built to bridge the gap between talented individuals, teams, and career opportunities. UConnect acts as a comprehensive ecosystem for professional growth, offering everything from blockchain-verified credentials to an interactive AI resume builder.
 
-First, run the development server:
+## ✨ Key Features
 
-```bash
+### 👤 Dynamic Professional Profiles
+- **LinkedIn-Style Interface**: A clean, professional layout to showcase your skills, summary, and experience.
+- **Direct Image Uploads**: Seamlessly upload and update your profile picture.
+- **Blockchain-Verified Certifications**: Upload certificates that are marked with a green verification tick if backed by a valid Blockchain Transaction ID, ensuring absolute authenticity.
+
+### 📄 Interactive AI Resume Builder
+- **Two-Pane Editor**: Build your resume using an intuitive form on the left while watching it render in real-time on a beautifully formatted A4 preview on the right.
+- **Classic Professional Templates**: Generates resumes with classic serif typography, structured bullet points, and clean separators.
+- **Native PDF Export**: Uses heavily optimized `@media print` CSS to strip UI elements and export pixel-perfect, text-searchable PDFs directly from the browser without relying on heavy third-party libraries.
+- **Rich Sections**: Dedicated sections for Experience, Education, Projects, and Achievements with smart bullet-point rendering.
+
+### 🤖 Gemini AI Resume Scanner
+- Built-in Applicant Tracking System (ATS) simulator powered by Google's **Gemini 1.5 Flash**.
+- **Targeted Feedback**: Input a target job title, and the AI analyzes your entire resume to provide:
+  - An ATS Match Score (out of 100)
+  - Identified Missing Keywords and Skill Gaps
+  - Actionable Improvement Suggestions
+
+### 💬 Team & Messaging Ecosystem
+- Collaborative team spaces with integrated messaging features to connect with mentors, teammates, and recruiters.
+- Discover opportunities, participate in projects, and collaborate in real time.
+
+---
+
+## 🛠️ Technology Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Frontend**: React 19, Tailwind CSS v4, Lucide React (Icons)
+- **Backend/API**: Next.js Route Handlers (`/api`)
+- **Database**: MySQL managed via Prisma ORM
+- **AI Integration**: `@google/generative-ai` SDK (Gemini API)
+- **Authentication**: JWT (JSON Web Tokens) & bcryptjs for secure password hashing
+- **File Storage**: Local filesystem (`public/uploads`) for media and certificates
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (v18 or higher)
+- MySQL server running locally or remotely
+
+### 1. Installation
+\`\`\`bash
+# Install dependencies
+npm install
+\`\`\`
+
+### 2. Environment Variables
+Create a \`.env\` file in the root directory and configure the following variables:
+\`\`\`env
+# Database Connection (MySQL)
+DATABASE_URL="mysql://USER:PASSWORD@localhost:3306/uconnect_db"
+
+# Authentication Secret
+JWT_SECRET="your-super-secret-jwt-key"
+
+# Google Gemini API Key (For AI Resume Scanner)
+GEMINI_API_KEY="your-google-gemini-api-key"
+\`\`\`
+
+### 3. Database Setup
+Sync the Prisma schema to your MySQL database to create the necessary tables:
+\`\`\`bash
+npx prisma db push
+\`\`\`
+
+### 4. Run the Development Server
+Start the Next.js development server:
+\`\`\`bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+\`\`\`
+Open [http://localhost:3000](http://localhost:3000) in your browser to explore the ecosystem.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📂 Project Structure Highlights
+- `/app/resume` - The interactive two-pane resume builder and PDF exporter.
+- `/app/profile` - The dynamic user profile interface.
+- `/app/api/resume/scan` - The Gemini AI ATS scoring endpoint.
+- `/app/api/upload` - Direct file upload handler.
+- `/public/uploads` - Local storage for user avatars and certificates.
+- `/prisma/schema.prisma` - Database models (Users, Certificates, Projects).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📝 License
+This project is licensed under the MIT License.

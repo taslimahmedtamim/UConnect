@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String   @id @default(uuid())
+  username           String?  @unique // Unique searchable handle (lowercase, alphanumeric + underscores)
+  fullName           String
+  email              String   @unique
+  passwordHash       String
+  role               String   @default("student")
+  bio                String?
+  university         String?
+  department         String?
+  skills             Json     @default("[]") // Array of strings
+  githubUsername     String? // GitHub handle for stats integration
+  codeforcesUsername String? // Codeforces handle for stats integration
+  title              String?
+  location           String?
+  profileImage       String?
+  experience         Json     @default("[]") // Array of experience objects
+  certificates       Json     @default("[]") // Array of certificate objects
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  ownedTeams       Team[]        @relation("TeamOwner")
+  memberTeams      Team[]        @relation("TeamMembers")
+  joinRequests     JoinRequest[]
+  projects         Project[]
+  opportunities    Opportunity[]
+  messagesSent     Message[]     @relation("MessageSender")
+  messagesReceived Message[]     @relation("MessageReceiver")
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  category    String
+  tags        Json     @default("[]") // Array of strings
+  repoUrl     String?
+  demoUrl     String?
+  likes       Int      @default(0)
+  views       Int      @default(0)
+  status      String   @default("In Progress")
+  progress    Int      @default(10)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  @@index([authorId])
+}
+
+model Opportunity {
+  id           String   @id @default(uuid())
+  title        String
+  company      String
+  type         String
+  location     String
+  salary       String?
+  description  String   @db.Text
+  requirements Json     @default("[]") // Array of strings
+  postedAt     DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  postedById String
+  postedBy   User   @relation(fields: [postedById], references: [id])
+
+  @@index([postedById])
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  isRead    Boolean  @default(false)
+
+  senderId String
+  sender   User   @relation("MessageSender", fields: [senderId], references: [id])
+
+  receiverId String?
+  receiver   User?   @relation("MessageReceiver", fields: [receiverId], references: [id])
+
+  teamId String?
+  team   Team?   @relation("TeamMessages", fields: [teamId], references: [id])
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([teamId])
+}
+
+model Team {
+  id             String   @id @default(uuid())
+  name           String
+  description    String   @db.Text
+  requiredSkills Json     @default("[]") // Array of strings
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  ownerId String
+  owner   User   @relation("TeamOwner", fields: [ownerId], references: [id])
+
+  members      User[]        @relation("TeamMembers")
+  joinRequests JoinRequest[]
+  messages     Message[]     @relation("TeamMessages")
+
+  @@index([ownerId])
+}
+
+model JoinRequest {
+  id          String   @id @default(uuid())
+  teamId      String
+  userId      String
+  status      String   @default("pending") // 'pending', 'approved', 'rejected'
+  aiScore     Int      @default(0)
+  aiFeedback  String?  @db.Text
+  requestedAt DateTime @default(now())
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, userId])
+  @@index([teamId])
+  @@index([userId])
+}
