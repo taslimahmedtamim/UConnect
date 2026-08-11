@@ -23,11 +23,11 @@ export default function TeamLeaderboard({ team, teamId, currentUser }: { team: a
         
         const merged = allMembers.map((member: any) => ({
           user: member,
-          points: pointsMap.get(member.id) || 0
+          points: Number(pointsMap.get(member.id)) || 0
         }));
 
         // Sort descending
-        merged.sort((a, b) => b.points - a.points);
+        merged.sort((a, b) => Number(b.points) - Number(a.points));
         setLeaderboard(merged);
       }
     } catch (e) {

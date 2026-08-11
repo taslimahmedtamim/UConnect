@@ -107,9 +107,9 @@ export default function Sidebar() {
                       <Icon className="w-5 h-5" />
                       <span className="font-medium text-sm">{item.label}</span>
                     </div>
-                    {item.badge && (
+                    {(item as any).badge && (
                       <span className={`${isActive ? 'bg-white/20 text-white' : 'bg-blue-600 text-white'} py-0.5 px-2 rounded-full text-[10px] font-bold`}>
-                        {item.badge}
+                        {(item as any).badge}
                       </span>
                     )}
                   </Link>

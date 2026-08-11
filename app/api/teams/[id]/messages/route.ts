@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const teamId = params.id;
+    const { id: teamId } = await params;
     
     // In a real app we'd verify the user via session/token
     // For now, we will trust the client or maybe pass a user ID, but GET is fine.
@@ -25,9 +25,12 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const teamId = params.id;
+    const user = await getUserFromRequest(req);
+    if (!user) return unauthorizedResponse();
+
+    const { id: teamId } = await params;
     const { content, senderId } = await req.json();
 
     if (!content || !senderId) {
