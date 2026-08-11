@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { X, Play, ExternalLink, Github, Star, Heart, Eye } from 'lucide-react';
+import { X, Play, ExternalLink, Code, Star, Heart, Eye } from 'lucide-react';
 
 type Props = {
   project: any | null;
@@ -80,7 +80,7 @@ export default function ProjectDemoModal({ project, onClose }: Props) {
                   rel="noopener noreferrer"
                   className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold rounded-xl flex items-center gap-1.5"
                 >
-                  <Github className="w-4 h-4" /> Code Repo
+                  <Code className="w-4 h-4" /> Code Repo
                 </a>
               )}
               {project.demoUrl && (
