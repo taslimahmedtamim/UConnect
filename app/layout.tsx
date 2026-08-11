@@ -32,7 +32,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <Navbar />
-          <main className="flex-grow pt-16">
+          <main className="flex-grow">
             <AppLayout>
               {children}
             </AppLayout>
