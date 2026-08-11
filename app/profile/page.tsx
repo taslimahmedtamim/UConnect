@@ -450,6 +450,13 @@ export default function ProfilePage() {
                   className="px-5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-40"
                   placeholder="Add a new skill..."
                 />
+                <button
+                  onClick={handleAddSkill}
+                  disabled={!formData.newSkill.trim()}
+                  className="px-4 py-2.5 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Add
+                </button>
               </div>
             )}
           </div>
