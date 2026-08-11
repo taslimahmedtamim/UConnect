@@ -190,9 +190,13 @@ export default function DashboardPage() {
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">Quick Actions</h2>
             </div>
             <div className="p-4 space-y-3">
+              <Link href="/skillmap" className="flex items-center gap-3 w-full p-3 bg-slate-50 hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/20 border border-slate-100 dark:border-slate-700 rounded-lg text-slate-700 hover:text-blue-700 dark:text-slate-300 dark:hover:text-blue-400 transition-colors group">
+                <FileText className="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors" />
+                <span className="font-medium text-sm">Explore U-SkillMap & AI Roadmap</span>
+              </Link>
               <Link href="/resume" className="flex items-center gap-3 w-full p-3 bg-slate-50 hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/20 border border-slate-100 dark:border-slate-700 rounded-lg text-slate-700 hover:text-blue-700 dark:text-slate-300 dark:hover:text-blue-400 transition-colors group">
                 <FileText className="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors" />
-                <span className="font-medium text-sm">Generate Resume</span>
+                <span className="font-medium text-sm">Generate AI Resume</span>
               </Link>
               <Link href="/teams" className="flex items-center gap-3 w-full p-3 bg-slate-50 hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-blue-900/20 border border-slate-100 dark:border-slate-700 rounded-lg text-slate-700 hover:text-blue-700 dark:text-slate-300 dark:hover:text-blue-400 transition-colors group">
                 <Users className="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors" />

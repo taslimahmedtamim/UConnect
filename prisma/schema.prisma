@@ -35,6 +35,14 @@ model User {
   opportunities    Opportunity[]
   messagesSent     Message[]     @relation("MessageSender")
   messagesReceived Message[]     @relation("MessageReceiver")
+  userSkills       UserSkill[]
+  userCareer       UserCareer?
+  endorsementsGiven Endorsement[] @relation("Endorser")
+  mentorProfile            MentorProfile?
+  mentorshipRequestsSent     MentorshipRequest[] @relation("StudentRequests")
+  mentorshipRequestsReceived MentorshipRequest[] @relation("MentorRequests")
+  helpPosts                  HelpPost[]
+  helpAnswers                HelpAnswer[]
 }
 
 model Project {
@@ -129,4 +137,163 @@ model JoinRequest {
   @@unique([teamId, userId])
   @@index([teamId])
   @@index([userId])
+}
+
+// U-SkillMap models
+model Skill {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  category  String?  
+  tags      Json     @default("[]") // array of strings
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userSkills       UserSkill[]
+  careerPathSkills CareerPathSkill[]
+}
+
+model UserSkill {
+  id             String   @id @default(uuid())
+  userId         String
+  skillId        String
+  level          Int      @default(1) // 1..5
+  endorsementCnt Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill        Skill         @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  endorsements Endorsement[]
+
+  @@unique([userId, skillId])
+  @@index([userId])
+  @@index([skillId])
+}
+
+model Endorsement {
+  id          String   @id @default(uuid())
+  userSkillId String
+  endorserId  String
+  createdAt   DateTime @default(now())
+
+  userSkill UserSkill @relation(fields: [userSkillId], references: [id], onDelete: Cascade)
+  endorser  User      @relation("Endorser", fields: [endorserId], references: [id], onDelete: Cascade)
+
+  @@unique([userSkillId, endorserId])
+  @@index([userSkillId])
+  @@index([endorserId])
+}
+
+model CareerPath {
+  id          String   @id @default(uuid())
+  title       String   @unique
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  skills      CareerPathSkill[]
+  userCareers UserCareer[]
+}
+
+model CareerPathSkill {
+  id           String   @id @default(uuid())
+  careerPathId String
+  skillId      String
+  importance   Int      @default(3) // 1..5
+  createdAt    DateTime @default(now())
+
+  careerPath CareerPath @relation(fields: [careerPathId], references: [id], onDelete: Cascade)
+  skill      Skill      @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([careerPathId, skillId])
+  @@index([careerPathId])
+  @@index([skillId])
+}
+
+model UserCareer {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  careerPathId String
+  chosenAt     DateTime @default(now())
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  careerPath CareerPath @relation(fields: [careerPathId], references: [id], onDelete: Cascade)
+
+  @@index([careerPathId])
+}
+
+model MentorProfile {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  title           String
+  company         String?
+  expertise       Json     @default("[]") // Array of skill strings
+  experienceYears Int      @default(3)
+  availability    String?  @default("Flexible")
+  bio             String?  @db.Text
+  rating          Float    @default(5.0)
+  reviewsCount    Int      @default(0)
+  featured        Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model MentorshipRequest {
+  id          String    @id @default(uuid())
+  mentorId    String
+  studentId   String
+  topic       String
+  message     String    @db.Text
+  status      String    @default("pending") // 'pending', 'accepted', 'rejected', 'completed'
+  scheduledAt DateTime?
+  meetingUrl  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  mentor  User @relation("MentorRequests", fields: [mentorId], references: [id], onDelete: Cascade)
+  student User @relation("StudentRequests", fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([mentorId])
+  @@index([studentId])
+}
+
+model HelpPost {
+  id        String   @id @default(uuid())
+  title     String
+  content   String   @db.Text
+  category  String   @default("General") // 'Frontend', 'Backend', 'DevOps', 'AI & Data', 'Security', 'Career'
+  tags      Json     @default("[]")
+  status    String   @default("open") // 'open', 'solved'
+  views     Int      @default(0)
+  upvotes   Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  answers HelpAnswer[]
+
+  @@index([authorId])
+  @@index([category])
+}
+
+model HelpAnswer {
+  id         String   @id @default(uuid())
+  content    String   @db.Text
+  isAccepted Boolean  @default(false)
+  upvotes    Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  postId String
+  post   HelpPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([authorId])
 }

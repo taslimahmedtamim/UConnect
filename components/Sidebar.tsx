@@ -18,12 +18,15 @@ import {
   HelpCircle,
   LogOut,
   Moon,
+  Sun,
   ChevronLeft,
   Zap
 } from "lucide-react";
+import { useTheme } from "./ThemeProvider";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
   const [user, setUser] = useState<{fullName: string, role: string} | null>(null);
 
   useEffect(() => {
@@ -132,8 +135,12 @@ export default function Sidebar() {
         </div>
         
         <div className="flex items-center gap-1 shrink-0">
-          <button className="p-1.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-            <Moon className="w-4 h-4" />
+          <button 
+            onClick={toggleTheme}
+            className="p-1.5 text-slate-500 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
           </button>
           <button 
             onClick={() => {
