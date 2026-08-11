@@ -26,17 +26,6 @@ type Props = {
 };
 
 export default function LeaderboardTable({ users, startIndex = 3 }: Props) {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const filtered = users.filter((u) => {
-    const q = searchTerm.toLowerCase();
-    return (
-      u.fullName.toLowerCase().includes(q) ||
-      (u.username || '').toLowerCase().includes(q) ||
-      (u.university || '').toLowerCase().includes(q)
-    );
-  });
-
   const getInitials = (name: string) =>
     name
       .split(' ')
@@ -47,18 +36,6 @@ export default function LeaderboardTable({ users, startIndex = 3 }: Props) {
 
   return (
     <div className="space-y-4">
-      {/* Search Bar */}
-      <div className="relative max-w-md">
-        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-        <input
-          type="text"
-          placeholder="Filter ranked users by name or university..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-9 pr-4 py-2.5 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 text-slate-900 dark:text-white shadow-sm"
-        />
-      </div>
-
       {/* Table Container */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
@@ -70,11 +47,12 @@ export default function LeaderboardTable({ users, startIndex = 3 }: Props) {
                 <th className="p-4">Top Skills</th>
                 <th className="p-4 text-center">Tier</th>
                 <th className="p-4 text-right">UConnect XP</th>
+                <th className="p-4 text-right">Action</th>
               </tr>
             </thead>
 
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-              {filtered.map((user, idx) => {
+              {users.map((user, idx) => {
                 const rankNumber = startIndex + idx + 1;
                 return (
                   <tr
@@ -144,11 +122,21 @@ export default function LeaderboardTable({ users, startIndex = 3 }: Props) {
                     <td className="p-4 text-right font-black text-sm text-blue-600 dark:text-blue-400">
                       {user.totalXp.toLocaleString()} XP
                     </td>
+
+                    {/* Action */}
+                    <td className="p-4 text-right">
+                      <Link
+                        href={`/u/${user.username}`}
+                        className="inline-flex items-center justify-center bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-blue-600 px-4 py-2 rounded-lg font-bold transition-colors"
+                      >
+                        Profile
+                      </Link>
+                    </td>
                   </tr>
                 );
               })}
 
-              {filtered.length === 0 && (
+              {users.length === 0 && (
                 <tr>
                   <td colSpan={5} className="p-8 text-center text-slate-500">
                     No ranked users found.

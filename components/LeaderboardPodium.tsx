@@ -91,8 +91,8 @@ export default function LeaderboardPodium({ topThree }: Props) {
         {/* 1st Place (Center - Elevated) */}
         {first ? (
           <div className="flex flex-col items-center group -mt-6">
+            <Crown className="w-8 h-8 text-amber-400 animate-bounce mx-auto mb-3 drop-shadow-md z-20" />
             <div className="relative mb-3 text-center">
-              <Crown className="w-8 h-8 text-amber-400 animate-bounce mx-auto mb-1 drop-shadow-md" />
               <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr from-amber-400 via-amber-300 to-yellow-500 p-1 shadow-xl group-hover:scale-105 transition-transform ring-4 ring-amber-400/30">
                 {first.profileImage ? (
                   <img src={first.profileImage} alt={first.fullName} className="w-full h-full rounded-2xl object-cover" />
@@ -102,7 +102,7 @@ export default function LeaderboardPodium({ topThree }: Props) {
                   </div>
                 )}
               </div>
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-400 text-slate-900 font-black text-xs px-3 py-0.5 rounded-full shadow-lg flex items-center gap-1">
+              <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-400 text-slate-900 font-black text-xs px-3 py-0.5 rounded-full shadow-lg flex items-center gap-1 z-20">
                 <Trophy className="w-3 h-3 text-slate-900 fill-slate-900" /> #1
               </span>
             </div>

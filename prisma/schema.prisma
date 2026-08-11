@@ -33,6 +33,7 @@ model User {
   joinRequests     JoinRequest[]
   projects         Project[]
   opportunities    Opportunity[]
+  applications     OpportunityApplication[]
   messagesSent     Message[]     @relation("MessageSender")
   messagesReceived Message[]     @relation("MessageReceiver")
   userSkills       UserSkill[]
@@ -43,6 +44,9 @@ model User {
   mentorshipRequestsReceived MentorshipRequest[] @relation("MentorRequests")
   helpPosts                  HelpPost[]
   helpAnswers                HelpAnswer[]
+  announcements              Announcement[] @relation("AnnouncementAuthor")
+  pointsGiven                TeamPoint[]    @relation("PointsGiven")
+  pointsReceived             TeamPoint[]    @relation("PointsReceived")
 }
 
 model Project {
@@ -53,6 +57,7 @@ model Project {
   tags        Json     @default("[]") // Array of strings
   repoUrl     String?
   demoUrl     String?
+  lookingForContributors Boolean @default(false)
   likes       Int      @default(0)
   views       Int      @default(0)
   rating      Float    @default(4.8)
@@ -82,8 +87,27 @@ model Opportunity {
 
   postedById String
   postedBy   User   @relation(fields: [postedById], references: [id])
+  applications OpportunityApplication[]
 
   @@index([postedById])
+}
+
+model OpportunityApplication {
+  id            String   @id @default(uuid())
+  opportunityId String
+  studentId     String
+  aiScore       Int      @default(0)
+  aiFeedback    String?  @db.Text
+  status        String   @default("pending") // 'pending', 'accepted', 'rejected'
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  student     User        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([opportunityId, studentId])
+  @@index([opportunityId])
+  @@index([studentId])
 }
 
 model Message {
@@ -120,8 +144,42 @@ model Team {
   members      User[]        @relation("TeamMembers")
   joinRequests JoinRequest[]
   messages     Message[]     @relation("TeamMessages")
+  announcements Announcement[] @relation("TeamAnnouncements")
+  teamPoints   TeamPoint[]
 
   @@index([ownerId])
+}
+
+model TeamPoint {
+  id         String   @id @default(uuid())
+  teamId     String
+  giverId    String
+  receiverId String
+  points     Int      @default(1)
+  createdAt  DateTime @default(now())
+
+  team       Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  giver      User     @relation("PointsGiven", fields: [giverId], references: [id], onDelete: Cascade)
+  receiver   User     @relation("PointsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
+  @@index([giverId])
+  @@index([receiverId])
+}
+
+model Announcement {
+  id        String   @id @default(uuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  
+  teamId    String
+  team      Team     @relation("TeamAnnouncements", fields: [teamId], references: [id], onDelete: Cascade)
+  
+  authorId  String
+  author    User     @relation("AnnouncementAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
+  @@index([authorId])
 }
 
 model JoinRequest {
@@ -298,4 +356,14 @@ model HelpAnswer {
 
   @@index([postId])
   @@index([authorId])
+}
+
+model OTP {
+  id        String   @id @default(uuid())
+  email     String
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
 }

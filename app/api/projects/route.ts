@@ -58,7 +58,7 @@ export async function POST(req: Request) {
     if (!user) return unauthorizedResponse();
 
     const data = await req.json();
-    const { title, description, category, tags, repoUrl, demoUrl, rating } = data;
+    const { title, description, category, tags, repoUrl, demoUrl, rating, lookingForContributors } = data;
 
     if (!title || !description) {
       return NextResponse.json({ success: false, message: 'Title and description are required' }, { status: 400 });
@@ -76,6 +76,7 @@ export async function POST(req: Request) {
         tags: tagsArray,
         repoUrl: repoUrl ? repoUrl.trim() : null,
         demoUrl: demoUrl ? demoUrl.trim() : null,
+        lookingForContributors: Boolean(lookingForContributors),
         rating: rating ? Number(rating) : 4.8,
         authorId: user.id
       },

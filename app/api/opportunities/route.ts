@@ -19,6 +19,12 @@ export async function GET(req: Request) {
             fullName: true,
             role: true,
           }
+        },
+        applications: {
+          select: {
+            studentId: true,
+            aiScore: true
+          }
         }
       }
     });

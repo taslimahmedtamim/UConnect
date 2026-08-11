@@ -6,8 +6,15 @@ export async function GET(req: Request) {
   try {
     const currentUser = await getUserFromRequest(req);
 
-    // Fetch all users with their skills, endorsements, projects, and teams
+    // Fetch all real users (excluding common demo domains) with their skills, endorsements, projects, teams, and points
     const users = await prisma.user.findMany({
+      where: {
+        NOT: {
+          email: {
+            in: ['sarah.lin@tech.org', 'elena.rostova@ai.edu', 'alex.rivera@cloud.io']
+          }
+        }
+      },
       select: {
         id: true,
         fullName: true,
@@ -29,45 +36,52 @@ export async function GET(req: Request) {
         },
         memberTeams: {
           select: { id: true }
+        },
+        pointsReceived: {
+          select: { points: true }
         }
       }
     });
 
-    // Compute rankings for each user
+    // Compute rankings for each user based on actual points
     const rankedUsers = users.map((u) => {
-      // 1. Skill proficiency score (sum of levels * 100)
-      const skillScore = u.userSkills.reduce((acc, us) => acc + (us.level || 0) * 100, 0);
+      // 1. Peer Recognition Points (Each point awarded by peers = 100 XP)
+      const totalPeerPoints = u.pointsReceived?.reduce((acc, pt) => acc + (pt.points || 0), 0) || 0;
+      const peerScore = totalPeerPoints * 100;
 
-      // 2. Endorsements count & score (150 XP per endorsement)
+      // 2. Skill proficiency score (sum of levels * 50)
+      const skillScore = u.userSkills.reduce((acc, us) => acc + (us.level || 0) * 50, 0);
+
+      // 3. Endorsements count & score (100 XP per endorsement)
       const totalEndorsements = u.userSkills.reduce((acc, us) => acc + (us.endorsementCnt || us.endorsements?.length || 0), 0);
-      const endorsementScore = totalEndorsements * 150;
+      const endorsementScore = totalEndorsements * 100;
 
-      // 3. Projects score (50 XP per project + 15 XP per like)
+      // 4. Projects score (200 XP per project + 15 XP per like)
       const projectCount = u.projects.length;
       const totalLikes = u.projects.reduce((acc, p) => acc + (p.likes || 0), 0);
-      const projectScore = projectCount * 500 + totalLikes * 25;
+      const projectScore = projectCount * 200 + totalLikes * 15;
 
-      // 4. Team membership score (200 XP per team)
-      const teamScore = u.memberTeams.length * 200;
-
-      // Total UConnect XP
-      const totalXp = skillScore + endorsementScore + projectScore + teamScore;
+      // Total UConnect XP - If they have no points/activity, it will be 0
+      const totalXp = peerScore + skillScore + endorsementScore + projectScore;
 
       // Assign Tier Badge based on total XP
-      let tier = 'Silver';
-      let badge = 'Level 1';
+      let tier = 'Bronze';
+      let badge = 'Novice';
       if (totalXp >= 4000) {
         tier = 'Legendary';
         badge = 'Apex';
       } else if (totalXp >= 2500) {
         tier = 'Master';
         badge = 'Master';
-      } else if (totalXp >= 1500) {
+      } else if (totalXp >= 1000) {
         tier = 'Diamond';
         badge = 'Pro';
-      } else if (totalXp >= 800) {
+      } else if (totalXp >= 300) {
         tier = 'Gold';
         badge = 'Expert';
+      } else if (totalXp >= 100) {
+        tier = 'Silver';
+        badge = 'Intermediate';
       }
 
       // Extract top 3 skill names
@@ -87,10 +101,11 @@ export async function GET(req: Request) {
         department: u.department,
         githubUsername: u.githubUsername,
         codeforcesUsername: u.codeforcesUsername,
+        peerScore,
+        totalPeerPoints,
         skillScore,
         endorsementScore,
         projectScore,
-        teamScore,
         totalEndorsements,
         projectCount,
         totalLikes,

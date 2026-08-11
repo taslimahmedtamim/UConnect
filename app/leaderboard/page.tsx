@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Trophy, Zap, Award, FolderOpen, Crown, Star, Flame, Shield, ArrowUpRight } from 'lucide-react';
+import { Trophy, Zap, Award, FolderOpen, Crown, Star, Flame, Shield, ArrowUpRight, Search } from 'lucide-react';
 import LeaderboardPodium from '@/components/LeaderboardPodium';
 import LeaderboardTable from '@/components/LeaderboardTable';
 
@@ -10,6 +10,7 @@ export default function LeaderboardPage() {
   const [leaderboards, setLeaderboards] = useState<any | null>(null);
   const [currentUserRank, setCurrentUserRank] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -40,8 +41,20 @@ export default function LeaderboardPage() {
   }
 
   const currentList: any[] = leaderboards?.[activeCategory] || [];
-  const topThree = currentList.slice(0, 3);
-  const restUsers = currentList.slice(3);
+  
+  // Apply Global Search Filter
+  const filteredList = currentList.filter((u) => {
+    if (!searchTerm) return true;
+    const q = searchTerm.toLowerCase();
+    return (
+      u.fullName.toLowerCase().includes(q) ||
+      (u.username || '').toLowerCase().includes(q) ||
+      (u.university || '').toLowerCase().includes(q)
+    );
+  });
+
+  const topThree = filteredList.slice(0, 3);
+  const restUsers = filteredList.slice(3);
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 space-y-8">
@@ -112,15 +125,30 @@ export default function LeaderboardPage() {
         </nav>
       </div>
 
+      {/* Global Search Bar */}
+      <div className="relative max-w-xl mx-auto md:mx-0">
+        <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+        <input
+          type="text"
+          placeholder="Search global ranks by name, username, or university..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 text-slate-900 dark:text-white shadow-sm"
+        />
+      </div>
+
       {/* Top 3 Podium */}
       <LeaderboardPodium topThree={topThree} />
 
-      {/* Ranks #4+ Table */}
+      {/* Full Standings Table */}
       <div className="space-y-4">
         <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <Flame className="w-5 h-5 text-amber-500" /> Full Standings
+          <Flame className="w-5 h-5 text-amber-500" /> {searchTerm ? "Search Results" : "Full Standings"}
         </h3>
-        <LeaderboardTable users={restUsers} startIndex={3} />
+        <LeaderboardTable 
+          users={searchTerm ? filteredList : restUsers} 
+          startIndex={searchTerm ? 0 : 3} 
+        />
       </div>
     </div>
   );

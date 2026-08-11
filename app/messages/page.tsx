@@ -109,7 +109,7 @@ export default function MessagesPage() {
   if (!currentUser) return null;
 
   return (
-    <div className="flex h-[calc(100vh-70px)] bg-slate-50 dark:bg-[#0b1120]">
+    <div className="flex h-[calc(100dvh-64px)] md:h-screen bg-slate-50 dark:bg-[#0b1120]">
       
       {/* Sidebar: Conversations List */}
       <div className="w-80 border-r border-slate-200 dark:border-slate-800 flex flex-col bg-white dark:bg-slate-900">

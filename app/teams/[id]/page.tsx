@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Users, Code, CheckCircle, XCircle, BrainCircuit, Sparkles } from "lucide-react";
+import { Users, Code, CheckCircle, XCircle, BrainCircuit, Sparkles, MessageSquare, Megaphone } from "lucide-react";
+import TeamAnnouncements from "@/components/TeamAnnouncements";
+import TeamLeaderboard from "@/components/TeamLeaderboard";
 
 export default function TeamDetailsPage() {
   const router = useRouter();
@@ -244,23 +246,8 @@ export default function TeamDetailsPage() {
         </div>
       )}
 
-      {/* Members List */}
-      <div>
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Team Members ({team.members.length})</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {team.members.map((member: any) => (
-            <div key={member.id} className="bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-200 dark:border-slate-800 flex items-center gap-4">
-              <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold text-lg">
-                {member.fullName.charAt(0)}
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-900 dark:text-white">{member.fullName}</h4>
-                <p className="text-sm text-slate-500">{member.id === team.owner.id ? 'Owner' : 'Member'}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Team Leaderboard */}
+      <TeamLeaderboard team={team} teamId={id as string} currentUser={currentUser} />
 
     </div>
   );

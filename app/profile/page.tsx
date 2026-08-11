@@ -15,6 +15,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState<any>(null);
 
   const [formData, setFormData] = useState({
+    username: "",
     fullName: "",
     title: "",
     location: "",
@@ -42,14 +43,18 @@ export default function ProfilePage() {
 
       try {
         const res = await fetch("/api/users/profile", {
-          
+          // Cookies are automatically sent
         });
 
-        if (!res.ok) throw new Error("Failed to fetch profile");
+        if (!res.ok) {
+          router.push("/login");
+          return;
+        }
 
         const data = await res.json();
         setUser(data.user);
         setFormData({
+          username: data.user.username || "",
           fullName: data.user.fullName || "",
           title: data.user.title || "",
           location: data.user.location || "",
@@ -114,6 +119,20 @@ export default function ProfilePage() {
     }
   };
 
+  const handleRemoveExperience = (index: number) => {
+    setFormData({
+      ...formData,
+      experience: formData.experience.filter((_, i) => i !== index),
+    });
+  };
+
+  const handleRemoveCertificate = (index: number) => {
+    setFormData({
+      ...formData,
+      certificates: formData.certificates.filter((_, i) => i !== index),
+    });
+  };
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, fieldName: 'profileImage' | 'certificate') => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -149,9 +168,10 @@ export default function ProfilePage() {
       const res = await fetch("/api/users/profile", {
         method: "PUT",
         headers: { 
-          "Content-Type": "application/json",
-          },
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({
+          username: formData.username,
           fullName: formData.fullName,
           profileImage: formData.profileImage,
           title: formData.title,
@@ -258,7 +278,7 @@ export default function ProfilePage() {
               )}
             </div>
 
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-3 mb-1">
               {isEditing ? (
                 <input 
                   type="text" 
@@ -271,6 +291,24 @@ export default function ProfilePage() {
                 <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
                   {formData.fullName || "Your Name"}
                 </h1>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2 mb-4">
+              {isEditing ? (
+                <div className="flex items-center text-slate-500 font-mono">
+                  @<input 
+                    type="text" 
+                    value={formData.username} 
+                    onChange={(e) => setFormData({...formData, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '')})}
+                    className="bg-transparent border-b border-slate-300 dark:border-slate-700 focus:border-blue-500 outline-none w-auto max-w-xs"
+                    placeholder="username"
+                  />
+                </div>
+              ) : (
+                <p className="text-blue-500 font-mono font-medium">
+                  @{formData.username || "username"}
+                </p>
               )}
             </div>
 
@@ -358,16 +396,25 @@ export default function ProfilePage() {
 
           <div className="space-y-6">
             {formData.experience.map((exp: any, index: number) => (
-              <div key={index} className="flex gap-4">
+              <div key={index} className="flex gap-4 relative group">
                 <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center shrink-0">
                   <Briefcase className="w-6 h-6 text-slate-400" />
                 </div>
-                <div>
+                <div className="flex-1 pr-8">
                   <h3 className="font-bold text-slate-900 dark:text-white">{exp.title}</h3>
                   <p className="text-sm text-slate-800 dark:text-slate-200">{exp.company}</p>
                   <p className="text-xs text-slate-500 mb-2">{exp.duration}</p>
                   <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{exp.description}</p>
                 </div>
+                {isEditing && (
+                  <button
+                    onClick={() => handleRemoveExperience(index)}
+                    className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity bg-red-50 dark:bg-red-900/30 rounded-full"
+                    title="Remove Experience"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             ))}
             {formData.experience.length === 0 && (
@@ -479,11 +526,11 @@ export default function ProfilePage() {
 
           <div className="space-y-6">
             {formData.certificates.map((cert: any, index: number) => (
-              <div key={index} className="flex gap-4 border-b border-slate-100 dark:border-slate-800 pb-6 last:border-0 last:pb-0">
+              <div key={index} className="flex gap-4 border-b border-slate-100 dark:border-slate-800 pb-6 last:border-0 last:pb-0 relative group">
                 <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center shrink-0">
                   <Award className="w-6 h-6 text-amber-500" />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 pr-8">
                   <h3 className="font-bold text-slate-900 dark:text-white">{cert.name}</h3>
                   <p className="text-sm text-slate-800 dark:text-slate-200">{cert.issuer}</p>
                   <p className="text-xs text-slate-500 mb-3">Issued {cert.date}</p>
@@ -502,9 +549,18 @@ export default function ProfilePage() {
                   )}
                 </div>
                 {cert.imageUrl && (
-                  <div className="ml-4 shrink-0">
+                  <div className="ml-4 shrink-0 pr-8">
                     <img src={cert.imageUrl} alt={cert.name} className="w-32 h-24 object-cover rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm hover:scale-105 transition-transform" />
                   </div>
+                )}
+                {isEditing && (
+                  <button
+                    onClick={() => handleRemoveCertificate(index)}
+                    className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity bg-red-50 dark:bg-red-900/30 rounded-full"
+                    title="Remove Certificate"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
                 )}
               </div>
             ))}

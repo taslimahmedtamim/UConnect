@@ -8,33 +8,34 @@ export async function POST(req: Request) {
     const user = await getUserFromRequest(req);
     if (!user) return unauthorizedResponse();
 
-    const userCareer = await prisma.userCareer.findUnique({
-      where: { userId: user.id },
-      include: {
-        careerPath: {
-          include: {
-            skills: { include: { skill: true } }
-          }
-        }
+    let body: any = {};
+    try { body = await req.json(); } catch(e) {}
+    
+    let targetRole = body.topic?.trim();
+    let currentSkillList = 'None listed yet';
+    let requiredSkillsList = 'N/A';
+
+    if (!targetRole) {
+      const userCareer = await prisma.userCareer.findUnique({
+        where: { userId: user.id },
+        include: { careerPath: { include: { skills: { include: { skill: true } } } } }
+      });
+
+      if (!userCareer || !userCareer.careerPath) {
+        return NextResponse.json(
+          { success: false, message: 'Please provide a topic or choose a target career path first.' },
+          { status: 400 }
+        );
       }
-    });
-
-    if (!userCareer || !userCareer.careerPath) {
-      return NextResponse.json(
-        { success: false, message: 'Please choose a target career path first.' },
-        { status: 400 }
-      );
+      targetRole = userCareer.careerPath.title;
+      
+      const userSkills = await prisma.userSkill.findMany({
+        where: { userId: user.id },
+        include: { skill: true }
+      });
+      currentSkillList = userSkills.map(us => `${us.skill.name} (Level ${us.level}/5)`).join(', ');
+      requiredSkillsList = userCareer.careerPath.skills.map(cps => `${cps.skill.name} (Required Importance: ${cps.importance}/5)`).join(', ');
     }
-
-    const userSkills = await prisma.userSkill.findMany({
-      where: { userId: user.id },
-      include: { skill: true }
-    });
-
-    const currentSkillList = userSkills.map(us => `${us.skill.name} (Level ${us.level}/5)`).join(', ');
-    const requiredSkillsList = userCareer.careerPath.skills
-      .map(cps => `${cps.skill.name} (Required Importance: ${cps.importance}/5)`)
-      .join(', ');
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (apiKey) {
@@ -44,17 +45,18 @@ export async function POST(req: Request) {
 
         const prompt = `
 You are an elite career mentor and AI tech coach.
-Generate a structured, high-impact multi-phase learning roadmap for a student aiming to become a "${userCareer.careerPath.title}".
+Generate a highly sequential, structured multi-phase learning roadmap for a student learning "${targetRole}".
 
 STUDENT CURRENT SKILLS:
-${currentSkillList || 'None listed yet'}
+${currentSkillList}
 
-TARGET ROLE REQUIREMENTS:
-${requiredSkillsList}
+TARGET ROLE/SKILL:
+${targetRole}
+${requiredSkillsList !== 'N/A' ? `\nREQUIREMENTS:\n${requiredSkillsList}` : ''}
 
 Create a personalized 4-phase learning roadmap. Provide your response strictly in raw JSON (no markdown formatting, no code block markers) with this exact schema:
 {
-  "targetRole": "${userCareer.careerPath.title}",
+  "targetRole": "${targetRole}",
   "estimatedWeeks": 8,
   "overview": "Short summary of the transition strategy and key focus areas",
   "phases": [
@@ -65,17 +67,18 @@ Create a personalized 4-phase learning roadmap. Provide your response strictly i
       "objective": "Primary goal for this phase",
       "skillsToFocus": ["Skill 1", "Skill 2"],
       "actionItems": [
-        "Actionable item 1",
-        "Actionable item 2",
-        "Actionable item 3"
+        {
+          "task": "Specific actionable learning step (e.g. Learn React Hooks)",
+          "resourceTitle": "Title of the free resource to learn this",
+          "resourceUrl": "https://working-url-to-free-resource.com"
+        }
       ],
       "recommendedProject": "Hands-on mini project idea to practice these skills"
     }
-  ],
-  "recommendedResources": [
-    { "title": "Resource Name", "type": "Documentation/Course/Book", "focus": "What it covers" }
   ]
 }
+
+Make sure the 'resourceUrl' for each action item is SPECIFIC, FREE, and contains a real, working URL (e.g., links to freeCodeCamp, specific YouTube tutorials, or official documentation) that exactly matches the task.
 `;
 
         const result = await model.generateContent(prompt);
@@ -96,56 +99,24 @@ Create a personalized 4-phase learning roadmap. Provide your response strictly i
     }
 
     // Heuristic fallback roadmap
-    const missingOrWeak = userCareer.careerPath.skills.map(s => s.skill.name);
+    const missingOrWeak = [targetRole];
     const fallbackRoadmap = {
-      targetRole: userCareer.careerPath.title,
+      targetRole: targetRole,
       estimatedWeeks: 6,
-      overview: `A targeted 6-week curriculum to bridge your skill gap towards becoming a ${userCareer.careerPath.title}.`,
+      overview: `A targeted 6-week curriculum to master ${targetRole}.`,
       phases: [
         {
           phase: 1,
           title: "Foundations & Core Prerequisites",
           duration: "Weeks 1-2",
           objective: "Strengthen core fundamentals and essential tooling.",
-          skillsToFocus: missingOrWeak.slice(0, 2),
-          actionItems: [
-            `Deep dive into ${missingOrWeak[0] || 'core concepts'} syntax, patterns, and standard practices.`,
-            `Build 2 small standalone exercises focusing on modular code design.`,
-            `Configure local development environment and version control workflows.`
-          ],
-          recommendedProject: `Build a CLI or lightweight prototype utilizing ${missingOrWeak[0] || 'core stack'}.`
-        },
-        {
-          phase: 2,
-          title: "Advanced Concepts & Implementation",
-          duration: "Weeks 3-4",
-          objective: "Master intermediate techniques and integrate key libraries.",
-          skillsToFocus: missingOrWeak.slice(2, 4),
-          actionItems: [
-            `Implement data integration and state architecture.`,
-            `Study standard design patterns and asynchronous execution.`,
-            `Write unit tests and error handling logic.`
-          ],
-          recommendedProject: `Create a responsive interactive web app connected to a REST/GraphQL API.`
-        },
-        {
-          phase: 3,
-          title: "Full Ecosystem Integration & Project Build",
-          duration: "Weeks 5-6",
-          objective: "Assemble all skills into a comprehensive portfolio project.",
           skillsToFocus: missingOrWeak,
           actionItems: [
-            `Architect a full-stack portfolio application for the ${userCareer.careerPath.title} domain.`,
-            `Implement authentication, database storage, and deployment pipelines.`,
-            `Publish project repository and write a detailed README.`
+            { task: `Deep dive into syntax and patterns.`, resourceTitle: "freeCodeCamp", resourceUrl: "https://www.freecodecamp.org/" },
+            { task: `Configure local development environment.`, resourceTitle: "MDN Web Docs", resourceUrl: "https://developer.mozilla.org/" }
           ],
-          recommendedProject: `Capstone: Production-ready ${userCareer.careerPath.title} showcase application.`
+          recommendedProject: `Build a CLI or lightweight prototype.`
         }
-      ],
-      recommendedResources: [
-        { title: "Official Documentation & MDN", type: "Docs", focus: "Language & framework references" },
-        { title: "GitHub Community Projects", type: "Open Source", focus: "Real-world code architecture" },
-        { title: "UConnect Team Collaboration", type: "Platform", focus: "Join open teams to practice peer coding" }
       ]
     };
 

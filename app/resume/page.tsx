@@ -64,6 +64,9 @@ export default function ResumeBuilderPage() {
   const [targetJobTitle, setTargetJobTitle] = useState("");
   const [scanning, setScanning] = useState(false);
   const [scanResult, setScanResult] = useState<any>(null);
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [pdfBase64, setPdfBase64] = useState<string>('');
+  const [scanSource, setScanSource] = useState<'current' | 'upload'>('current');
 
   // Fetch initial user data to populate the resume
   useEffect(() => {
@@ -73,7 +76,7 @@ export default function ResumeBuilderPage() {
 
       try {
         const res = await fetch("/api/users/profile", {
-          
+          // Cookies are automatically sent
         });
 
         if (!res.ok) throw new Error("Failed to fetch profile");
@@ -160,6 +163,27 @@ export default function ResumeBuilderPage() {
     window.print();
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.type !== 'application/pdf') {
+        alert('Please upload a valid PDF file.');
+        return;
+      }
+      setPdfFile(file);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setPdfBase64(event.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const clearPdfFile = () => {
+    setPdfFile(null);
+    setPdfBase64('');
+  };
+
   const handleScan = async () => {
     if (!targetJobTitle.trim()) {
       alert("Please enter a target job title.");
@@ -175,7 +199,8 @@ export default function ResumeBuilderPage() {
           "Content-Type": "application/json",
           },
         body: JSON.stringify({
-          resumeData,
+          resumeData: scanSource === 'current' ? resumeData : null,
+          pdfData: scanSource === 'upload' && pdfBase64 ? pdfBase64 : null,
           targetJobTitle
         })
       });
@@ -645,7 +670,7 @@ export default function ResumeBuilderPage() {
               </button>
             </div>
             
-            <div className="p-6 overflow-y-auto flex-1">
+            <div className="p-6 overflow-y-auto flex-1 no-scrollbar">
               {!scanResult ? (
                 <div className="space-y-4">
                   <p className="text-slate-600 dark:text-slate-400">
@@ -661,6 +686,58 @@ export default function ResumeBuilderPage() {
                       className="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-slate-900 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
                     />
                   </div>
+
+                  {/* Scan Source Toggle */}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Resume Source</label>
+                    <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl mb-4">
+                      <button
+                        type="button"
+                        onClick={() => setScanSource('current')}
+                        className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${scanSource === 'current' ? 'bg-white dark:bg-[#111827] text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                      >
+                        Built-in Resume
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setScanSource('upload')}
+                        className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${scanSource === 'upload' ? 'bg-white dark:bg-[#111827] text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                      >
+                        Upload PDF
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* PDF Upload Section */}
+                  {scanSource === 'upload' && (
+                    <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                      {!pdfFile ? (
+                        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-lg cursor-pointer bg-slate-50 dark:hover:bg-slate-800 dark:bg-[#0B0F19] hover:bg-slate-100 dark:border-slate-700 transition-colors">
+                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                            <Plus className="w-8 h-8 text-slate-400 mb-2" />
+                            <p className="text-sm text-slate-500 dark:text-slate-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">PDF ONLY</p>
+                          </div>
+                          <input type="file" accept="application/pdf" className="hidden" onChange={handleFileChange} />
+                        </label>
+                      ) : (
+                        <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg text-blue-600 dark:text-blue-400">
+                              <CheckCircle2 className="w-5 h-5" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-bold text-slate-900 dark:text-white">{pdfFile.name}</p>
+                              <p className="text-xs text-slate-500">{(pdfFile.size / 1024 / 1024).toFixed(2)} MB • Ready to scan</p>
+                            </div>
+                          </div>
+                          <button onClick={clearPdfFile} className="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                            <X className="w-5 h-5" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                   <button 
                     onClick={handleScan}
                     disabled={scanning}

@@ -15,7 +15,8 @@ export default function ProjectsPage() {
     category: "Web Development",
     tags: "",
     repoUrl: "",
-    demoUrl: ""
+    demoUrl: "",
+    lookingForContributors: false
   });
 
   const fetchProjects = async () => {
@@ -53,7 +54,7 @@ export default function ProjectsPage() {
 
       if (res.ok) {
         setIsModalOpen(false);
-        setFormData({ title: "", description: "", category: "Web Development", tags: "", repoUrl: "", demoUrl: "" });
+        setFormData({ title: "", description: "", category: "Web Development", tags: "", repoUrl: "", demoUrl: "", lookingForContributors: false });
         fetchProjects();
       } else {
         const err = await res.json();
@@ -99,10 +100,10 @@ export default function ProjectsPage() {
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-slate-400" />
           <select className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium">
-            <option value="">All Categories</option>
-            <option value="Web Development">Web Development</option>
-            <option value="Mobile App">Mobile App</option>
-            <option value="AI/ML">AI/ML</option>
+            <option value="" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">All Categories</option>
+            <option value="Web Development" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">Web Development</option>
+            <option value="Mobile App" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">Mobile App</option>
+            <option value="AI/ML" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">AI/ML</option>
           </select>
         </div>
       </div>
@@ -120,10 +121,17 @@ export default function ProjectsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
             <div key={project.id} className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow group flex flex-col h-full">
-              <div className="flex items-start justify-between mb-4">
-                <span className="inline-block px-2.5 py-1 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 text-xs font-semibold rounded-full">
-                  {project.category}
-                </span>
+              <div className="flex items-start justify-between mb-4 gap-2 flex-wrap">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-block px-2.5 py-1 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 text-xs font-semibold rounded-full">
+                    {project.category}
+                  </span>
+                  {project.lookingForContributors && (
+                    <span className="inline-block px-2.5 py-1 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 text-xs font-semibold rounded-full border border-emerald-200 dark:border-emerald-800">
+                      Looking for Contributors
+                    </span>
+                  )}
+                </div>
                 <div className="flex items-center gap-3 text-slate-400 text-xs font-medium">
                   <span className="flex items-center gap-1 hover:text-blue-500 transition-colors cursor-pointer"><ThumbsUp className="w-3 h-3" /> {project.likes}</span>
                   <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {project.views}</span>
@@ -154,8 +162,9 @@ export default function ProjectsPage() {
                 
                 <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   {project.repoUrl && (
-                    <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg transition-colors">
+                    <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-1.5 p-1.5 ${project.lookingForContributors ? 'px-3 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'} rounded-lg transition-colors`}>
                       <GitBranch className="w-4 h-4" />
+                      {project.lookingForContributors && <span className="text-xs font-bold">Contribute</span>}
                     </a>
                   )}
                   {project.demoUrl && (
@@ -173,7 +182,7 @@ export default function ProjectsPage() {
       {/* Create Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto border border-slate-200 dark:border-slate-800">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto no-scrollbar border border-slate-200 dark:border-slate-800">
             <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center sticky top-0 bg-white dark:bg-slate-900 z-10">
               <h2 className="text-xl font-bold">Create New Project</h2>
               <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
@@ -193,17 +202,29 @@ export default function ProjectsPage() {
                 <div>
                   <label className="block text-sm font-medium mb-1.5 text-slate-700 dark:text-slate-300">Category</label>
                   <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-sm">
-                    <option>Web Development</option>
-                    <option>Mobile App</option>
-                    <option>AI/ML</option>
-                    <option>UI/UX Design</option>
-                    <option>Other</option>
+                    <option className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">Web Development</option>
+                    <option className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">Mobile App</option>
+                    <option className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">AI/ML</option>
+                    <option className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">UI/UX Design</option>
+                    <option className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">Other</option>
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1.5 text-slate-700 dark:text-slate-300">Tags (comma separated)</label>
                   <input type="text" value={formData.tags} onChange={e => setFormData({...formData, tags: e.target.value})} className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-sm" placeholder="React, Node, Figma" />
                 </div>
+              </div>
+              <div className="mb-2 flex items-center gap-2">
+                <input 
+                  type="checkbox" 
+                  id="lookingForContributors"
+                  checked={formData.lookingForContributors} 
+                  onChange={e => setFormData({...formData, lookingForContributors: e.target.checked})} 
+                  className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer"
+                />
+                <label htmlFor="lookingForContributors" className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
+                  I am looking for contributors
+                </label>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>

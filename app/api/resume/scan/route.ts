@@ -15,30 +15,56 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { resumeData, targetJobTitle } = body;
+    const { resumeData, targetJobTitle, pdfData } = body;
 
-    if (!resumeData || !targetJobTitle) {
+    if (!targetJobTitle) {
       return NextResponse.json(
-        { message: 'Missing resume data or target job title.' },
+        { message: 'Missing target job title.' },
         { status: 400 }
       );
     }
 
-    // Initialize the model
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });
+    // Initialize the model - 3.5-flash supports PDF inline data natively
+    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' });
 
-    const prompt = getResumeScanPrompt(resumeData, targetJobTitle);
+    let promptParts: any[] = [];
+    const basePromptText = `You are an expert technical recruiter and an advanced ATS (Applicant Tracking System). Analyze the provided resume against the target job title: "${targetJobTitle}".
+Provide your analysis in the following strict JSON format (do not include markdown block formatting, just the raw JSON object):
+{
+  "score": <A number out of 100 representing the ATS match, e.g., 85>,
+  "gaps": ["List of 3-5 specific missing skills, keywords, or experiences required for this role"],
+  "suggestions": ["List of 3-5 actionable suggestions to improve the resume for this specific role"]
+}`;
 
-    if (prompt.length / 4 > 2000) {
-      console.warn('[AI_TOKEN_WARNING] Resume scan prompt exceeds 2000 tokens.');
+    if (pdfData) {
+      // The frontend sends base64 data. Ensure prefix is removed if present.
+      const base64Content = pdfData.includes('base64,') ? pdfData.split('base64,')[1] : pdfData;
+      
+      promptParts = [
+        {
+          inlineData: {
+            data: base64Content,
+            mimeType: 'application/pdf'
+          }
+        },
+        basePromptText
+      ];
+    } else if (resumeData) {
+      // Fallback to text prompt
+      const textPrompt = getResumeScanPrompt(resumeData, targetJobTitle);
+      promptParts = [textPrompt];
+    } else {
+      return NextResponse.json(
+        { message: 'Missing resume data or PDF file.' },
+        { status: 400 }
+      );
     }
 
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent(promptParts);
     const response = await result.response;
     const text = response.text();
     
     // Parse the JSON response
-    // Sometimes Gemini wraps JSON in markdown blocks like \`\`\`json ... \`\`\`
     let cleanJson = text.trim();
     if (cleanJson.startsWith('```json')) {
       cleanJson = cleanJson.replace(/^```json/, '').replace(/```$/, '').trim();
@@ -61,7 +87,7 @@ export async function POST(req: Request) {
     // Graceful Fallback
     const fallbackResult = {
       score: 50,
-      gaps: ["Analysis failed due to an AI error.", "Ensure your API key is active."],
+      gaps: ["Analysis failed due to an AI error.", "Ensure your API key is active and supports PDF parsing if using PDF."],
       suggestions: ["Try breaking your resume into smaller sections.", "Try scanning again later."]
     };
 

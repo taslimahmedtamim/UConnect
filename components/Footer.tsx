@@ -28,7 +28,7 @@ export default function Footer() {
           {/* Brand Info (2 columns wide) */}
           <div className="md:col-span-2 space-y-4">
             <Link href="/" className="inline-flex items-center gap-2.5 text-xl font-bold text-white">
-              <img src="/favicon.svg" alt="UConnect Logo" className="w-8 h-8 object-contain" />
+              <Zap className="w-8 h-8 text-blue-600" fill="currentColor" />
               <span className="font-extrabold tracking-tight">UConnect<span className="text-blue-500">.</span></span>
             </Link>
 

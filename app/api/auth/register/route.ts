@@ -25,11 +25,26 @@ export async function POST(req: Request) {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
+    const baseUsername = fullName.toLowerCase().replace(/[^a-z0-9_]/g, '').substring(0, 20) || 'user';
+    let username = baseUsername;
+    let isUnique = false;
+    let counter = 0;
+    while (!isUnique) {
+      const existing = await prisma.user.findUnique({ where: { username } });
+      if (!existing) {
+        isUnique = true;
+      } else {
+        counter++;
+        username = `${baseUsername}${counter}`;
+      }
+    }
+
     const user = await prisma.user.create({
       data: {
         email,
         passwordHash,
         fullName,
+        username,
         role
       }
     });

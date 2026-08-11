@@ -37,18 +37,19 @@ export default function Navbar() {
           </button>
 
           {!showSidebar && (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 ml-2">
               <Link 
                 href="/login" 
-                className={`text-sm font-medium transition-colors ${pathname === '/login' ? 'text-blue-600' : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'}`}
+                className={`text-sm font-semibold transition-all duration-300 ${pathname === '/login' ? 'text-blue-600' : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:-translate-y-0.5'}`}
               >
                 Log in
               </Link>
               <Link 
                 href="/register" 
-                className="text-sm font-medium px-4 py-2 rounded-full bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 transition-colors"
+                className="group relative inline-flex items-center justify-center px-5 py-2 text-sm font-semibold text-white transition-all duration-300 ease-in-out bg-slate-900 dark:bg-white dark:text-slate-900 rounded-full hover:shadow-lg hover:shadow-slate-900/20 dark:hover:shadow-white/20 hover:-translate-y-0.5 overflow-hidden"
               >
-                Get Started
+                <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
+                <span className="relative">Get Started</span>
               </Link>
             </div>
           )}

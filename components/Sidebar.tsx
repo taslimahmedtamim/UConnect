@@ -45,7 +45,7 @@ export default function Sidebar() {
         { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
         { label: "Projects", href: "/projects", icon: FolderOpen },
         { label: "Teams", href: "/teams", icon: Users },
-        { label: "Opportunities", href: "/opportunities", icon: Briefcase, badge: "24" },
+        { label: "Opportunities", href: "/opportunities", icon: Briefcase },
       ]
     },
     {
@@ -59,7 +59,6 @@ export default function Sidebar() {
     {
       title: "Community",
       items: [
-        { label: "Showcase", href: "/showcase", icon: MonitorPlay },
         { label: "Leaderboard", href: "/leaderboard", icon: Trophy },
         { label: "Mentors", href: "/mentors", icon: GraduationCap },
       ]
@@ -67,7 +66,7 @@ export default function Sidebar() {
     {
       title: "Support",
       items: [
-        { label: "Messages", href: "/messages", icon: MessageSquare, badge: "3" },
+        { label: "Messages", href: "/messages", icon: MessageSquare },
         { label: "Help Board", href: "/help", icon: HelpCircle },
       ]
     }
