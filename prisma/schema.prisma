@@ -55,6 +55,8 @@ model Project {
   demoUrl     String?
   likes       Int      @default(0)
   views       Int      @default(0)
+  rating      Float    @default(4.8)
+  featured    Boolean  @default(false)
   status      String   @default("In Progress")
   progress    Int      @default(10)
   createdAt   DateTime @default(now())
