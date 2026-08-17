@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import AppLayout from "@/components/AppLayout";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { UserProvider } from "@/components/UserProvider";
+import GlobalAIAssistant from "@/components/GlobalAIAssistant";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "UConnect 2.0 | AI Career & Team Ecosystem",
+  title: "UConnect | AI Career & Team Ecosystem",
   description: "AI-driven platform for team matchmaking, resumes, and jobs.",
 };
 
@@ -31,12 +33,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100`}
       >
         <ThemeProvider>
-          <Navbar />
-          <main className="flex-grow">
-            <AppLayout>
-              {children}
-            </AppLayout>
-          </main>
+          <UserProvider>
+            <Navbar />
+            <main className="flex-grow">
+              <AppLayout>
+                {children}
+              </AppLayout>
+            </main>
+            <GlobalAIAssistant />
+          </UserProvider>
         </ThemeProvider>
       </body>
     </html>

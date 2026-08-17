@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { 
   Sparkles, Download, Plus, X, Edit3, Briefcase, GraduationCap, 
   Code, Award, Globe, Link as LinkIcon, User, CheckCircle2, AlertCircle, ChevronDown, ChevronUp,
-  Shield, Code2, MapPin, Phone, Mail
+  Shield, Code2, MapPin, Phone, Mail, Wand2
 } from "lucide-react";
 
 const GithubIcon = ({ className }: { className?: string }) => (
@@ -36,6 +36,8 @@ export default function ResumeBuilderPage() {
     achievements: false
   });
 
+  const [improvingText, setImprovingText] = useState<{ field: string, index?: number } | null>(null);
+
   // Resume Data State
   const [resumeData, setResumeData] = useState({
     fullName: "",
@@ -46,8 +48,7 @@ export default function ResumeBuilderPage() {
     portfolio: "",
     linkedin: "",
     github: "",
-    tryhackme: "",
-    codeforces: "",
+    customLinks: [] as { name: string, url: string }[],
     summary: "",
     photo: "",
     skills: [] as string[],
@@ -93,8 +94,7 @@ export default function ResumeBuilderPage() {
           portfolio: "",
           linkedin: "",
           github: user.githubUsername || "",
-          tryhackme: "",
-          codeforces: "",
+          customLinks: [],
           summary: user.bio || "",
           photo: user.profileImage || "",
           skills: user.skills || [],
@@ -116,7 +116,12 @@ export default function ResumeBuilderPage() {
             endDate: e.duration?.split(" - ")[1] || "",
             description: e.description
           })) : [],
-          projects: []
+          projects: user.projects ? user.projects.map((p: any) => ({
+            title: p.title || "",
+            tools: p.tags ? (Array.isArray(p.tags) ? p.tags.join(", ") : p.tags) : "",
+            link: p.repoUrl || p.demoUrl || "",
+            description: p.description || ""
+          })) : []
         });
       } catch (error) {
         console.error(error);
@@ -133,17 +138,12 @@ export default function ResumeBuilderPage() {
     setResumeData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleArrayStringChange = (field: string, value: string) => {
-    const arr = value.split(",").map(s => s.trim()).filter(s => s);
-    setResumeData(prev => ({ ...prev, [field]: arr }));
-  };
-
   // Generic Handlers for arrays of objects
-  const addArrayItem = (field: 'experience' | 'education' | 'projects' | 'achievements', emptyObj: any) => {
+  const addArrayItem = (field: 'experience' | 'education' | 'projects' | 'achievements' | 'customLinks', emptyObj: any) => {
     setResumeData(prev => ({ ...prev, [field]: [emptyObj, ...prev[field]] }));
   };
 
-  const updateArrayItem = (field: 'experience' | 'education' | 'projects' | 'achievements', index: number, key: string, value: string) => {
+  const updateArrayItem = (field: 'experience' | 'education' | 'projects' | 'achievements' | 'customLinks', index: number, key: string, value: string) => {
     setResumeData(prev => {
       const newArray = [...prev[field]];
       newArray[index] = { ...newArray[index], [key]: value };
@@ -151,7 +151,27 @@ export default function ResumeBuilderPage() {
     });
   };
 
-  const removeArrayItem = (field: 'experience' | 'education' | 'projects' | 'achievements', index: number) => {
+  const removeArrayItem = (field: 'experience' | 'education' | 'projects' | 'achievements' | 'customLinks', index: number) => {
+    setResumeData(prev => {
+      const newArray = [...prev[field]];
+      newArray.splice(index, 1);
+      return { ...prev, [field]: newArray };
+    });
+  };
+
+  const addStringArrayItem = (field: 'skills' | 'languages' | 'certifications') => {
+    setResumeData(prev => ({ ...prev, [field]: [...prev[field], ""] }));
+  };
+
+  const updateStringArrayItem = (field: 'skills' | 'languages' | 'certifications', index: number, value: string) => {
+    setResumeData(prev => {
+      const newArray = [...prev[field]];
+      newArray[index] = value;
+      return { ...prev, [field]: newArray };
+    });
+  };
+
+  const removeStringArrayItem = (field: 'skills' | 'languages' | 'certifications', index: number) => {
     setResumeData(prev => {
       const newArray = [...prev[field]];
       newArray.splice(index, 1);
@@ -161,6 +181,42 @@ export default function ResumeBuilderPage() {
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleImproveWithAI = async (field: 'summary' | 'experience' | 'projects', index?: number) => {
+    let currentText = "";
+    if (field === 'summary') currentText = resumeData.summary;
+    else if (field === 'experience' && index !== undefined) currentText = resumeData.experience[index].description;
+    else if (field === 'projects' && index !== undefined) currentText = resumeData.projects[index].description;
+
+    if (!currentText.trim()) {
+      alert("Please enter some text first.");
+      return;
+    }
+
+    setImprovingText({ field, index });
+    try {
+      const res = await fetch("/api/resume/improve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: currentText, context: field })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to improve text");
+
+      if (field === 'summary') {
+        handleInputChange('summary', data.result);
+      } else if (field === 'experience' && index !== undefined) {
+        updateArrayItem('experience', index, 'description', data.result);
+      } else if (field === 'projects' && index !== undefined) {
+        updateArrayItem('projects', index, 'description', data.result);
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message);
+    } finally {
+      setImprovingText(null);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -308,7 +364,7 @@ export default function ResumeBuilderPage() {
               <User className="w-4 h-4 text-blue-500" />
               <h3 className="font-semibold text-slate-900 dark:text-white">Personal Information</h3>
             </div>
-            <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-5 flex flex-col gap-4">
               <div>
                 <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Full Name</label>
                 <input type="text" value={resumeData.fullName} onChange={e => handleInputChange('fullName', e.target.value)} className="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 outline-none" />
@@ -341,40 +397,127 @@ export default function ResumeBuilderPage() {
                 <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Portfolio URL</label>
                 <input type="url" value={resumeData.portfolio} onChange={e => handleInputChange('portfolio', e.target.value)} className="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 outline-none" />
               </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">TryHackMe URL</label>
-                <input type="url" value={resumeData.tryhackme} onChange={e => handleInputChange('tryhackme', e.target.value)} className="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 outline-none" />
+            </div>
+
+            {/* Custom Links */}
+            <div className="px-5 pb-5">
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-xs font-medium text-slate-500 dark:text-slate-400">Custom Links (LeetCode, etc.)</label>
+                <button onClick={() => addArrayItem('customLinks', { name: "", url: "" })} className="text-[11px] bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded font-medium transition-colors">
+                  + Add Link
+                </button>
               </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Codeforces URL</label>
-                <input type="url" value={resumeData.codeforces} onChange={e => handleInputChange('codeforces', e.target.value)} className="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 outline-none" />
+              <div className="space-y-2">
+                {resumeData.customLinks.map((link, idx) => (
+                  <div key={idx} className="flex gap-2 items-center">
+                    <input type="text" value={link.name} onChange={e => updateArrayItem('customLinks', idx, 'name', e.target.value)} placeholder="Name (e.g. Medium)" className="w-1/3 bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-1.5 text-xs text-slate-900 dark:text-white focus:border-blue-500 outline-none" />
+                    <input type="url" value={link.url} onChange={e => updateArrayItem('customLinks', idx, 'url', e.target.value)} placeholder="URL" className="flex-1 bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-1.5 text-xs text-slate-900 dark:text-white focus:border-blue-500 outline-none" />
+                    <button onClick={() => removeArrayItem('customLinks', idx)} className="p-1.5 text-slate-400 hover:text-red-500">
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
               </div>
+            </div>
+
+            <div className="px-5 pb-5">
               <div className="md:col-span-2">
-                <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Profile Summary</label>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="block text-xs font-medium text-slate-500 dark:text-slate-400">Profile Summary</label>
+                  <button 
+                    onClick={() => handleImproveWithAI('summary')}
+                    disabled={improvingText?.field === 'summary' || !resumeData.summary.trim()}
+                    className="flex items-center gap-1 text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 disabled:opacity-50"
+                  >
+                    <Wand2 className="w-3 h-3" />
+                    {improvingText?.field === 'summary' ? 'Improving...' : 'Improve with AI'}
+                  </button>
+                </div>
                 <textarea value={resumeData.summary} onChange={e => handleInputChange('summary', e.target.value)} rows={3} className="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 outline-none resize-none" />
               </div>
             </div>
           </div>
 
-          {/* Simple Lists: Skills, Languages, Certs */}
+
+
+          {/* Skills Array */}
           <div className="bg-white dark:bg-[#111827] rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-            <div className="bg-slate-50 dark:bg-[#1F2937] px-5 py-3 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
-              <Code className="w-4 h-4 text-emerald-500" />
-              <h3 className="font-semibold text-slate-900 dark:text-white">Quick Lists (Comma separated)</h3>
+            <div className="bg-slate-50 dark:bg-[#1F2937] px-5 py-3 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Code className="w-4 h-4 text-green-500" />
+                <h3 className="font-semibold text-slate-900 dark:text-white">Technical Skills</h3>
+              </div>
+              <button onClick={() => addStringArrayItem('skills')} className="text-xs bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg font-medium transition-colors">
+                + Add
+              </button>
             </div>
-            <div className="p-5 space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Skills</label>
-                <input type="text" value={resumeData.skills.join(", ")} onChange={e => handleArrayStringChange('skills', e.target.value)} className="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 outline-none" placeholder="JavaScript, Python, React..." />
+            <div className="p-5 space-y-2">
+              {resumeData.skills.map((skill: any, idx) => {
+                const skillStr = typeof skill === 'string' ? skill : (skill.name || '');
+                return (
+                  <div key={idx} className="flex gap-2 items-center">
+                    <input type="text" value={skillStr} onChange={e => updateStringArrayItem('skills', idx, e.target.value)} placeholder="e.g. Frontend: React, Next.js, Tailwind" className="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 outline-none" />
+                    <button onClick={() => removeStringArrayItem('skills', idx)} className="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                );
+              })}
+              {resumeData.skills.length === 0 && <p className="text-sm text-slate-500 text-center italic">No skills added.</p>}
+            </div>
+          </div>
+
+          {/* Certifications Array */}
+          <div className="bg-white dark:bg-[#111827] rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+            <div className="bg-slate-50 dark:bg-[#1F2937] px-5 py-3 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Award className="w-4 h-4 text-yellow-500" />
+                <h3 className="font-semibold text-slate-900 dark:text-white">Certifications</h3>
               </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Languages</label>
-                <input type="text" value={resumeData.languages.join(", ")} onChange={e => handleArrayStringChange('languages', e.target.value)} className="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 outline-none" placeholder="English, Bengali, Spanish..." />
+              <button onClick={() => addStringArrayItem('certifications')} className="text-xs bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg font-medium transition-colors">
+                + Add
+              </button>
+            </div>
+            <div className="p-5 space-y-2">
+              {resumeData.certifications.map((cert: any, idx) => {
+                const certStr = typeof cert === 'string' ? cert : (cert.name || '');
+                return (
+                  <div key={idx} className="flex gap-2 items-center">
+                    <input type="text" value={certStr} onChange={e => updateStringArrayItem('certifications', idx, e.target.value)} placeholder="e.g. AWS Certified Solutions Architect - 2024" className="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 outline-none" />
+                    <button onClick={() => removeStringArrayItem('certifications', idx)} className="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                );
+              })}
+              {resumeData.certifications.length === 0 && <p className="text-sm text-slate-500 text-center italic">No certifications added.</p>}
+            </div>
+          </div>
+
+          {/* Languages Array */}
+          <div className="bg-white dark:bg-[#111827] rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+            <div className="bg-slate-50 dark:bg-[#1F2937] px-5 py-3 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Globe className="w-4 h-4 text-teal-500" />
+                <h3 className="font-semibold text-slate-900 dark:text-white">Languages</h3>
               </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Certifications</label>
-                <input type="text" value={resumeData.certifications.join(", ")} onChange={e => handleArrayStringChange('certifications', e.target.value)} className="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 outline-none" placeholder="AWS Cloud Practitioner, CCNA..." />
-              </div>
+              <button onClick={() => addStringArrayItem('languages')} className="text-xs bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg font-medium transition-colors">
+                + Add
+              </button>
+            </div>
+            <div className="p-5 space-y-2">
+              {resumeData.languages.map((lang: any, idx) => {
+                const langStr = typeof lang === 'string' ? lang : (lang.name || '');
+                return (
+                  <div key={idx} className="flex gap-2 items-center">
+                    <input type="text" value={langStr} onChange={e => updateStringArrayItem('languages', idx, e.target.value)} placeholder="e.g. English (Fluent)" className="w-full bg-slate-50 dark:bg-[#0B0F19] border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 outline-none" />
+                    <button onClick={() => removeStringArrayItem('languages', idx)} className="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                );
+              })}
+              {resumeData.languages.length === 0 && <p className="text-sm text-slate-500 text-center italic">No languages added.</p>}
             </div>
           </div>
 
@@ -431,7 +574,20 @@ export default function ResumeBuilderPage() {
                     <input type="text" value={exp.role} onChange={e => updateArrayItem('experience', idx, 'role', e.target.value)} placeholder="Job Title / Role" className="w-full bg-transparent border-b border-slate-300 dark:border-slate-700 focus:border-blue-500 outline-none text-sm pb-1" />
                     <input type="text" value={exp.startDate} onChange={e => updateArrayItem('experience', idx, 'startDate', e.target.value)} placeholder="Start Date" className="w-full bg-transparent border-b border-slate-300 dark:border-slate-700 focus:border-blue-500 outline-none text-sm pb-1" />
                     <input type="text" value={exp.endDate} onChange={e => updateArrayItem('experience', idx, 'endDate', e.target.value)} placeholder="End Date" className="w-full bg-transparent border-b border-slate-300 dark:border-slate-700 focus:border-blue-500 outline-none text-sm pb-1" />
-                    <textarea value={exp.description} onChange={e => updateArrayItem('experience', idx, 'description', e.target.value)} placeholder="Impact, responsibilities, and achievements." rows={3} className="w-full bg-transparent border border-slate-300 dark:border-slate-700 rounded focus:border-blue-500 outline-none text-sm p-2 col-span-2 resize-none mt-2" />
+                    <div className="col-span-2 mt-2">
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="text-xs text-slate-500">Description</label>
+                        <button 
+                          onClick={() => handleImproveWithAI('experience', idx)}
+                          disabled={improvingText?.field === 'experience' && improvingText.index === idx || !exp.description.trim()}
+                          className="flex items-center gap-1 text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 disabled:opacity-50"
+                        >
+                          <Wand2 className="w-3 h-3" />
+                          {improvingText?.field === 'experience' && improvingText.index === idx ? 'Improving...' : 'Improve with AI'}
+                        </button>
+                      </div>
+                      <textarea value={exp.description} onChange={e => updateArrayItem('experience', idx, 'description', e.target.value)} placeholder="Impact, responsibilities, and achievements." rows={3} className="w-full bg-transparent border border-slate-300 dark:border-slate-700 rounded focus:border-blue-500 outline-none text-sm p-2 resize-none" />
+                    </div>
                   </div>
                 </div>
               ))}
@@ -460,7 +616,20 @@ export default function ResumeBuilderPage() {
                     <input type="text" value={proj.title} onChange={e => updateArrayItem('projects', idx, 'title', e.target.value)} placeholder="Project Name" className="w-full bg-transparent border-b border-slate-300 dark:border-slate-700 focus:border-blue-500 outline-none text-sm pb-1" />
                     <input type="text" value={proj.tools} onChange={e => updateArrayItem('projects', idx, 'tools', e.target.value)} placeholder="Tech Stack (comma separated)" className="w-full bg-transparent border-b border-slate-300 dark:border-slate-700 focus:border-blue-500 outline-none text-sm pb-1" />
                     <input type="url" value={proj.link} onChange={e => updateArrayItem('projects', idx, 'link', e.target.value)} placeholder="Project Link / GitHub" className="w-full bg-transparent border-b border-slate-300 dark:border-slate-700 focus:border-blue-500 outline-none text-sm pb-1 col-span-2" />
-                    <textarea value={proj.description} onChange={e => updateArrayItem('projects', idx, 'description', e.target.value)} placeholder="Project description and your contribution." rows={2} className="w-full bg-transparent border border-slate-300 dark:border-slate-700 rounded focus:border-blue-500 outline-none text-sm p-2 col-span-2 resize-none mt-2" />
+                    <div className="col-span-2 mt-2">
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="text-xs text-slate-500">Description</label>
+                        <button 
+                          onClick={() => handleImproveWithAI('projects', idx)}
+                          disabled={improvingText?.field === 'projects' && improvingText.index === idx || !proj.description.trim()}
+                          className="flex items-center gap-1 text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 disabled:opacity-50"
+                        >
+                          <Wand2 className="w-3 h-3" />
+                          {improvingText?.field === 'projects' && improvingText.index === idx ? 'Improving...' : 'Improve with AI'}
+                        </button>
+                      </div>
+                      <textarea value={proj.description} onChange={e => updateArrayItem('projects', idx, 'description', e.target.value)} placeholder="Project description and your contribution." rows={2} className="w-full bg-transparent border border-slate-300 dark:border-slate-700 rounded focus:border-blue-500 outline-none text-sm p-2 resize-none" />
+                    </div>
                   </div>
                 </div>
               ))}
@@ -517,9 +686,12 @@ export default function ResumeBuilderPage() {
                 <div className="flex flex-wrap justify-center items-center gap-x-3 gap-y-1 text-sm text-black font-medium mt-1" style={{ fontSize: '11px' }}>
                   {resumeData.github && <a href={resumeData.github.startsWith('http') ? resumeData.github : `https://${resumeData.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 font-bold text-black no-underline hover:underline"><GithubIcon className="w-3 h-3 opacity-80" /> GitHub</a>}
                   {resumeData.linkedin && <a href={resumeData.linkedin.startsWith('http') ? resumeData.linkedin : `https://${resumeData.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 font-bold text-black no-underline hover:underline"><LinkedinIcon className="w-3 h-3 opacity-80" /> LinkedIn</a>}
-                  {resumeData.portfolio && <a href={resumeData.portfolio.startsWith('http') ? resumeData.portfolio : `https://${resumeData.portfolio}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 font-bold text-black no-underline hover:underline"><Globe className="w-3 h-3 opacity-80" /> Portfolio</a>}
-                  {resumeData.tryhackme && <a href={resumeData.tryhackme.startsWith('http') ? resumeData.tryhackme : `https://${resumeData.tryhackme}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 font-bold text-black no-underline hover:underline"><Shield className="w-3 h-3 opacity-80" /> TryHackMe</a>}
-                  {resumeData.codeforces && <a href={resumeData.codeforces.startsWith('http') ? resumeData.codeforces : `https://${resumeData.codeforces}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 font-bold text-black no-underline hover:underline"><Code2 className="w-3 h-3 opacity-80" /> Codeforces</a>}
+                  {resumeData.portfolio && <a href={resumeData.portfolio.startsWith('http') ? resumeData.portfolio : `https://${resumeData.portfolio}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 font-bold no-underline text-black"><Globe className="w-3 h-3 opacity-80" /> Portfolio</a>}
+                  {resumeData.customLinks && resumeData.customLinks.map((link, idx) => link.name && link.url && (
+                    <a key={idx} href={link.url.startsWith('http') ? link.url : `https://${link.url}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 font-bold no-underline text-black">
+                      <LinkIcon className="w-3 h-3 opacity-80" /> {link.name}
+                    </a>
+                  ))}
                 </div>
               </div>
 
@@ -536,9 +708,12 @@ export default function ResumeBuilderPage() {
                 <div className="mb-3">
                   <h2 className="text-[14px] font-bold text-black border-b border-black pb-[2px] mb-2">Technical Skills</h2>
                   <ul className="list-disc pl-5 text-[11.5px] space-y-[2px]">
-                    {resumeData.skills.map((skill, idx) => (
-                      <li key={idx} dangerouslySetInnerHTML={{ __html: skill.includes(':') ? `<strong>${skill.split(':')[0]}:</strong>${skill.substring(skill.indexOf(':') + 1)}` : skill }}></li>
-                    ))}
+                    {resumeData.skills.map((skill: any, idx) => {
+                      const skillStr = typeof skill === 'string' ? skill : (skill.name || '');
+                      return (
+                        <li key={idx} dangerouslySetInnerHTML={{ __html: skillStr.includes(':') ? `<strong>${skillStr.split(':')[0]}:</strong>${skillStr.substring(skillStr.indexOf(':') + 1)}` : skillStr }}></li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}

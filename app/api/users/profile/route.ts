@@ -26,12 +26,15 @@ export async function GET(req: Request) {
         profileImage: true,
         experience: true,
         certificates: true,
+        projects: true,
+        userRoadmap: true,
         createdAt: true,
       }
     });
 
     return NextResponse.json({ success: true, user: fullProfile });
   } catch (error: any) {
+    console.error("Profile API Error:", error);
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }
@@ -98,6 +101,8 @@ export async function PUT(req: Request) {
         profileImage: true,
         experience: true,
         certificates: true,
+        projects: true,
+        userRoadmap: true,
       }
     });
 

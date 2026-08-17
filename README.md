@@ -1,30 +1,33 @@
-# 🚀 UConnect 2.0 | AI Career & Team Ecosystem
+# 🚀 UConnect | AI Career & Team Ecosystem
 
-Welcome to **UConnect 2.0**, an advanced, AI-powered platform built to bridge the gap between talented individuals, teams, and career opportunities. UConnect acts as a comprehensive ecosystem for professional growth, offering everything from verified certifications to an interactive AI resume builder.
+Welcome to **UConnect**, an advanced, AI-powered platform built to bridge the gap between talented individuals, teams, and career opportunities. UConnect acts as a comprehensive ecosystem for professional growth, offering everything from interactive skill roadmapping to explainable AI job matches.
 
 ## ✨ Key Features
 
-### 👤 Dynamic Professional Profiles
-- **LinkedIn-Style Interface**: A clean, professional layout to showcase your skills, summary, and experience.
-- **Direct Image Uploads**: Seamlessly upload and update your profile picture.
-- **Verified Certifications**: Upload certificates with an associated transaction/reference ID; certificates with a valid ID are marked with a green verification tick.
+### 👤 Dynamic Professional Profiles & U-SkillMap
+- **Unified Identity**: A clean, professional layout to showcase your skills, projects, summary, and experience.
+- **U-SkillMap**: Visualize your technical domains using radar charts and matrices. Connects directly to Gemini AI to generate personalized learning roadmaps based on your target career goal.
 
-### 📄 Interactive AI Resume Builder
-- **Two-Pane Editor**: Build your resume using an intuitive form on the left while watching it render in real-time on a beautifully formatted A4 preview on the right.
-- **Classic Professional Templates**: Generates resumes with classic serif typography, structured bullet points, and clean separators.
-- **Native PDF Export**: Uses heavily optimized `@media print` CSS to strip UI elements and export pixel-perfect, text-searchable PDFs directly from the browser without relying on heavy third-party libraries.
-- **Rich Sections**: Dedicated sections for Experience, Education, Projects, and Achievements with smart bullet-point rendering.
+### 🧠 Career Command Center (Dashboard)
+- **Career Journey Tracker**: Visually track your progress through SkillMap, Projects, Resumes, and Jobs.
+- **Context-Aware AI Recommendation**: Using Gemini AI, your dashboard generates a daily focus and specific action items based on your exact skills and goals.
 
-### 🤖 Gemini AI Resume Scanner
-- Built-in Applicant Tracking System (ATS) simulator powered by Google's **Gemini 1.5 Flash**.
-- **Targeted Feedback**: Input a target job title, and the AI analyzes your entire resume to provide:
-  - An ATS Match Score (out of 100)
-  - Identified Missing Keywords and Skill Gaps
-  - Actionable Improvement Suggestions
+### 💡 AI Project Portfolio
+- **AI Project Generator**: Don't know what to build? The Gemini-powered AI Assistant generates complete, portfolio-ready project ideas with problem statements, recommended stacks, features, and difficulty ratings.
+- **Showcase**: Beautifully track and display your projects with visual progress bars and status indicators.
 
-### 💬 Team & Messaging Ecosystem
-- Collaborative team spaces with integrated messaging features to connect with mentors, teammates, and recruiters.
-- Discover opportunities, participate in projects, and collaborate in real time.
+### 👥 Smart Team Matchmaking
+- **Explainable Match Percentage**: Instantly calculate your match percentage against a team's required skills.
+- **Missing Skills Alert**: Highlights exactly what skills you are missing so you can jump back to U-SkillMap to learn them.
+- **Find My Ideal Team**: Surface only the teams where you have a strong skill match.
+
+### 💼 Opportunity Engine & AI Scoring
+- **Match Score UI**: Job cards feature visual match scores comparing your profile to job requirements.
+- **Skill Discovery Loop**: Click on a missing skill on a job posting to be taken straight to the SkillMap to add it to your learning path.
+- **AI Resume Review**: Built-in Applicant Tracking System (ATS) simulator evaluates your custom resume against specific job opportunities.
+
+### 🤖 Global UConnect AI Assistant
+- A floating global AI assistant accessible from any page. It securely inherits your entire profile context (skills, career goals, experience) to act as a hyper-personalized career advisor.
 
 ---
 
@@ -33,9 +36,9 @@ Welcome to **UConnect 2.0**, an advanced, AI-powered platform built to bridge th
 - **Frontend**: React 19, Tailwind CSS v4, Lucide React (Icons)
 - **Backend/API**: Next.js Route Handlers (`/api`)
 - **Database**: MySQL managed via Prisma ORM
-- **AI Integration**: `@google/generative-ai` SDK (Gemini API)
-- **Authentication**: JWT (JSON Web Tokens) & bcryptjs for secure password hashing
-- **File Storage**: Cloud object storage (e.g. Vercel Blob / Cloudinary / Supabase Storage) for avatars and certificates
+- **AI Integration**: `@google/generative-ai` SDK (Gemini API 3.5 Flash)
+- **Authentication**: Custom JWT (JSON Web Tokens) & bcryptjs
+- **State Management**: React Context (`UserProvider`, `ThemeProvider`)
 
 ---
 
@@ -44,7 +47,6 @@ Welcome to **UConnect 2.0**, an advanced, AI-powered platform built to bridge th
 ### Prerequisites
 - Node.js (v18 or higher)
 - MySQL server running locally or remotely
-- An object storage account (Vercel Blob, Cloudinary, or Supabase) for file uploads
 
 ### 1. Installation
 ```bash
@@ -56,18 +58,13 @@ npm install
 Create a `.env` file in the root directory and configure the following variables:
 ```env
 # Database Connection (MySQL)
-# Local dev example — in production, use your hosted MySQL connection string
-# (e.g. PlanetScale, TiDB Cloud, Railway), including SSL params if required
 DATABASE_URL="mysql://USER:PASSWORD@localhost:3306/uconnect_db"
 
 # Authentication Secret
 JWT_SECRET="your-super-secret-jwt-key"
 
-# Google Gemini API Key (For AI Resume Scanner)
+# Google Gemini API Key
 GEMINI_API_KEY="your-google-gemini-api-key"
-
-# File Storage (choose one provider and set its credentials)
-BLOB_READ_WRITE_TOKEN="your-vercel-blob-token"
 ```
 
 ### 3. Database Setup
@@ -86,11 +83,12 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to explore t
 ---
 
 ## 📂 Project Structure Highlights
-- `/app/resume` - The interactive two-pane resume builder and PDF exporter.
-- `/app/profile` - The dynamic user profile interface.
-- `/app/api/resume/scan` - The Gemini AI ATS scoring endpoint.
-- `/app/api/upload` - File upload handler (uploads to configured object storage).
-- `/prisma/schema.prisma` - Database models (Users, Certificates, Projects).
+- `/app/dashboard` - The Career Command Center.
+- `/app/projects` - AI Project Assistant and Portfolio.
+- `/app/teams` - Smart matchmaking algorithm and team cards.
+- `/app/opportunities` - Job board with explainable match scoring.
+- `/components/GlobalAIAssistant.tsx` - The floating contextual AI advisor.
+- `/prisma/schema.prisma` - Core data schema.
 
 ---
 

@@ -136,7 +136,7 @@ export default function Footer() {
         {/* Bottom Copyright & GitHub Contributors Strip */}
         <div className="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]">
           <div>
-            © {new Date().getFullYear()} <span className="font-bold text-white">UConnect 2.0</span>. Built for Students, Developers & Mentors.
+            © {new Date().getFullYear()} <span className="font-bold text-white">UConnect</span>. Built for Students, Developers & Mentors.
           </div>
 
           {/* Dynamic GitHub Contributors */}

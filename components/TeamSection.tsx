@@ -107,7 +107,7 @@ export default function TeamSection() {
             <Sparkles className="w-3.5 h-3.5 fill-blue-500" /> Core Engineering Team
           </div>
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
-            Meet the Builders Behind UConnect 2.0
+            Meet the Builders Behind UConnect
           </h2>
           <p className="text-sm text-slate-500 dark:text-slate-400">
             The full-stack developers and AI engineers driving innovation, skill mapping, and career matchmaking.

@@ -20,7 +20,8 @@ import {
   Moon,
   Sun,
   ChevronLeft,
-  Zap
+  Zap,
+  Bell
 } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 
@@ -135,6 +136,13 @@ export default function Sidebar() {
         
         <div className="flex items-center gap-1 shrink-0">
           <button 
+            className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors relative"
+            title="Notifications"
+          >
+            <Bell className="w-4 h-4" />
+            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+          </button>
+          <button 
             onClick={toggleTheme}
             className="p-1.5 text-slate-500 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
@@ -142,8 +150,10 @@ export default function Sidebar() {
             {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
           </button>
           <button 
-            onClick={() => {
-              localStorage.removeItem("token");
+            onClick={async () => {
+              try {
+                await fetch("/api/auth/logout", { method: "POST" });
+              } catch (e) {}
               localStorage.removeItem("user");
               window.location.href = "/login";
             }}

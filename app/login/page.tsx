@@ -45,9 +45,9 @@ export default function LoginPage() {
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       
       {/* Dynamic Background Elements */}
-      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/20 dark:bg-blue-600/20 rounded-full blur-[100px] pointer-events-none animate-pulse" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/20 dark:bg-indigo-600/20 rounded-full blur-[100px] pointer-events-none animate-pulse delay-1000" />
-      <div className="absolute top-[40%] right-[30%] w-[20%] h-[20%] bg-purple-500/10 dark:bg-purple-600/10 rounded-full blur-[80px] pointer-events-none animate-pulse delay-500" />
+      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 dark:bg-blue-600/10 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/10 dark:bg-indigo-600/10 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute top-[40%] right-[30%] w-[20%] h-[20%] bg-purple-500/5 dark:bg-purple-600/5 rounded-full blur-[60px] pointer-events-none" />
 
       <div className="max-w-md w-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50 dark:border-slate-800/50 z-10 transition-all duration-500 hover:shadow-blue-500/10 hover:border-blue-500/20">
         <div className="text-center mb-8">

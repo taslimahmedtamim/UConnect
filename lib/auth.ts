@@ -24,6 +24,9 @@ export async function getUserFromRequest(req: Request) {
   }
 }
 
-export function unauthorizedResponse() {
+export async function unauthorizedResponse() {
+  const cookieStore = await cookies();
+  cookieStore.delete('accessToken');
+  cookieStore.delete('refreshToken');
   return NextResponse.json({ error: 'Unauthorized', code: 'UNAUTHORIZED' }, { status: 401 });
 }

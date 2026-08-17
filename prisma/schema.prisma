@@ -47,6 +47,7 @@ model User {
   announcements              Announcement[] @relation("AnnouncementAuthor")
   pointsGiven                TeamPoint[]    @relation("PointsGiven")
   pointsReceived             TeamPoint[]    @relation("PointsReceived")
+  userRoadmap                UserRoadmap?
 }
 
 model Project {
@@ -66,6 +67,11 @@ model Project {
   progress    Int      @default(10)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  features             Json     @default("[]") // For AI generated task list [{title, completed}]
+  skillsDemonstrated   Json     @default("[]")
+  difficulty           String?
+  estimatedDuration    String?
 
   authorId String
   author   User   @relation(fields: [authorId], references: [id])
@@ -366,4 +372,19 @@ model OTP {
   createdAt DateTime @default(now())
 
   @@index([email])
+}
+
+model UserRoadmap {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  careerGoal   String
+  currentLevel String
+  learningTime String
+  learningGoal String
+  roadmapData  Json     // AI generated roadmap
+  progressData Json     // Progress, streaks, completed tasks, assessments
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

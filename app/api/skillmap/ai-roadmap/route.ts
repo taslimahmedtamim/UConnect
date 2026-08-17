@@ -3,6 +3,25 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
 
+export async function GET(req: Request) {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return unauthorizedResponse();
+
+    const userRoadmap = await prisma.userRoadmap.findUnique({
+      where: { userId: user.id }
+    });
+
+    if (!userRoadmap) {
+      return NextResponse.json({ success: true, roadmap: null });
+    }
+
+    return NextResponse.json({ success: true, roadmap: userRoadmap });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const user = await getUserFromRequest(req);
@@ -11,8 +30,17 @@ export async function POST(req: Request) {
     let body: any = {};
     try { body = await req.json(); } catch(e) {}
     
-    let targetRole = body.topic?.trim();
-    let currentSkillList = 'None listed yet';
+    // Check if body is passing full assessment or just topic fallback
+    const {
+      careerGoal,
+      currentLevel,
+      learningTime,
+      learningGoal,
+      existingSkills
+    } = body;
+
+    let targetRole = careerGoal?.trim() || body.topic?.trim();
+    let currentSkillList = existingSkills?.join(', ') || 'None listed yet';
     let requiredSkillsList = 'N/A';
 
     if (!targetRole) {
@@ -23,7 +51,7 @@ export async function POST(req: Request) {
 
       if (!userCareer || !userCareer.careerPath) {
         return NextResponse.json(
-          { success: false, message: 'Please provide a topic or choose a target career path first.' },
+          { success: false, message: 'Please provide a target career goal first.' },
           { status: 400 }
         );
       }
@@ -34,7 +62,7 @@ export async function POST(req: Request) {
         include: { skill: true }
       });
       currentSkillList = userSkills.map(us => `${us.skill.name} (Level ${us.level}/5)`).join(', ');
-      requiredSkillsList = userCareer.careerPath.skills.map(cps => `${cps.skill.name} (Required Importance: ${cps.importance}/5)`).join(', ');
+      requiredSkillsList = userCareer.careerPath.skills.map(cps => `${cps.skill.name} (Required: ${cps.importance}/5)`).join(', ');
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
@@ -45,40 +73,57 @@ export async function POST(req: Request) {
 
         const prompt = `
 You are an elite career mentor and AI tech coach.
-Generate a highly sequential, structured multi-phase learning roadmap for a student learning "${targetRole}".
+Generate a highly sequential, adaptive multi-phase learning roadmap for a student transitioning to "${targetRole}".
 
-STUDENT CURRENT SKILLS:
-${currentSkillList}
+ASSESSMENT PROFILE:
+- Target Role/Goal: ${targetRole}
+- Current Experience Level: ${currentLevel || 'Beginner'}
+- Daily Learning Time: ${learningTime || '1-2 hours/day'}
+- Primary Goal: ${learningGoal || 'Job Readiness'}
+- Already Known Skills: ${currentSkillList}
+${requiredSkillsList !== 'N/A' ? `\n- Market Requirements: ${requiredSkillsList}` : ''}
 
-TARGET ROLE/SKILL:
-${targetRole}
-${requiredSkillsList !== 'N/A' ? `\nREQUIREMENTS:\n${requiredSkillsList}` : ''}
+Based on what they ALREADY KNOW, skip those fundamentals. Focus on bridging the gap.
 
-Create a personalized 4-phase learning roadmap. Provide your response strictly in raw JSON (no markdown formatting, no code block markers) with this exact schema:
+Provide your response strictly in raw JSON (no markdown formatting, no \`\`\`json block markers) matching this exact structure:
 {
-  "targetRole": "${targetRole}",
-  "estimatedWeeks": 8,
-  "overview": "Short summary of the transition strategy and key focus areas",
-  "phases": [
+  "careerGoal": "${targetRole}",
+  "readinessScore": 42,
+  "skillGaps": [
+    { "skill": "Skill Name", "current": 40, "required": 90, "gap": "Large" }
+  ],
+  "roadmap": [
     {
       "phase": 1,
       "title": "Phase Title",
-      "duration": "2 Weeks",
-      "objective": "Primary goal for this phase",
+      "duration": "Estimated Duration",
+      "objective": "Primary goal",
       "skillsToFocus": ["Skill 1", "Skill 2"],
       "actionItems": [
         {
-          "task": "Specific actionable learning step (e.g. Learn React Hooks)",
-          "resourceTitle": "Title of the free resource to learn this",
+          "taskId": "unique-task-id",
+          "task": "Specific actionable learning step",
+          "estimatedTime": "2 hours",
+          "difficulty": "Beginner",
+          "resourceTitle": "Resource Title",
           "resourceUrl": "https://working-url-to-free-resource.com"
         }
       ],
-      "recommendedProject": "Hands-on mini project idea to practice these skills"
+      "recommendedProject": {
+        "title": "Project Title",
+        "description": "Short description",
+        "difficulty": "Intermediate",
+        "estimatedTime": "1 week",
+        "requiredSkills": ["Skill 1", "Skill 2"]
+      }
     }
-  ]
+  ],
+  "recommendations": ["Recommendation 1", "Recommendation 2"]
 }
 
-Make sure the 'resourceUrl' for each action item is SPECIFIC, FREE, and contains a real, working URL (e.g., links to freeCodeCamp, specific YouTube tutorials, or official documentation) that exactly matches the task.
+Make sure 'readinessScore' is an integer 0-100 reflecting how close they are to the goal based on current skills.
+For 'actionItems', use a unique 'taskId' (string). 
+Make 'resourceUrl' SPECIFIC, FREE, and real (e.g., freeCodeCamp, official docs).
 `;
 
         const result = await model.generateContent(prompt);
@@ -92,35 +137,42 @@ Make sure the 'resourceUrl' for each action item is SPECIFIC, FREE, and contains
         }
 
         const parsed = JSON.parse(text);
-        return NextResponse.json({ success: true, roadmap: parsed });
+
+        // Save to DB
+        const savedRoadmap = await prisma.userRoadmap.upsert({
+          where: { userId: user.id },
+          update: {
+            careerGoal: targetRole,
+            currentLevel: currentLevel || 'Unknown',
+            learningTime: learningTime || 'Unknown',
+            learningGoal: learningGoal || 'Unknown',
+            roadmapData: parsed,
+            // Keep existing progressData or initialize
+          },
+          create: {
+            userId: user.id,
+            careerGoal: targetRole,
+            currentLevel: currentLevel || 'Unknown',
+            learningTime: learningTime || 'Unknown',
+            learningGoal: learningGoal || 'Unknown',
+            roadmapData: parsed,
+            progressData: {
+              completedTasks: [],
+              completedProjects: [],
+              learningStreak: 0,
+              lastLearningDate: null
+            }
+          }
+        });
+
+        return NextResponse.json({ success: true, roadmap: savedRoadmap });
       } catch (aiErr: any) {
-        console.warn('Gemini AI Roadmap Error, falling back to rule-based roadmap:', aiErr.message);
+        console.warn('Gemini AI Roadmap Error:', aiErr.message);
+        return NextResponse.json({ success: false, message: 'AI generation failed: ' + aiErr.message }, { status: 500 });
       }
     }
 
-    // Heuristic fallback roadmap
-    const missingOrWeak = [targetRole];
-    const fallbackRoadmap = {
-      targetRole: targetRole,
-      estimatedWeeks: 6,
-      overview: `A targeted 6-week curriculum to master ${targetRole}.`,
-      phases: [
-        {
-          phase: 1,
-          title: "Foundations & Core Prerequisites",
-          duration: "Weeks 1-2",
-          objective: "Strengthen core fundamentals and essential tooling.",
-          skillsToFocus: missingOrWeak,
-          actionItems: [
-            { task: `Deep dive into syntax and patterns.`, resourceTitle: "freeCodeCamp", resourceUrl: "https://www.freecodecamp.org/" },
-            { task: `Configure local development environment.`, resourceTitle: "MDN Web Docs", resourceUrl: "https://developer.mozilla.org/" }
-          ],
-          recommendedProject: `Build a CLI or lightweight prototype.`
-        }
-      ]
-    };
-
-    return NextResponse.json({ success: true, roadmap: fallbackRoadmap, note: 'Generated with standard curriculum builder' });
+    return NextResponse.json({ success: false, message: 'Gemini API Key missing' }, { status: 500 });
 
   } catch (error: any) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });

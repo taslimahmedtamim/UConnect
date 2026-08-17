@@ -58,7 +58,11 @@ export async function POST(req: Request) {
     if (!user) return unauthorizedResponse();
 
     const data = await req.json();
-    const { title, description, category, tags, repoUrl, demoUrl, rating, lookingForContributors } = data;
+    const { 
+      title, description, category, tags, repoUrl, demoUrl, rating, 
+      lookingForContributors, status, progress, features, 
+      skillsDemonstrated, difficulty, estimatedDuration 
+    } = data;
 
     if (!title || !description) {
       return NextResponse.json({ success: false, message: 'Title and description are required' }, { status: 400 });
@@ -78,6 +82,12 @@ export async function POST(req: Request) {
         demoUrl: demoUrl ? demoUrl.trim() : null,
         lookingForContributors: Boolean(lookingForContributors),
         rating: rating ? Number(rating) : 4.8,
+        status: status || 'In Progress',
+        progress: progress ? Number(progress) : 10,
+        features: Array.isArray(features) ? features : [],
+        skillsDemonstrated: Array.isArray(skillsDemonstrated) ? skillsDemonstrated : [],
+        difficulty: difficulty || null,
+        estimatedDuration: estimatedDuration || null,
         authorId: user.id
       },
       include: {

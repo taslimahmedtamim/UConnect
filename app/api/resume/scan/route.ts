@@ -32,7 +32,12 @@ export async function POST(req: Request) {
 Provide your analysis in the following strict JSON format (do not include markdown block formatting, just the raw JSON object):
 {
   "score": <A number out of 100 representing the ATS match, e.g., 85>,
-  "gaps": ["List of 3-5 specific missing skills, keywords, or experiences required for this role"],
+  "gaps": ["List of 3-5 specific missing skills, experiences, or requirements for this role"],
+  "keywordAnalysis": {
+    "found": ["List of critical keywords found in the resume"],
+    "missing": ["List of critical keywords missing from the resume"]
+  },
+  "formattingIssues": ["List of 1-3 structural or formatting issues (e.g., 'Summary is too long', 'Lack of quantified metrics')"],
   "suggestions": ["List of 3-5 actionable suggestions to improve the resume for this specific role"]
 }`;
 
@@ -87,7 +92,9 @@ Provide your analysis in the following strict JSON format (do not include markdo
     // Graceful Fallback
     const fallbackResult = {
       score: 50,
-      gaps: ["Analysis failed due to an AI error.", "Ensure your API key is active and supports PDF parsing if using PDF."],
+      gaps: ["Analysis failed due to an AI error.", "Ensure your API key is active and supports PDF parsing if using PDF.", "Error detail: " + error.message],
+      keywordAnalysis: { found: [], missing: [] },
+      formattingIssues: ["Check formatting.", "Trace: " + (error.stack || "").substring(0, 200)],
       suggestions: ["Try breaking your resume into smaller sections.", "Try scanning again later."]
     };
 

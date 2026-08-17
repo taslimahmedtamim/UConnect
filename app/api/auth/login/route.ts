@@ -47,11 +47,11 @@ export async function POST(req: Request) {
 
     const secret = process.env.JWT_SECRET || 'fallback_secret';
     
-    // Short-lived access token (15m)
+    // Access token (7d)
     const accessToken = jwt.sign(
       { id: user.id, role: user.role, email: user.email },
       secret,
-      { expiresIn: '15m' }
+      { expiresIn: '7d' }
     );
 
     // Long-lived refresh token (7d)
