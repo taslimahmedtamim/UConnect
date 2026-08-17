@@ -58,7 +58,7 @@ export default function RegisterPage() {
       if (!res.ok) throw new Error(data.error || "Registration failed");
 
       localStorage.setItem("user", JSON.stringify(data.user));
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
     } catch (err: any) {
       setError(err.message);
     } finally {
