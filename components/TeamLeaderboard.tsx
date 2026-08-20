@@ -8,10 +8,16 @@ export default function TeamLeaderboard({ team, teamId, currentUser }: { team: a
   const [loading, setLoading] = useState(true);
   const [awarding, setAwarding] = useState<string | null>(null);
 
-  // Combine owner and members into a single array for easier mapping if points are 0
   const allMembers = [team.owner, ...team.members].filter(
     (v, i, a) => a.findIndex(t => t.id === v.id) === i
   );
+
+  const getRankBadge = (points: number) => {
+    if (points >= 50) return { title: "Expert", color: "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:border-yellow-800/50 dark:text-yellow-500", icon: "🏆" };
+    if (points >= 20) return { title: "Contributor", color: "bg-slate-200 text-slate-700 border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-300", icon: "🥈" };
+    if (points >= 5) return { title: "Novice", color: "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:border-orange-800/50 dark:text-orange-400", icon: "🥉" };
+    return { title: "Member", color: "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400", icon: "🌱" };
+  };
 
   const fetchLeaderboard = async () => {
     try {
@@ -41,36 +47,6 @@ export default function TeamLeaderboard({ team, teamId, currentUser }: { team: a
     fetchLeaderboard();
   }, [teamId]);
 
-  const awardPoint = async (receiverId: string) => {
-    if (!currentUser) return;
-    setAwarding(receiverId);
-    
-    try {
-      const res = await fetch(`/api/teams/${teamId}/points`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ receiverId })
-      });
-      const data = await res.json();
-      
-      if (data.success) {
-        // Optimistically update
-        setLeaderboard(prev => {
-          const updated = prev.map(item => 
-            item.user.id === receiverId ? { ...item, points: item.points + 1 } : item
-          );
-          return updated.sort((a, b) => b.points - a.points);
-        });
-      } else {
-        alert(data.message);
-      }
-    } catch (e) {
-      console.error("Failed to award point", e);
-    } finally {
-      setAwarding(null);
-    }
-  };
-
   const isMember = currentUser && (currentUser.id === team.owner.id || team.members.some((m: any) => m.id === currentUser.id));
 
   return (
@@ -80,8 +56,8 @@ export default function TeamLeaderboard({ team, teamId, currentUser }: { team: a
           <Trophy className="w-5 h-5 text-amber-500" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Peer Recognition Leaderboard</h2>
-          <p className="text-sm text-slate-500">Award points to teammates for their great work and support!</p>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Team Leaderboard</h2>
+          <p className="text-sm text-slate-500">Points are earned when your tasks are reviewed by a team lead!</p>
         </div>
       </div>
 
@@ -120,13 +96,20 @@ export default function TeamLeaderboard({ team, teamId, currentUser }: { team: a
                 </div>
                 
                 <div className="flex-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 mb-1">
                     <h4 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
                       {item.user.fullName}
                       {isMe && <span className="text-[10px] uppercase tracking-wider bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400 px-2 py-0.5 rounded-full">You</span>}
                     </h4>
                   </div>
-                  <p className="text-sm text-slate-500">{item.user.title || (item.user.id === team.ownerId ? 'Team Owner' : 'Member')}</p>
+                  
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-500">{item.user.title || (item.user.id === team.ownerId ? 'Team Owner' : 'Member')}</span>
+                    <span className="text-slate-300 dark:text-slate-700">•</span>
+                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${getRankBadge(item.points).color}`}>
+                      {getRankBadge(item.points).icon} {getRankBadge(item.points).title}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-4">
@@ -134,16 +117,6 @@ export default function TeamLeaderboard({ team, teamId, currentUser }: { team: a
                     <div className="text-2xl font-black text-slate-900 dark:text-white leading-none mb-1">{item.points}</div>
                     <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Points</div>
                   </div>
-                  
-                  {isMember && !isMe && (
-                    <button
-                      onClick={() => awardPoint(item.user.id)}
-                      disabled={awarding === item.user.id}
-                      className="flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 rounded-lg font-bold text-sm transition-colors shadow-sm disabled:opacity-50"
-                    >
-                      <Plus className="w-4 h-4" /> Award
-                    </button>
-                  )}
                 </div>
               </div>
             );

@@ -36,6 +36,20 @@ export async function GET(req: Request, { params }: { params: Promise<{ username
             requiredSkills: true,
             members: { select: { id: true } }
           }
+        },
+        projects: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            tags: true,
+            likes: true,
+            views: true,
+            repoUrl: true,
+            demoUrl: true,
+            createdAt: true
+          },
+          orderBy: { createdAt: 'desc' }
         }
         // Don't select sensitive info like email, passwordHash, etc.
       }

@@ -45,43 +45,27 @@ export async function GET(req: Request) {
 
     // Compute rankings for each user based on actual points
     const rankedUsers = users.map((u) => {
-      // 1. Peer Recognition Points (Each point awarded by peers = 100 XP)
-      const totalPeerPoints = u.pointsReceived?.reduce((acc, pt) => acc + (pt.points || 0), 0) || 0;
-      const peerScore = totalPeerPoints * 100;
+      // U Points: Points awarded by team members and mentors through tasks
+      const uPoints = u.pointsReceived?.reduce((acc, pt) => acc + (pt.points || 0), 0) || 0;
 
-      // 2. Skill proficiency score (sum of levels * 50)
-      const skillScore = u.userSkills.reduce((acc, us) => acc + (us.level || 0) * 50, 0);
-
-      // 3. Endorsements count & score (100 XP per endorsement)
-      const totalEndorsements = u.userSkills.reduce((acc, us) => acc + (us.endorsementCnt || us.endorsements?.length || 0), 0);
-      const endorsementScore = totalEndorsements * 100;
-
-      // 4. Projects score (200 XP per project + 15 XP per like)
-      const projectCount = u.projects.length;
-      const totalLikes = u.projects.reduce((acc, p) => acc + (p.likes || 0), 0);
-      const projectScore = projectCount * 200 + totalLikes * 15;
-
-      // Total UConnect XP - If they have no points/activity, it will be 0
-      const totalXp = peerScore + skillScore + endorsementScore + projectScore;
-
-      // Assign Tier Badge based on total XP
-      let tier = 'Bronze';
-      let badge = 'Novice';
-      if (totalXp >= 4000) {
+      // Assign Tier Badge based on U Points
+      let tier = 'Member';
+      let badge = 'Seed';
+      if (uPoints >= 100) {
         tier = 'Legendary';
         badge = 'Apex';
-      } else if (totalXp >= 2500) {
-        tier = 'Master';
-        badge = 'Master';
-      } else if (totalXp >= 1000) {
+      } else if (uPoints >= 50) {
         tier = 'Diamond';
-        badge = 'Pro';
-      } else if (totalXp >= 300) {
+        badge = 'Master';
+      } else if (uPoints >= 20) {
         tier = 'Gold';
         badge = 'Expert';
-      } else if (totalXp >= 100) {
+      } else if (uPoints >= 5) {
         tier = 'Silver';
-        badge = 'Intermediate';
+        badge = 'Contributor';
+      } else if (uPoints >= 1) {
+        tier = 'Bronze';
+        badge = 'Novice';
       }
 
       // Extract top 3 skill names
@@ -101,15 +85,7 @@ export async function GET(req: Request) {
         department: u.department,
         githubUsername: u.githubUsername,
         codeforcesUsername: u.codeforcesUsername,
-        peerScore,
-        totalPeerPoints,
-        skillScore,
-        endorsementScore,
-        projectScore,
-        totalEndorsements,
-        projectCount,
-        totalLikes,
-        totalXp,
+        uPoints,
         tier,
         badge,
         topSkills
@@ -117,10 +93,10 @@ export async function GET(req: Request) {
     });
 
     // Category Leaderboards
-    const overallLeaderboard = [...rankedUsers].sort((a, b) => b.totalXp - a.totalXp);
-    const skillsLeaderboard = [...rankedUsers].sort((a, b) => b.skillScore - a.skillScore);
-    const endorsementLeaderboard = [...rankedUsers].sort((a, b) => b.totalEndorsements - a.totalEndorsements);
-    const projectsLeaderboard = [...rankedUsers].sort((a, b) => b.projectScore - a.projectScore);
+    const overallLeaderboard = [...rankedUsers].sort((a, b) => b.uPoints - a.uPoints);
+    const skillsLeaderboard = [...rankedUsers].sort((a, b) => b.uPoints - a.uPoints); // Keeping for backward compatibility with UI if needed
+    const endorsementLeaderboard = [...rankedUsers].sort((a, b) => b.uPoints - a.uPoints);
+    const projectsLeaderboard = [...rankedUsers].sort((a, b) => b.uPoints - a.uPoints);
 
     // Current user position
     let currentUserRank = null;

@@ -54,7 +54,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     if (!user) return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
 
     const { id: teamId } = await params;
-    const { receiverId } = await req.json();
+    const { receiverId, points = 1 } = await req.json();
 
     if (!receiverId) {
       return NextResponse.json({ success: false, message: "Receiver ID is required" }, { status: 400 });
@@ -79,16 +79,16 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       return NextResponse.json({ success: false, message: "Both users must be members of the team" }, { status: 403 });
     }
 
-    const point = await (prisma as any).teamPoint.create({
+    const pointRecord = await (prisma as any).teamPoint.create({
       data: {
         teamId,
         giverId: user.id,
         receiverId,
-        points: 1
+        points: Number(points)
       }
     });
 
-    return NextResponse.json({ success: true, point });
+    return NextResponse.json({ success: true, point: pointRecord });
   } catch (error: any) {
     console.error("POST point error:", error);
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });

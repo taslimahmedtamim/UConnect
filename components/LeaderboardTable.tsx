@@ -12,7 +12,7 @@ type UserRank = {
   profileImage?: string | null;
   university?: string | null;
   department?: string | null;
-  totalXp: number;
+  uPoints: number;
   tier: string;
   badge: string;
   topSkills: string[];
@@ -46,7 +46,7 @@ export default function LeaderboardTable({ users, startIndex = 3 }: Props) {
                 <th className="p-4">Developer Profile</th>
                 <th className="p-4">Top Skills</th>
                 <th className="p-4 text-center">Tier</th>
-                <th className="p-4 text-right">UConnect XP</th>
+                <th className="p-4 text-right">Rep</th>
                 <th className="p-4 text-right">Action</th>
               </tr>
             </thead>
@@ -120,7 +120,7 @@ export default function LeaderboardTable({ users, startIndex = 3 }: Props) {
 
                     {/* XP Score */}
                     <td className="p-4 text-right font-black text-sm text-blue-600 dark:text-blue-400">
-                      {user.totalXp.toLocaleString()} XP
+                      {user.uPoints.toLocaleString()} Rep
                     </td>
 
                     {/* Action */}

@@ -454,11 +454,10 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* PROGRESS & INSIGHTS GRID */}
+        {/* PROGRESS CARD */}
         {!isEditing && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="w-full">
             <CareerProgressCard user={user} />
-            <AICareerInsights user={user} />
           </div>
         )}
 
@@ -754,6 +753,13 @@ export default function ProfilePage() {
             )}
           </div>
         </div>
+
+        {/* AI CAREER INSIGHTS SECTION */}
+        {!isEditing && (
+          <div className="mt-8">
+            <AICareerInsights user={user} />
+          </div>
+        )}
 
       </div>
 

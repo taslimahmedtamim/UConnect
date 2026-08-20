@@ -35,7 +35,7 @@ export default function LeaderboardPage() {
     return (
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 flex flex-col items-center justify-center min-h-[60vh]">
         <div className="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="text-sm font-semibold text-slate-500">Calculating global XP standings...</p>
+        <p className="text-sm font-semibold text-slate-500">Calculating global Rep standings...</p>
       </div>
     );
   }
@@ -54,7 +54,6 @@ export default function LeaderboardPage() {
   });
 
   const topThree = filteredList.slice(0, 3);
-  const restUsers = filteredList.slice(3);
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 space-y-8">
@@ -89,7 +88,7 @@ export default function LeaderboardPage() {
                 <span>{currentUserRank.userData?.badge}</span>
               </div>
               <div className="text-xs text-blue-100 font-semibold mt-0.5">
-                {currentUserRank.userData?.totalXp?.toLocaleString()} XP • {currentUserRank.userData?.tier}
+                {currentUserRank.userData?.uPoints?.toLocaleString()} Rep • {currentUserRank.userData?.tier}
               </div>
             </div>
           </div>
@@ -100,7 +99,7 @@ export default function LeaderboardPage() {
       <div className="border-b border-slate-200 dark:border-slate-800">
         <nav className="flex space-x-8 overflow-x-auto no-scrollbar">
           {[
-            { id: 'overall', label: 'Overall UConnect XP', icon: Trophy },
+            { id: 'overall', label: 'Overall Rep', icon: Trophy },
             { id: 'skills', label: 'Skill Proficiency Ranks', icon: Zap },
             { id: 'endorsements', label: 'Most Endorsed Peers', icon: Award },
             { id: 'projects', label: 'Top Project Builders', icon: FolderOpen },
@@ -146,8 +145,8 @@ export default function LeaderboardPage() {
           <Flame className="w-5 h-5 text-amber-500" /> {searchTerm ? "Search Results" : "Full Standings"}
         </h3>
         <LeaderboardTable 
-          users={searchTerm ? filteredList : restUsers} 
-          startIndex={searchTerm ? 0 : 3} 
+          users={filteredList} 
+          startIndex={0} 
         />
       </div>
     </div>

@@ -18,6 +18,12 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
             department: true,
             university: true
           }
+        },
+        team: {
+          include: {
+            members: { select: { id: true, fullName: true, profileImage: true } },
+            owner: { select: { id: true, fullName: true, profileImage: true } }
+          }
         }
       }
     });
@@ -40,16 +46,20 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     const data = await req.json();
     const { id } = await params;
     
-    // Fetch the project to ensure the user is the author
+    // Fetch the project to ensure the user is the author or a team member
     const project = await prisma.project.findUnique({
-      where: { id }
+      where: { id },
+      include: { team: { include: { members: true } } }
     });
 
     if (!project) {
       return NextResponse.json({ success: false, message: 'Project not found' }, { status: 404 });
     }
 
-    if (project.authorId !== user.id) {
+    const isAuthor = project.authorId === user.id;
+    const isTeamMember = project.team && (project.team.ownerId === user.id || project.team.members.some(m => m.id === user.id));
+
+    if (!isAuthor && !isTeamMember) {
       return NextResponse.json({ success: false, message: 'Unauthorized to update this project' }, { status: 403 });
     }
 

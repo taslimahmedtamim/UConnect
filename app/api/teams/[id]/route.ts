@@ -14,7 +14,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
           include: {
             user: { select: { id: true, fullName: true, email: true, bio: true, skills: true } }
           }
-        }
+        },
+        projects: true
       }
     });
 

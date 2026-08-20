@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { Users, Code, CheckCircle, XCircle, BrainCircuit, Sparkles, MessageSquare, Megaphone } from "lucide-react";
 import TeamAnnouncements from "@/components/TeamAnnouncements";
 import TeamLeaderboard from "@/components/TeamLeaderboard";
+import TeamProjects from "@/components/TeamProjects";
 
 export default function TeamDetailsPage() {
   const router = useRouter();
@@ -17,6 +18,7 @@ export default function TeamDetailsPage() {
   const [joining, setJoining] = useState(false);
   const [actioning, setActioning] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
     const fetchTeam = async () => {
@@ -165,10 +167,34 @@ export default function TeamDetailsPage() {
         )}
       </div>
 
-      {/* Owner Management Area */}
-      {isOwner && team.joinRequests && team.joinRequests.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Pending Applications</h2>
+      {/* Tabs Navigation */}
+      <div className="flex overflow-x-auto gap-2 border-b border-slate-200 dark:border-slate-800 mb-8 pb-px">
+        <button 
+          onClick={() => setActiveTab("overview")}
+          className={`px-4 py-3 font-semibold text-sm border-b-2 transition-colors whitespace-nowrap ${activeTab === 'overview' ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700'}`}
+        >
+          Team Overview
+        </button>
+        <button 
+          onClick={() => setActiveTab("projects")}
+          className={`px-4 py-3 font-semibold text-sm border-b-2 transition-colors whitespace-nowrap ${activeTab === 'projects' ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700'}`}
+        >
+          Projects & Tasks
+        </button>
+        <button 
+          onClick={() => setActiveTab("leaderboard")}
+          className={`px-4 py-3 font-semibold text-sm border-b-2 transition-colors whitespace-nowrap flex items-center gap-2 ${activeTab === 'leaderboard' ? 'border-amber-500 text-amber-600 dark:border-amber-500 dark:text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700'}`}
+        >
+          Leaderboard 🏆
+        </button>
+      </div>
+
+      {activeTab === "overview" && (
+        <>
+          {/* Owner Management Area */}
+          {isOwner && team.joinRequests && team.joinRequests.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Pending Applications</h2>
           <div className="space-y-4">
             {team.joinRequests.filter((r:any) => r.status === 'pending').map((req: any) => (
               <div key={req.id} className="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row gap-6 items-start md:items-center">
@@ -245,9 +271,16 @@ export default function TeamDetailsPage() {
           </div>
         </div>
       )}
+      </>
+      )}
 
-      {/* Team Leaderboard */}
-      <TeamLeaderboard team={team} teamId={id as string} currentUser={currentUser} />
+      {activeTab === "projects" && (
+        <TeamProjects team={team} currentUser={currentUser} />
+      )}
+
+      {activeTab === "leaderboard" && (
+        <TeamLeaderboard team={team} teamId={id as string} currentUser={currentUser} />
+      )}
 
     </div>
   );

@@ -76,7 +76,11 @@ model Project {
   authorId String
   author   User   @relation(fields: [authorId], references: [id])
 
+  teamId   String?
+  team     Team?  @relation("TeamProjects", fields: [teamId], references: [id], onDelete: Cascade)
+
   @@index([authorId])
+  @@index([teamId])
 }
 
 model Opportunity {
@@ -111,9 +115,13 @@ model OpportunityApplication {
   opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
   student     User        @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
+  teamId      String?
+  team        Team?       @relation("TeamApplications", fields: [teamId], references: [id], onDelete: Cascade)
+
   @@unique([opportunityId, studentId])
   @@index([opportunityId])
   @@index([studentId])
+  @@index([teamId])
 }
 
 model Message {
@@ -152,6 +160,8 @@ model Team {
   messages     Message[]     @relation("TeamMessages")
   announcements Announcement[] @relation("TeamAnnouncements")
   teamPoints   TeamPoint[]
+  projects     Project[]     @relation("TeamProjects")
+  applications OpportunityApplication[] @relation("TeamApplications")
 
   @@index([ownerId])
 }

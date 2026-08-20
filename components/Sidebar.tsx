@@ -39,7 +39,9 @@ export default function Sidebar() {
     }
   }, []);
 
-  const navGroups = [
+  const userRole = (user?.role || "student").toLowerCase();
+
+  let navGroups = [
     {
       title: "Main",
       items: [
@@ -72,6 +74,52 @@ export default function Sidebar() {
       ]
     }
   ];
+
+  if (userRole === 'teacher' || userRole === 'mentor') {
+    navGroups = [
+      {
+        title: "Mentorship",
+        items: [
+          { label: "My Sessions", href: "/mentors", icon: GraduationCap },
+        ]
+      },
+      {
+        title: "Oversight",
+        items: [
+          { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+          { label: "Projects", href: "/projects", icon: FolderOpen },
+          { label: "Teams", href: "/teams", icon: Users },
+          { label: "Help Board", href: "/help", icon: HelpCircle },
+        ]
+      },
+      {
+        title: "Account",
+        items: [
+          { label: "Profile", href: "/profile", icon: UserCircle },
+          { label: "Messages", href: "/messages", icon: MessageSquare },
+        ]
+      }
+    ];
+  } else if (userRole === 'recruiter') {
+    navGroups = [
+      {
+        title: "Talent Scouting",
+        items: [
+          { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+          { label: "Opportunities", href: "/opportunities", icon: Briefcase },
+          { label: "Projects", href: "/projects", icon: FolderOpen },
+          { label: "Leaderboard", href: "/leaderboard", icon: Trophy },
+        ]
+      },
+      {
+        title: "Account",
+        items: [
+          { label: "Profile", href: "/profile", icon: UserCircle },
+          { label: "Messages", href: "/messages", icon: MessageSquare },
+        ]
+      }
+    ];
+  }
 
   return (
     <aside className="fixed left-0 top-0 bottom-0 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col hidden md:flex z-[60]">

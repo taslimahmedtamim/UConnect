@@ -11,7 +11,7 @@ type UserRank = {
   role: string;
   profileImage?: string | null;
   university?: string | null;
-  totalXp: number;
+  uPoints: number;
   tier: string;
   badge: string;
   topSkills: string[];
@@ -47,7 +47,7 @@ export default function LeaderboardPodium({ topThree }: Props) {
         </div>
         <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Top UConnect Champions</h2>
         <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-md mx-auto">
-          Highest XP earners based on verified skills, peer endorsements, and project contributions.
+          Highest Rep earners based on peer task reviews and team contributions.
         </p>
       </div>
 
@@ -76,7 +76,7 @@ export default function LeaderboardPodium({ topThree }: Props) {
                 {second.fullName}
               </h4>
               <span className="text-[11px] text-slate-400 font-semibold block truncate max-w-[110px]">
-                {second.totalXp.toLocaleString()} XP
+                {second.uPoints.toLocaleString()} Rep
               </span>
             </div>
 
@@ -112,7 +112,7 @@ export default function LeaderboardPodium({ topThree }: Props) {
                 {first.fullName}
               </h4>
               <span className="text-xs font-bold text-amber-400/90 block">
-                {first.totalXp.toLocaleString()} XP
+                {first.uPoints.toLocaleString()} Rep
               </span>
             </div>
 
@@ -147,7 +147,7 @@ export default function LeaderboardPodium({ topThree }: Props) {
                 {third.fullName}
               </h4>
               <span className="text-[11px] text-slate-400 font-semibold block truncate max-w-[110px]">
-                {third.totalXp.toLocaleString()} XP
+                {third.uPoints.toLocaleString()} Rep
               </span>
             </div>
 

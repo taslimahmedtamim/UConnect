@@ -59,7 +59,7 @@ export default function CareerProgressCard({ user }: { user: any }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-3 flex flex-col items-center text-center">
           <Code className="w-5 h-5 text-emerald-500 mb-1" />
           <span className="text-xl font-bold text-slate-900 dark:text-white">{stats.skills}</span>

@@ -49,6 +49,21 @@ export async function POST(req: Request) {
       }
     });
 
+    if (role.toLowerCase() === 'teacher') {
+      await prisma.mentorProfile.create({
+        data: {
+          userId: user.id,
+          title: "Educator / Teacher",
+          company: "University",
+          expertise: ["Education", "Software Engineering"],
+          experienceYears: 5,
+          availability: "Flexible",
+          bio: "I am a teacher here to guide students.",
+          featured: true
+        }
+      });
+    }
+
     const secret = process.env.JWT_SECRET || 'fallback_secret';
     
     const accessToken = jwt.sign(
