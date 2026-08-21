@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Mail, Lock, LogIn, ArrowRight, Zap } from "lucide-react";
+import { Mail, Lock, LogIn, ArrowRight, Zap, ShieldCheck } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -13,6 +13,8 @@ export default function LoginPage() {
     email: "",
     password: ""
   });
+  
+  const [loginMode, setLoginMode] = useState<'normal' | 'admin'>('normal');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,8 +34,17 @@ export default function LoginPage() {
         throw new Error(data.error || data.message || "Failed to login");
       }
 
+      if (loginMode === 'admin' && data.user.role !== 'admin') {
+        throw new Error('Access denied. Admin privileges required.');
+      }
+
       localStorage.setItem("user", JSON.stringify(data.user));
-      window.location.href = "/dashboard";
+      
+      if (loginMode === 'admin') {
+        window.location.href = "/admin";
+      } else {
+        window.location.href = "/dashboard";
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -119,11 +130,37 @@ export default function LoginPage() {
 
           <button
             type="submit"
+            onClick={() => setLoginMode('normal')}
             disabled={loading}
             className="group w-full flex items-center justify-center gap-2 py-3.5 px-4 border border-transparent rounded-xl shadow-lg shadow-blue-500/25 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:-translate-y-0.5 mt-2"
           >
-            {loading ? "Signing in..." : "Sign in to Dashboard"}
-            {!loading && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
+            {loading && loginMode === 'normal' ? "Signing in..." : "Sign in to Dashboard"}
+            {!(loading && loginMode === 'normal') && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
+          </button>
+
+          <div className="relative mt-6 mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200 dark:border-slate-700"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white/70 dark:bg-slate-900/70 text-slate-500">Or continue as</span>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            onClick={() => setLoginMode('admin')}
+            disabled={loading}
+            className="group w-full flex items-center justify-center gap-2 py-3.5 px-4 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-300 hover:-translate-y-0.5"
+          >
+            {loading && loginMode === 'admin' ? (
+              "Authenticating..."
+            ) : (
+              <>
+                <ShieldCheck className="w-4 h-4 text-slate-500 group-hover:text-slate-700 dark:text-slate-400 dark:group-hover:text-slate-300 transition-colors" />
+                Sign in as Admin
+              </>
+            )}
           </button>
         </form>
       </div>

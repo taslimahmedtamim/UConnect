@@ -15,9 +15,14 @@ export default function Navbar() {
     setIsLoggedIn(!!localStorage.getItem("user"));
   }, [pathname]);
 
+  const isAdminRoute = pathname.startsWith("/admin");
   const hideSidebarRoutes = ["/", "/login", "/register"];
   const isPublicProfile = pathname.startsWith("/u/");
   const showSidebar = !hideSidebarRoutes.includes(pathname) && !isPublicProfile;
+
+  if (isAdminRoute) {
+    return null;
+  }
 
   return (
     <nav className={`fixed top-0 right-0 h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 z-50 transition-all ${showSidebar ? 'left-0 md:hidden' : 'left-0'}`}>

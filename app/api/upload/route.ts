@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
+import { createClient } from '@supabase/supabase-js';
 
 export async function POST(req: Request) {
   try {
@@ -29,7 +30,33 @@ export async function POST(req: Request) {
     const filename = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
     const savedFilename = `${uniqueSuffix}-${filename}`;
     
-    // Save to public/uploads
+    // Check if Supabase is configured
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
+    // If Supabase is fully configured, use it
+    if (supabaseUrl && supabaseAnonKey && !supabaseUrl.includes('your-supabase-url')) {
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+      
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('uploads')
+        .upload(savedFilename, buffer, {
+          contentType: file.type,
+          upsert: false
+        });
+
+      if (uploadError) {
+        throw new Error(`Supabase upload failed: ${uploadError.message}`);
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('uploads')
+        .getPublicUrl(savedFilename);
+
+      return NextResponse.json({ success: true, url: publicUrl });
+    }
+    
+    // Fallback: Save to public/uploads
     const uploadDir = path.join(process.cwd(), 'public', 'uploads');
     
     // Ensure the uploads directory exists
@@ -49,3 +76,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message || 'File upload failed', code: 'UPLOAD_FAILED' }, { status: 500 });
   }
 }
+

@@ -6,6 +6,11 @@ import Sidebar from "./Sidebar";
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   
+  // Bypass AppLayout entirely for admin routes
+  if (pathname.startsWith("/admin")) {
+    return <>{children}</>;
+  }
+
   // Don't show sidebar on auth pages or landing page
   const hideSidebarRoutes = ["/", "/login", "/register"];
   const isPublicProfile = pathname.startsWith("/u/");
