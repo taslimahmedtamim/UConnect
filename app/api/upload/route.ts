@@ -32,14 +32,14 @@ export async function POST(req: Request) {
     
     // Check if Supabase is configured
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const supabaseAnonKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     
     // If Supabase is fully configured, use it
     if (supabaseUrl && supabaseAnonKey && !supabaseUrl.includes('your-supabase-url')) {
       const supabase = createClient(supabaseUrl, supabaseAnonKey);
       
       const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('uploads')
+        .from('uconnect-uploads')
         .upload(savedFilename, buffer, {
           contentType: file.type,
           upsert: false
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
       }
 
       const { data: { publicUrl } } = supabase.storage
-        .from('uploads')
+        .from('uconnect-uploads')
         .getPublicUrl(savedFilename);
 
       return NextResponse.json({ success: true, url: publicUrl });
