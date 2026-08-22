@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { createNotification } from '@/lib/notifications';
 
 export async function GET(req: Request) {
   try {
@@ -96,6 +97,15 @@ export async function POST(req: Request) {
       }
     });
 
+    // Notify the mentor
+    await createNotification({
+      userId: mentorId,
+      type: 'mentorship_request',
+      title: 'New Mentorship Request',
+      message: `${student.fullName} wants mentorship on "${topic.trim()}"`,
+      link: '/mentors'
+    });
+
     return NextResponse.json({ success: true, request }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
@@ -134,6 +144,25 @@ export async function PATCH(req: Request) {
         updatedAt: new Date()
       }
     });
+
+    // Notify the student about the decision
+    if (status === 'accepted') {
+      await createNotification({
+        userId: existing.studentId,
+        type: 'mentorship_accepted',
+        title: 'Session Accepted!',
+        message: `${user.fullName} accepted your mentorship request on "${existing.topic}"`,
+        link: '/mentors'
+      });
+    } else if (status === 'rejected') {
+      await createNotification({
+        userId: existing.studentId,
+        type: 'mentorship_rejected',
+        title: 'Session Declined',
+        message: `Your mentorship request on "${existing.topic}" was declined.`,
+        link: '/mentors'
+      });
+    }
 
     return NextResponse.json({ success: true, request: updated });
   } catch (error: any) {

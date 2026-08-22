@@ -7,8 +7,9 @@ import {
   LayoutDashboard, 
   Users, 
   Briefcase, 
-  FileText, 
-  Settings,
+  FileText,
+  Activity,
+  Bell,
   LogOut 
 } from 'lucide-react';
 
@@ -20,7 +21,8 @@ const AdminSidebar = () => {
     { name: 'Users', href: '/admin/users', icon: Users },
     { name: 'Projects', href: '/admin/projects', icon: Briefcase },
     { name: 'Opportunities', href: '/admin/opportunities', icon: FileText },
-    { name: 'Settings', href: '/admin/settings', icon: Settings },
+    { name: 'Teams', href: '/admin/teams', icon: Activity },
+    { name: 'Broadcast', href: '/admin/broadcast', icon: Bell },
   ];
 
   return (

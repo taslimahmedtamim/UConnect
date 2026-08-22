@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, MoreVertical, Edit2, Trash2, Shield, UserX, UserCheck } from 'lucide-react';
+import { Search, MoreVertical, Edit2, Trash2, Shield, UserX, UserCheck, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 
 type User = {
@@ -19,6 +19,51 @@ interface UserTableProps {
 
 export default function UserTable({ users }: UserTableProps) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
+
+  const handleRoleChange = async (userId: string, newRole: string) => {
+    if (!confirm(`Are you sure you want to change this user's role to ${newRole}?`)) return;
+    
+    setUpdatingId(userId);
+    try {
+      const res = await fetch(`/api/admin/users/${userId}/role`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: newRole })
+      });
+      const data = await res.json();
+      if (data.success) {
+        window.location.reload(); // Refresh to get updated list
+      } else {
+        alert(data.message || 'Failed to update role');
+      }
+    } catch (e) {
+      alert('Error updating role');
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const handleDelete = async (userId: string, userEmail: string) => {
+    if (!confirm(`Are you sure you want to permanently delete the user ${userEmail}? This action cannot be undone.`)) return;
+    
+    setUpdatingId(userId);
+    try {
+      const res = await fetch(`/api/admin/users/${userId}`, {
+        method: 'DELETE'
+      });
+      const data = await res.json();
+      if (data.success) {
+        window.location.reload(); // Refresh to get updated list
+      } else {
+        alert(data.message || 'Failed to delete user');
+      }
+    } catch (e) {
+      alert('Error deleting user');
+    } finally {
+      setUpdatingId(null);
+    }
+  };
 
   const filteredUsers = users.filter(user => 
     user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -87,12 +132,37 @@ export default function UserTable({ users }: UserTableProps) {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div className="flex items-center justify-end gap-3">
-                    <button className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 transition-colors" title="Edit Role">
-                      <Shield className="w-5 h-5" />
-                    </button>
-                    <button className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors" title="Delete User">
-                      <Trash2 className="w-5 h-5" />
-                    </button>
+                    {updatingId === user.id ? (
+                      <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
+                    ) : (
+                      <>
+                        {user.role !== 'admin' ? (
+                          <button 
+                            onClick={() => handleRoleChange(user.id, 'admin')}
+                            className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 transition-colors flex items-center gap-1 text-xs font-semibold bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded" 
+                            title="Make Admin"
+                          >
+                            <Shield className="w-4 h-4" /> Make Admin
+                          </button>
+                        ) : user.email !== 'admin@uconnect.com' ? (
+                          <button 
+                            onClick={() => handleRoleChange(user.id, 'student')}
+                            className="text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300 transition-colors flex items-center gap-1 text-xs font-semibold bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded" 
+                            title="Remove Admin"
+                          >
+                            <UserX className="w-4 h-4" /> Remove Admin
+                          </button>
+                        ) : (
+                          <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">Super Admin</span>
+                        )}
+                        
+                        {user.email !== 'admin@uconnect.com' && (
+                          <button onClick={() => handleDelete(user.id, user.email)} className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors p-2 rounded hover:bg-red-50 dark:hover:bg-red-900/20" title="Delete User">
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        )}
+                      </>
+                    )}
                   </div>
                 </td>
               </tr>

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { createNotification } from '@/lib/notifications';
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -37,6 +38,24 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       where: { id: applicationId },
       data: { status }
     });
+
+    if (status === 'accepted') {
+      await createNotification({
+        userId: application.studentId,
+        type: 'application_reviewed',
+        title: 'Application Accepted! 🎉',
+        message: `Your application for the opportunity was accepted.`,
+        link: '/opportunities'
+      });
+    } else if (status === 'rejected') {
+      await createNotification({
+        userId: application.studentId,
+        type: 'application_reviewed',
+        title: 'Application Update',
+        message: `Your application for the opportunity was rejected.`,
+        link: '/opportunities'
+      });
+    }
 
     return NextResponse.json({ success: true, application: updated });
 

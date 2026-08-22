@@ -16,8 +16,7 @@ export default function LoginPage() {
   
   const [loginMode, setLoginMode] = useState<'normal' | 'admin'>('normal');
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleLogin = async (mode: 'normal' | 'admin') => {
     setLoading(true);
     setError("");
 
@@ -34,13 +33,13 @@ export default function LoginPage() {
         throw new Error(data.error || data.message || "Failed to login");
       }
 
-      if (loginMode === 'admin' && data.user.role !== 'admin') {
+      if (mode === 'admin' && data.user.role !== 'admin') {
         throw new Error('Access denied. Admin privileges required.');
       }
 
       localStorage.setItem("user", JSON.stringify(data.user));
       
-      if (loginMode === 'admin') {
+      if (mode === 'admin') {
         window.location.href = "/admin";
       } else {
         window.location.href = "/dashboard";
@@ -50,6 +49,11 @@ export default function LoginPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleLogin(loginMode);
   };
 
   return (
@@ -148,8 +152,11 @@ export default function LoginPage() {
           </div>
 
           <button
-            type="submit"
-            onClick={() => setLoginMode('admin')}
+            type="button"
+            onClick={() => {
+              setLoginMode('admin');
+              handleLogin('admin');
+            }}
             disabled={loading}
             className="group w-full flex items-center justify-center gap-2 py-3.5 px-4 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-300 hover:-translate-y-0.5"
           >

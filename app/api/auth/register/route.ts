@@ -6,10 +6,10 @@ import jwt from 'jsonwebtoken';
 
 export async function POST(req: Request) {
   try {
-    const { email, password, fullName, role } = await req.json();
+    const { email, password, fullName, role, otp } = await req.json();
 
-    if (!email || !password || !fullName || !role) {
-      return NextResponse.json({ error: 'Missing required fields', code: 'MISSING_FIELDS' }, { status: 400 });
+    if (!email || !password || !fullName || !role || !otp) {
+      return NextResponse.json({ error: 'Missing required fields, including OTP', code: 'MISSING_FIELDS' }, { status: 400 });
     }
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -21,6 +21,22 @@ export async function POST(req: Request) {
     if (existingUser) {
       return NextResponse.json({ error: 'Email already exists', code: 'EMAIL_EXISTS' }, { status: 400 });
     }
+
+    // Verify OTP
+    const validOtp = await prisma.oTP.findFirst({
+      where: {
+        email,
+        code: otp,
+        expiresAt: { gt: new Date() }
+      }
+    });
+
+    if (!validOtp) {
+      return NextResponse.json({ error: 'Invalid or expired OTP', code: 'INVALID_OTP' }, { status: 400 });
+    }
+
+    // Delete the OTP as it's been used
+    await prisma.oTP.delete({ where: { id: validOtp.id } });
 
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);

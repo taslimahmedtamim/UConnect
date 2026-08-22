@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
+import { useUser } from '@/components/UserProvider';
 import { 
   GraduationCap, 
   Search, 
@@ -43,7 +44,15 @@ export default function MentorsPage() {
   // Modals
   const [selectedMentorToBook, setSelectedMentorToBook] = useState<any | null>(null);
   const [showBecomeMentorModal, setShowBecomeMentorModal] = useState(false);
+  const { user } = useUser();
+  const isEducator = user?.role === 'teacher' || user?.role === 'mentor';
   const [activeTab, setActiveTab] = useState<'directory' | 'sessions'>('directory');
+
+  useEffect(() => {
+    if (isEducator) {
+      setActiveTab('sessions');
+    }
+  }, [isEducator]);
 
   const fetchMentors = useCallback(async () => {
     try {
@@ -109,15 +118,17 @@ export default function MentorsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setShowBecomeMentorModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md shadow-purple-600/20 transition-all"
-          >
-            <UserCheck className="w-4 h-4" />
-            Become a Mentor
-          </button>
-        </div>
+        {!isEducator && (
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowBecomeMentorModal(true)}
+              className="flex items-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md shadow-purple-600/20 transition-all"
+            >
+              <UserCheck className="w-4 h-4" />
+              Become a Mentor
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Navigation Tabs (Directory vs Active Sessions) */}
@@ -150,7 +161,7 @@ export default function MentorsPage() {
       {activeTab === 'directory' && (
         <div className="space-y-8">
           {/* AI Matchmaker Banner Widget */}
-          <AIMentorMatchWidget onBookSession={(m) => setSelectedMentorToBook(m)} />
+          {!isEducator && <AIMentorMatchWidget onBookSession={(m) => setSelectedMentorToBook(m)} />}
 
           {/* Search & Filter Bar */}
           <div className="space-y-4">
@@ -195,13 +206,15 @@ export default function MentorsPage() {
             <div className="text-center py-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6">
               <GraduationCap className="w-12 h-12 text-slate-400 mx-auto mb-3" />
               <h3 className="text-base font-bold text-slate-900 dark:text-white">No mentors found</h3>
-              <p className="text-xs text-slate-500 mt-1">Try adjusting your search filter or become the first mentor in this topic!</p>
-              <button
-                onClick={() => setShowBecomeMentorModal(true)}
-                className="mt-4 px-4 py-2 bg-purple-600 text-white font-bold text-xs rounded-xl"
-              >
-                Become a Mentor
-              </button>
+              <p className="text-xs text-slate-500 mt-1">Try adjusting your search filter.</p>
+              {!isEducator && (
+                <button
+                  onClick={() => setShowBecomeMentorModal(true)}
+                  className="mt-4 px-4 py-2 bg-purple-600 text-white font-bold text-xs rounded-xl"
+                >
+                  Become a Mentor
+                </button>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Briefcase, Plus, Search, MapPin, Building, AlertCircle, CheckCircle2, ChevronRight, UploadCloud, Sparkles } from "lucide-react";
+import { Briefcase, Plus, Search, MapPin, Building, AlertCircle, CheckCircle2, XCircle, ChevronRight, UploadCloud, Sparkles } from "lucide-react";
 import { useUser } from "@/components/UserProvider";
 
 export default function OpportunitiesPage() {
@@ -16,6 +16,7 @@ export default function OpportunitiesPage() {
   const [customResume, setCustomResume] = useState("");
   const [pdfBase64, setPdfBase64] = useState("");
   const [filterMode, setFilterMode] = useState<"all"|"matches"|"applied">("all");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [formData, setFormData] = useState({
     title: "",
@@ -140,6 +141,18 @@ export default function OpportunitiesPage() {
   });
 
   let displayOpps = processedOpportunities;
+
+  // Apply search filter
+  if (searchTerm.trim()) {
+    const q = searchTerm.toLowerCase();
+    displayOpps = displayOpps.filter(o =>
+      o.title.toLowerCase().includes(q) ||
+      o.company.toLowerCase().includes(q) ||
+      o.description?.toLowerCase().includes(q) ||
+      (o.requirements || []).some((r: string) => r.toLowerCase().includes(q))
+    );
+  }
+
   if (filterMode === "matches") {
     displayOpps = displayOpps.filter(o => o.matchPercent > 0).sort((a, b) => b.matchPercent - a.matchPercent);
   } else if (filterMode === "applied") {
@@ -155,7 +168,7 @@ export default function OpportunitiesPage() {
           </h1>
           <p className="text-slate-500 dark:text-slate-400 mt-2">Find internships, jobs, and roles that match your skill profile.</p>
         </div>
-        {user?.role !== "student" && (
+        {user?.role && ['teacher', 'recruiter', 'admin'].includes(user.role) && (
           <button
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors"
@@ -165,19 +178,23 @@ export default function OpportunitiesPage() {
         )}
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-800 mb-8 flex flex-col md:flex-row gap-4">
+
+
+      <div className="mb-8 flex flex-col md:flex-row gap-4">
         <div className="flex-1 relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
           <input 
             type="text" 
             placeholder="Search by title, company, or skills..."
-            className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-12 pr-4 py-3.5 bg-slate-100 dark:bg-[#151c2c] border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm dark:text-white transition-all shadow-sm"
           />
         </div>
-        <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-1">
-          <button onClick={() => setFilterMode("all")} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${filterMode === "all" ? "bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white" : "text-slate-500"}`}>All Roles</button>
-          <button onClick={() => setFilterMode("matches")} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${filterMode === "matches" ? "bg-white dark:bg-slate-700 shadow-sm text-emerald-600 dark:text-emerald-400" : "text-slate-500"}`}>Top Matches</button>
-          <button onClick={() => setFilterMode("applied")} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${filterMode === "applied" ? "bg-white dark:bg-slate-700 shadow-sm text-blue-600 dark:text-blue-400" : "text-slate-500"}`}>Applied</button>
+        <div className="flex items-center bg-slate-100 dark:bg-[#151c2c] border border-slate-200 dark:border-slate-800 rounded-xl p-1.5 shadow-sm">
+          <button onClick={() => setFilterMode("all")} className={`px-5 py-2 rounded-lg text-sm font-semibold transition-colors ${filterMode === "all" ? "bg-white dark:bg-slate-700/50 shadow-sm text-slate-900 dark:text-white" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"}`}>All Roles</button>
+          <button onClick={() => setFilterMode("matches")} className={`px-5 py-2 rounded-lg text-sm font-semibold transition-colors ${filterMode === "matches" ? "bg-white dark:bg-slate-700/50 shadow-sm text-slate-900 dark:text-white" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"}`}>Top Matches</button>
+          <button onClick={() => setFilterMode("applied")} className={`px-5 py-2 rounded-lg text-sm font-semibold transition-colors ${filterMode === "applied" ? "bg-white dark:bg-slate-700/50 shadow-sm text-slate-900 dark:text-white" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"}`}>Applied</button>
         </div>
       </div>
 
@@ -194,7 +211,7 @@ export default function OpportunitiesPage() {
       ) : (
         <div className="space-y-6">
           {displayOpps.map((opp) => (
-            <div key={opp.id} className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 transition-shadow">
+            <div key={opp.id} className="bg-white dark:bg-[#151c2c] rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800/80 transition-shadow">
               <div className="flex flex-col lg:flex-row gap-6 justify-between items-start">
                 
                 {/* Left Side: Job Info */}
@@ -203,8 +220,15 @@ export default function OpportunitiesPage() {
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white">{opp.title}</h2>
                     <span className="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">{opp.type}</span>
                     {opp.application && (
-                      <span className="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3" /> Applied
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1 ${
+                        opp.application.status === 'accepted' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' :
+                        opp.application.status === 'rejected' ? 'bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-300' :
+                        'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+                      }`}>
+                        {opp.application.status === 'accepted' ? <CheckCircle2 className="w-3 h-3" /> :
+                         opp.application.status === 'rejected' ? <XCircle className="w-3 h-3" /> :
+                         <AlertCircle className="w-3 h-3" />}
+                        {opp.application.status === 'pending' ? 'Applied (Pending)' : opp.application.status}
                       </span>
                     )}
                   </div>
@@ -221,12 +245,12 @@ export default function OpportunitiesPage() {
 
                 {/* Right Side: Explainable AI Match */}
                 {user && (
-                  <div className="w-full lg:w-[350px] shrink-0 bg-slate-50 dark:bg-slate-800/50 rounded-xl p-5 border border-slate-100 dark:border-slate-800">
+                  <div className="w-full lg:w-[350px] shrink-0 bg-slate-50 dark:bg-[#1e2738]/50 rounded-xl p-5 border border-slate-100 dark:border-slate-800/60">
                     <div className="flex justify-between items-center mb-3">
                       <span className="text-sm font-bold text-slate-700 dark:text-slate-300">Your Match Score</span>
                       <span className={`text-xl font-black ${
                         opp.matchPercent >= 80 ? 'text-emerald-500' :
-                        opp.matchPercent >= 50 ? 'text-amber-500' : 'text-slate-500'
+                        opp.matchPercent >= 50 ? 'text-blue-400' : 'text-slate-400'
                       }`}>
                         {opp.matchPercent}%
                       </span>
@@ -255,18 +279,28 @@ export default function OpportunitiesPage() {
                       
                       {opp.missing.length > 0 && (
                         <div>
-                          <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1 flex items-center gap-1">
+                          <div className="text-xs font-semibold text-orange-600 dark:text-orange-500 mb-1 flex items-center gap-1">
                             <AlertCircle className="w-3 h-3" /> Missing:
                           </div>
-                          <div className="flex flex-wrap gap-1.5">
+                          <div className="flex flex-wrap gap-2">
                             {opp.missing.map((s: string, i: number) => (
-                              <Link key={i} href={`/skillmap?addSkill=${encodeURIComponent(s)}`} className="text-[10px] px-2 py-0.5 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 rounded border border-amber-100 dark:border-amber-800/50 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors flex items-center gap-1 group">
-                                {s} <ChevronRight className="w-2 h-2 group-hover:translate-x-0.5 transition-transform" />
+                              <Link key={i} href={`/skillmap?addSkill=${encodeURIComponent(s)}`} className="text-[10px] px-2.5 py-1 bg-orange-50 dark:bg-orange-950/20 text-orange-700 dark:text-orange-500 rounded-md border border-orange-200 dark:border-orange-900/50 hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors flex items-center gap-1 group">
+                                {s} <ChevronRight className="w-3 h-3 text-orange-400 dark:text-orange-600 group-hover:translate-x-0.5 transition-transform" />
                               </Link>
                             ))}
                           </div>
                         </div>
                       )}
+                      
+                      <div className="pt-3 mt-3 border-t border-slate-200 dark:border-slate-700">
+                        <Link 
+                          href="/resume" 
+                          className="w-full flex items-center justify-center gap-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 dark:text-indigo-300 py-2 px-4 rounded-lg text-sm font-semibold transition-colors"
+                        >
+                          <Sparkles className="w-4 h-4" />
+                          Tailor Resume with AI
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -276,14 +310,14 @@ export default function OpportunitiesPage() {
                 {user?.role === "student" && !opp.application && (
                   <button 
                     onClick={() => setApplyModalOpp(opp)}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md"
                   >
                     Apply Now
                   </button>
                 )}
                 {opp.application && (
-                  <button disabled className="bg-slate-100 dark:bg-slate-800 text-slate-500 px-6 py-2.5 rounded-lg font-medium flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5" /> Applied
+                  <button disabled className="bg-slate-100 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50 px-6 py-2.5 rounded-lg font-medium flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5 opacity-70" /> Applied
                   </button>
                 )}
               </div>
@@ -354,23 +388,26 @@ export default function OpportunitiesPage() {
       )}
       
       {/* Basic Post Modal kept simple for employer flow */}
-      {isModalOpen && user?.role !== "student" && (
+      {isModalOpen && user?.role && ['teacher', 'recruiter', 'admin'].includes(user.role) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
            <div className="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh]">
             <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
-              <h2 className="text-xl font-bold">Post Opportunity</h2>
-              <button onClick={() => setIsModalOpen(false)}>&times;</button>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Post Opportunity</h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">&times;</button>
             </div>
             <div className="p-5 overflow-y-auto">
               <form id="oppForm" onSubmit={handlePostOpportunity} className="space-y-4">
-                <input required type="text" placeholder="Title" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full p-2 bg-slate-50 border rounded-lg" />
-                <input required type="text" placeholder="Company" value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} className="w-full p-2 bg-slate-50 border rounded-lg" />
-                <input required type="text" placeholder="Required Skills (comma separated)" value={formData.requirements} onChange={e => setFormData({...formData, requirements: e.target.value})} className="w-full p-2 bg-slate-50 border rounded-lg" />
-                <textarea required placeholder="Description" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full p-2 bg-slate-50 border rounded-lg h-24" />
+                <input required type="text" placeholder="Title" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all" />
+                <input required type="text" placeholder="Company" value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all" />
+                <input required type="text" placeholder="Required Skills (comma separated)" value={formData.requirements} onChange={e => setFormData({...formData, requirements: e.target.value})} className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all" />
+                <textarea required placeholder="Description" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all h-32 resize-none" />
               </form>
             </div>
-            <div className="p-5 border-t">
-              <button type="submit" form="oppForm" className="px-4 py-2 bg-blue-600 text-white rounded-lg">Post</button>
+            <div className="p-5 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3 bg-slate-50 dark:bg-slate-900/50">
+              <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2.5 font-medium text-slate-600 hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-800 rounded-xl transition-colors">Cancel</button>
+              <button type="submit" form="oppForm" disabled={submitting} className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors disabled:opacity-50 flex items-center gap-2">
+                {submitting ? "Posting..." : "Post Opportunity"}
+              </button>
             </div>
           </div>
         </div>

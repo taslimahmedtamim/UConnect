@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { 
   LayoutDashboard, 
   FolderOpen, 
@@ -40,6 +40,50 @@ export default function Sidebar() {
   }, []);
 
   const userRole = (user?.role || "student").toLowerCase();
+
+  // Notifications
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showNotifPanel, setShowNotifPanel] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchNotifs = async () => {
+      try {
+        const res = await fetch('/api/notifications');
+        const data = await res.json();
+        if (data.success) {
+          setNotifications(data.notifications || []);
+          setUnreadCount(data.unreadCount || 0);
+        }
+      } catch (e) {}
+    };
+    fetchNotifs();
+    const interval = setInterval(fetchNotifs, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setShowNotifPanel(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const markAllRead = async () => {
+    try {
+      await fetch('/api/notifications', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ markAllRead: true })
+      });
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+      setUnreadCount(0);
+    } catch (e) {}
+  };
 
   let navGroups = [
     {
@@ -83,22 +127,15 @@ export default function Sidebar() {
           { label: "My Sessions", href: "/mentors", icon: GraduationCap },
         ]
       },
-      {
-        title: "Oversight",
-        items: [
-          { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-          { label: "Projects", href: "/projects", icon: FolderOpen },
-          { label: "Teams", href: "/teams", icon: Users },
-          { label: "Help Board", href: "/help", icon: HelpCircle },
-        ]
-      },
-      {
-        title: "Account",
-        items: [
-          { label: "Profile", href: "/profile", icon: UserCircle },
-          { label: "Messages", href: "/messages", icon: MessageSquare },
-        ]
-      }
+      ...navGroups.map(group => {
+        if (group.title === 'Community') {
+          return {
+            ...group,
+            items: group.items.filter(item => item.label !== 'Mentors')
+          };
+        }
+        return group;
+      })
     ];
   } else if (userRole === 'recruiter') {
     navGroups = [
@@ -183,13 +220,56 @@ export default function Sidebar() {
         </div>
         
         <div className="flex items-center gap-1 shrink-0">
+        <div className="relative" ref={notifRef}>
           <button 
+            onClick={() => setShowNotifPanel(!showNotifPanel)}
             className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors relative"
             title="Notifications"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+            {unreadCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 rounded-full border-2 border-white dark:border-slate-900 text-[8px] text-white font-bold flex items-center justify-center">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
           </button>
+
+          {showNotifPanel && (
+            <div className="absolute bottom-full left-0 mb-2 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl overflow-hidden z-50">
+              <div className="p-3 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                <span className="font-bold text-sm text-slate-900 dark:text-white">Notifications</span>
+                {unreadCount > 0 && (
+                  <button onClick={markAllRead} className="text-xs text-blue-600 hover:underline font-medium">Mark all read</button>
+                )}
+              </div>
+              <div className="max-h-64 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
+                {notifications.length === 0 ? (
+                  <div className="p-6 text-center text-sm text-slate-500">No notifications yet.</div>
+                ) : (
+                  notifications.slice(0, 10).map((n) => (
+                    <Link
+                      key={n.id}
+                      href={n.link || '#'}
+                      onClick={() => setShowNotifPanel(false)}
+                      className={`block p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${
+                        !n.read ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''
+                      }`}
+                    >
+                      <div className="flex items-start gap-2">
+                        {!n.read && <span className="mt-1.5 w-2 h-2 bg-blue-500 rounded-full shrink-0"></span>}
+                        <div className={!n.read ? '' : 'ml-4'}>
+                          <div className="text-sm font-semibold text-slate-900 dark:text-white">{n.title}</div>
+                          <div className="text-xs text-slate-500 mt-0.5 line-clamp-2">{n.message}</div>
+                          <div className="text-[10px] text-slate-400 mt-1">{new Date(n.createdAt).toLocaleDateString()}</div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+        </div>
           <button 
             onClick={toggleTheme}
             className="p-1.5 text-slate-500 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"

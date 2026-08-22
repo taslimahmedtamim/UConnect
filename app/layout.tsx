@@ -6,6 +6,7 @@ import AppLayout from "@/components/AppLayout";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { UserProvider } from "@/components/UserProvider";
 import GlobalAIAssistant from "@/components/GlobalAIAssistant";
+import MobileNav from "@/components/MobileNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +30,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (_) {}
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100`}
       >
@@ -41,6 +57,7 @@ export default function RootLayout({
               </AppLayout>
             </main>
             <GlobalAIAssistant />
+            <MobileNav />
           </UserProvider>
         </ThemeProvider>
       </body>

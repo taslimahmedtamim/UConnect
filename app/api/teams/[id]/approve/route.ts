@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { createNotification } from '@/lib/notifications';
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -50,6 +51,22 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
             connect: { id: joinRequest.userId }
           }
         }
+      });
+
+      await createNotification({
+        userId: joinRequest.userId,
+        type: 'team_joined',
+        title: 'Welcome to the team!',
+        message: `You have been accepted into "${team.name}"`,
+        link: '/teams'
+      });
+    } else {
+      await createNotification({
+        userId: joinRequest.userId,
+        type: 'team_rejected',
+        title: 'Team Request Declined',
+        message: `Your request to join "${team.name}" was declined.`,
+        link: '/teams'
       });
     }
 

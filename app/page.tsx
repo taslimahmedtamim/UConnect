@@ -9,7 +9,8 @@ import {
   Target,
   Briefcase,
   Terminal,
-  Code2
+  Code2,
+  FileText
 } from "lucide-react";
 import Footer from "@/components/Footer";
 import TeamSection from "@/components/TeamSection";
@@ -109,11 +110,11 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Card 3: Project Gen (Bottom Right) */}
+            {/* Card 3: AI Resume (Bottom Right) */}
             <div className="absolute bottom-16 right-10 w-60 p-5 rounded-2xl bg-slate-900/60 border border-slate-700/50 shadow-2xl backdrop-blur-xl transform rotate-3 hover:rotate-0 hover:scale-105 hover:z-30 transition-all duration-500">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center"><Terminal className="w-4 h-4" /></div>
-                <div className="text-sm font-bold text-white">AI Project Built</div>
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center"><FileText className="w-4 h-4" /></div>
+                <div className="text-sm font-bold text-white">AI ATS Resume</div>
               </div>
               <div className="space-y-2">
                 <div className="h-2 w-full bg-slate-800 rounded animate-pulse" />

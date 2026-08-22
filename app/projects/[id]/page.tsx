@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useUser } from "@/components/UserProvider";
 import GitHubStatsDetailed from "@/components/projects/GitHubStatsDetailed";
+import ProjectComments from "@/components/projects/ProjectComments";
 
 export default function ProjectDetailsPage() {
   const params = useParams();
@@ -443,6 +444,8 @@ export default function ProjectDetailsPage() {
                 </div>
               </div>
             )}
+
+            <ProjectComments projectId={params.id as string} />
           </div>
 
           {/* Sidebar */}

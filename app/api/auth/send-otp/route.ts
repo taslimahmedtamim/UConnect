@@ -23,21 +23,18 @@ export async function POST(req: Request) {
       },
     });
 
-    // Create a Nodemailer transporter
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      throw new Error("Server is missing EMAIL_USER or EMAIL_PASS environment variables.");
-    }
+    // Create a Nodemailer transporter (or mock for dev)
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    // Send the email
-    await transporter.sendMail({
+      // Send the email
+      await transporter.sendMail({
       from: `"UConnect" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: 'Your UConnect Verification Code',
@@ -51,7 +48,10 @@ export async function POST(req: Request) {
           <p style="color: #64748b; font-size: 14px;">This code will expire in 10 minutes.</p>
         </div>
       `,
-    });
+      });
+    } else {
+      console.log(`[DEV MODE] OTP for ${email} is: ${otp}`);
+    }
 
     return NextResponse.json({ success: true, message: 'OTP sent successfully' });
   } catch (error: any) {
