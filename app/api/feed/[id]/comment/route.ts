@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getUserFromRequest(req);
     if (!user) return unauthorizedResponse();
 
@@ -13,7 +14,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     const comment = await prisma.feedComment.create({
       data: {
         content,
-        postId: params.id,
+        postId: id,
         authorId: user.id
       },
       include: {
