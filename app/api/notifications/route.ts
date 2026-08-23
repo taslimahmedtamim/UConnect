@@ -8,6 +8,37 @@ export async function GET(req: Request) {
     const user = await getUserFromRequest(req);
     if (!user) return unauthorizedResponse();
 
+    // Auto-generate daily reminder if needed
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const reminderSentToday = await prisma.notification.findFirst({
+      where: { 
+        userId: user.id,
+        type: 'daily_reminder',
+        createdAt: { gte: todayStart }
+      }
+    });
+
+    if (!reminderSentToday) {
+      // Find user's roadmap to get their commitment
+      const roadmap = await prisma.userRoadmap.findUnique({
+        where: { userId: user.id }
+      });
+
+      const learningTime = roadmap?.learningTime || '1 hour daily';
+      
+      await prisma.notification.create({
+        data: {
+          userId: user.id,
+          type: 'daily_reminder',
+          title: 'Daily Learning Goal 🚀',
+          message: `Reminder: You committed to learning for ${learningTime}. Have you completed it today?`,
+          link: '/dashboard'
+        }
+      });
+    }
+
     const notifications = await prisma.notification.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: 'desc' },

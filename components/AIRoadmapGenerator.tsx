@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Sparkles, Calendar, CheckSquare, Square, Rocket, BookOpen, Clock, Target, CheckCircle2, Award, PlayCircle, BarChart3, TrendingUp, Zap, HelpCircle, Plus } from 'lucide-react';
 import SkillAssessmentModal, { AssessmentData } from './skillmap/SkillAssessmentModal';
 import AILearningAssistant from './skillmap/AILearningAssistant';
@@ -17,6 +17,7 @@ export default function AIRoadmapGenerator() {
   const [claiming, setClaiming] = useState(false);
   const [assistantTopic, setAssistantTopic] = useState<string | null>(null);
   const [quizTopic, setQuizTopic] = useState<string | null>(null);
+  const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     fetchExistingRoadmap();
@@ -59,15 +60,34 @@ export default function AIRoadmapGenerator() {
     }
   };
 
-  const toggleTask = async (taskId: string) => {
+  /**
+   * Persists the completed tasks array to the database.
+   * Debounced to avoid spamming the API on rapid toggling.
+   */
+  const persistProgress = (tasks: string[]) => {
+    if (saveTimerRef.current) {
+      clearTimeout(saveTimerRef.current);
+    }
+    saveTimerRef.current = setTimeout(async () => {
+      try {
+        await fetch('/api/skillmap/ai-roadmap/progress', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ completedTasks: tasks }),
+        });
+      } catch (e) {
+        console.error('Failed to save progress:', e);
+      }
+    }, 500); // 500ms debounce
+  };
+
+  const toggleTask = (taskId: string) => {
     const nextCompleted = completedTasks.includes(taskId)
       ? completedTasks.filter(id => id !== taskId)
       : [...completedTasks, taskId];
     
     setCompletedTasks(nextCompleted);
-    
-    // Optimistic UI, but we should persist this to DB in real app
-    // e.g. await fetch('/api/skillmap/progress', { method: 'POST', body: JSON.stringify({ completedTasks: nextCompleted }) })
+    persistProgress(nextCompleted);
   };
 
   const addProjectToResume = async (project: any) => {

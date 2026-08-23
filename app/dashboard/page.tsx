@@ -15,7 +15,10 @@ import {
   CheckCircle2,
   AlertCircle,
   Lightbulb,
-  Sparkles
+  Sparkles,
+  Terminal,
+  Rocket,
+  AlarmClock
 } from "lucide-react";
 import { useUser } from "@/components/UserProvider";
 import CareerProgressCard from "@/components/profile/CareerProgressCard";
@@ -23,6 +26,7 @@ import CareerProgressCard from "@/components/profile/CareerProgressCard";
 export default function DashboardPage() {
   const router = useRouter();
   const { user, loading: userLoading } = useUser();
+  const [dailyGoalCompleted, setDailyGoalCompleted] = useState(false);
   const [projects, setProjects] = useState<any[]>([]);
   const [teamCount, setTeamCount] = useState(0);
   const [activeJobsCount, setActiveJobsCount] = useState(0);
@@ -99,10 +103,22 @@ export default function DashboardPage() {
           setRecommendedJobs(matches.slice(0, 3));
         }
         
-        // Cache / load AI Recommendation
+        // Cache / load AI Recommendation (with daily expiry)
         const cachedAi = localStorage.getItem(`ai_rec_${user.id}`);
         if (cachedAi) {
-          setAiRecommendation(JSON.parse(cachedAi));
+          try {
+            const parsed = JSON.parse(cachedAi);
+            const today = new Date().toISOString().split('T')[0];
+            if (parsed.expiry === today && parsed.data) {
+              // Cache is from today — use it
+              setAiRecommendation(parsed.data);
+            } else {
+              // Cache is stale — refresh from AI
+              generateAIRecommendation();
+            }
+          } catch {
+            generateAIRecommendation();
+          }
         } else {
           generateAIRecommendation();
         }
@@ -121,23 +137,59 @@ export default function DashboardPage() {
     if (!user) return;
     setAiLoading(true);
     try {
-      // Mocked AI generation to save time/cost. In production, call a real endpoint if needed.
-      // E.g. const res = await fetch('/api/users/profile/insights', { method: 'POST' })
+      const res = await fetch('/api/users/profile/insights');
+      const data = await res.json();
+
+      if (data.success && data.insights) {
+        const insights = data.insights;
+        const rec = {
+          focus: insights.recommendations?.[0] || "Keep building your skills and projects.",
+          recommendation: insights.strengths?.length > 0
+            ? `Your strengths include ${insights.strengths.slice(0, 2).join(' and ')}. ${insights.weaknesses?.[0] ? `Consider improving: ${insights.weaknesses[0]}.` : ''}`
+            : `Focus on building your practical experience to increase your career readiness.`,
+          steps: insights.recommendations?.slice(0, 3) || [
+            "Complete your U-SkillMap assessment",
+            "Add a project to your portfolio",
+            "Update your resume"
+          ]
+        };
+        setAiRecommendation(rec);
+        // Cache with daily expiry
+        const cacheData = {
+          data: rec,
+          expiry: new Date().toISOString().split('T')[0] // today's date as expiry key
+        };
+        localStorage.setItem(`ai_rec_${user.id}`, JSON.stringify(cacheData));
+      } else {
+        // Fallback if API fails
+        const rec = {
+          focus: user.userRoadmap ? `Complete your ${user.userRoadmap.careerGoal} milestone.` : "Set up your Career Goal in U-SkillMap.",
+          recommendation: `Your profile is strong in ${user.skills.slice(0,2).join(', ') || 'fundamentals'}. Focus on building your practical experience.`,
+          steps: user.userRoadmap ? [
+            "Complete one more module in your U-SkillMap",
+            "Create a project using your new skills",
+            "Update your U-Resume with the new project"
+          ] : [
+            "Take the U-SkillMap assessment",
+            "Add past projects to your portfolio",
+            "Update your resume"
+          ]
+        };
+        setAiRecommendation(rec);
+      }
+    } catch (error) {
+      console.error("AI Recommendation error:", error);
+      // Graceful fallback
       const rec = {
-        focus: user.userRoadmap ? `Complete your ${user.userRoadmap.careerGoal} milestone.` : "Set up your Career Goal in U-SkillMap.",
-        recommendation: `Your profile is strong in ${user.skills.slice(0,2).join(', ') || 'fundamentals'}. Focus on building your practical experience to increase your job match rates.`,
-        steps: user.userRoadmap ? [
-          "Complete one more module in your U-SkillMap",
-          "Create a project using your new skills",
-          "Update your U-Resume with the new project"
-        ] : [
+        focus: "Keep building your skills and projects.",
+        recommendation: "Focus on completing your profile to get personalized AI insights.",
+        steps: [
           "Take the U-SkillMap assessment",
-          "Add past projects to your portfolio",
+          "Add projects to your portfolio",
           "Update your resume"
         ]
       };
       setAiRecommendation(rec);
-      localStorage.setItem(`ai_rec_${user.id}`, JSON.stringify(rec));
     } finally {
       setAiLoading(false);
     }
@@ -162,9 +214,14 @@ export default function DashboardPage() {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 space-y-8">
       {/* Header & Career Goal */}
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Career Command Center</h1>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-indigo-500/10 rounded-xl">
+              <Rocket className="w-6 h-6 text-indigo-500" />
+            </div>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Career Command Center</h1>
+          </div>
           <p className="text-slate-500 dark:text-slate-400">Welcome back, {user.fullName.split(' ')[0]}. Here is your career progress.</p>
         </div>
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-xl text-white shadow-lg min-w-[300px]">
@@ -184,6 +241,37 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Daily Commitment Tracker */}
+      <div className="bg-white dark:bg-slate-900 rounded-xl p-5 border border-purple-100 dark:border-purple-900/30 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 dark:bg-purple-500/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
+        <div className="flex items-center gap-4 z-10">
+          <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full text-purple-600 dark:text-purple-400">
+            <AlarmClock className="w-6 h-6" />
+          </div>
+          <div>
+            <h3 className="font-bold text-slate-900 dark:text-white">Daily Learning Commitment</h3>
+            <p className="text-sm text-slate-500">Target: {user.userRoadmap?.learningTime || "1 hour daily"}</p>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-4 w-full md:w-auto z-10">
+          {dailyGoalCompleted ? (
+            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-900/20 px-4 py-2 rounded-lg w-full md:w-auto justify-center">
+              <CheckCircle2 className="w-5 h-5" />
+              <span>Goal Met Today!</span>
+            </div>
+          ) : (
+            <button 
+              onClick={() => setDailyGoalCompleted(true)}
+              className="w-full md:w-auto px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg transition-colors shadow-lg shadow-purple-600/20 flex items-center justify-center gap-2"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              Check In
+            </button>
+          )}
         </div>
       </div>
 

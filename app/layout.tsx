@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { UserProvider } from "@/components/UserProvider";
 import GlobalAIAssistant from "@/components/GlobalAIAssistant";
 import MobileNav from "@/components/MobileNav";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,7 +54,9 @@ export default function RootLayout({
             <Navbar />
             <main className="flex-grow">
               <AppLayout>
-                {children}
+                <ErrorBoundary>
+                  {children}
+                </ErrorBoundary>
               </AppLayout>
             </main>
             <GlobalAIAssistant />
@@ -64,3 +67,4 @@ export default function RootLayout({
     </html>
   );
 }
+

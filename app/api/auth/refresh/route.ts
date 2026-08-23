@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
+import { getJwtSecret } from '@/lib/auth';
 
 export async function POST(req: Request) {
   try {
@@ -11,7 +12,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No refresh token found', code: 'NO_REFRESH_TOKEN' }, { status: 401 });
     }
 
-    const secret = process.env.JWT_SECRET || 'fallback_secret';
+    const secret = getJwtSecret();
     
     // Verify the refresh token
     const decoded = jwt.verify(refreshToken, secret) as any;

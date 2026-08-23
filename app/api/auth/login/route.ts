@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 import prisma from '@/lib/db';
 import jwt from 'jsonwebtoken';
+import { getJwtSecret } from '@/lib/auth';
 
 // In-memory rate limiting map
 // Key: IP address, Value: { count: number, resetTime: number }
@@ -45,13 +46,13 @@ export async function POST(req: Request) {
     // Reset rate limit on successful login
     rateLimitMap.delete(ip);
 
-    const secret = process.env.JWT_SECRET || 'fallback_secret';
+    const secret = getJwtSecret();
     
-    // Access token (7d)
+    // Short-lived access token (15 minutes — matches cookie maxAge)
     const accessToken = jwt.sign(
       { id: user.id, role: user.role, email: user.email },
       secret,
-      { expiresIn: '7d' }
+      { expiresIn: '15m' }
     );
 
     // Long-lived refresh token (7d)

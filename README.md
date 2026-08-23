@@ -1,19 +1,32 @@
-# 🚀 UConnect | AI Career & Team Ecosystem
+# 🚀 UConnect | AI-Powered Career & Community Ecosystem
 
-Welcome to **UConnect**, an advanced, AI-powered platform built to bridge the gap between talented individuals, teams, and career opportunities. UConnect acts as a comprehensive ecosystem for professional growth, offering everything from interactive skill roadmapping to explainable AI job matches.
+Welcome to **UConnect**, a next-generation platform designed to bridge the gap between talented individuals, collaborative teams, mentorship, and career opportunities. UConnect acts as a comprehensive ecosystem for professional growth, offering everything from interactive AI-driven skill roadmapping to explainable job matching and a vibrant community feed.
 
-## ✨ Key Features
+---
 
-### 👤 Dynamic Professional Profiles & U-SkillMap
+## ✨ Comprehensive Features
+
+### 👤 Dynamic Profiles & U-SkillMap
 - **Unified Identity**: A clean, professional layout to showcase your skills, projects, summary, and experience.
-- **U-SkillMap**: Visualize your technical domains using radar charts and matrices. Connects directly to Gemini AI to generate personalized learning roadmaps based on your target career goal.
+- **AI Profile Insights**: Instantly generates actionable insights, strengths, weaknesses, and a match score based on your target career.
+- **U-SkillMap**: Visualize your technical domains. Connects directly to Google's Gemini AI to generate personalized learning roadmaps, interactive quizzes, and a floating study assistant based on your exact career goals.
 
 ### 🧠 Career Command Center (Dashboard)
 - **Career Journey Tracker**: Visually track your progress through SkillMap, Projects, Resumes, and Jobs.
-- **Context-Aware AI Recommendation**: Using Gemini AI, your dashboard generates a daily focus and specific action items based on your exact skills and goals.
+- **Context-Aware AI Recommendation**: Your dashboard generates a daily focus and specific action items based on your skills and goals.
+- **Daily Commitment Tracker**: Build consistency with a daily learning check-in that generates smart AI-driven push notifications to keep you on track.
+
+### 🌐 Community Feed
+- **Reddit-Style Networking**: A fully integrated community feed where users can post thoughts, share knowledge, and ask questions.
+- **Interactive Engagement**: Upvote posts with a heart-based like system and jump into threaded comment discussions directly from the feed.
+
+### 🎓 Mentorship & Help Board
+- **AI Mentor Matchmaking**: UConnect uses AI to analyze your skill gaps and instantly pairs you with the perfect mentors from the community.
+- **Session Booking**: Mentors and students can schedule sessions directly through the platform.
+- **Help Board**: Post specific coding or career problems and get matched with peers or experts who can assist. Features an AI-assistant that can optionally answer your help board questions instantly.
 
 ### 💡 AI Project Portfolio
-- **AI Project Generator**: Don't know what to build? The Gemini-powered AI Assistant generates complete, portfolio-ready project ideas with problem statements, recommended stacks, features, and difficulty ratings.
+- **AI Project Generator**: Don't know what to build? The Gemini-powered AI Assistant generates complete, portfolio-ready project ideas with problem statements, recommended stacks, features, and difficulty ratings tailored to your current skill level.
 - **Showcase**: Beautifully track and display your projects with visual progress bars and status indicators.
 
 ### 👥 Smart Team Matchmaking
@@ -21,13 +34,12 @@ Welcome to **UConnect**, an advanced, AI-powered platform built to bridge the ga
 - **Missing Skills Alert**: Highlights exactly what skills you are missing so you can jump back to U-SkillMap to learn them.
 - **Find My Ideal Team**: Surface only the teams where you have a strong skill match.
 
-### 💼 Opportunity Engine & AI Scoring
+### 💼 Opportunity Engine & U-Resume
 - **Match Score UI**: Job cards feature visual match scores comparing your profile to job requirements.
-- **Skill Discovery Loop**: Click on a missing skill on a job posting to be taken straight to the SkillMap to add it to your learning path.
-- **AI Resume Review**: Built-in Applicant Tracking System (ATS) simulator evaluates your custom resume against specific job opportunities.
+- **U-Resume**: Build, scan, and improve your resume using AI. Features an Applicant Tracking System (ATS) simulator that evaluates your resume against specific job descriptions to boost your hireability.
 
 ### 🤖 Global UConnect AI Assistant
-- A floating global AI assistant accessible from any page. It securely inherits your entire profile context (skills, career goals, experience) to act as a hyper-personalized career advisor.
+- A floating global AI assistant accessible from any page via a purple spark icon. It securely inherits your entire profile context (skills, career goals, experience) to act as a hyper-personalized, context-aware career advisor.
 
 ---
 
@@ -83,7 +95,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to explore t
 ---
 
 ## 📂 Project Structure Highlights
-- `/app/dashboard` - The Career Command Center.
+- `/app/dashboard` - The Career Command Center & Daily Tracker.
+- `/app/feed` - Reddit-style Community Feed.
+- `/app/mentors` - AI Mentor Matchmaking and scheduling.
+- `/app/resume` - ATS Simulator and AI Resume Builder.
 - `/app/projects` - AI Project Assistant and Portfolio.
 - `/app/teams` - Smart matchmaking algorithm and team cards.
 - `/app/opportunities` - Job board with explainable match scoring.

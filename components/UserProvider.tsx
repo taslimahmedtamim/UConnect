@@ -44,14 +44,26 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchUser = async () => {
+  const fetchUser = async (isRetry = false) => {
     try {
       setLoading(true);
       setError(null);
       const res = await fetch("/api/users/profile");
       if (!res.ok) {
         if (res.status === 401) {
-          // Not logged in
+          // If this is the first attempt, try to refresh the access token
+          if (!isRetry) {
+            try {
+              const refreshRes = await fetch("/api/auth/refresh", { method: "POST" });
+              if (refreshRes.ok) {
+                // Token refreshed — retry fetching user profile
+                return fetchUser(true);
+              }
+            } catch {
+              // Refresh failed — user is not logged in
+            }
+          }
+          // Not logged in (or refresh failed)
           setUser(null);
           if (typeof window !== 'undefined') {
             localStorage.removeItem("user");

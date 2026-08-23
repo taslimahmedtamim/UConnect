@@ -50,6 +50,9 @@ model User {
   userRoadmap                UserRoadmap?
   notifications              Notification[]
   projectComments            ProjectComment[] @relation("ProjectComments")
+  feedPosts                  FeedPost[]     @relation("FeedPosts")
+  feedComments               FeedComment[]  @relation("FeedComments")
+  feedLikes                  FeedLike[]     @relation("FeedLikes")
 }
 
 model Project {
@@ -433,4 +436,51 @@ model Notification {
 
   @@index([userId])
   @@index([createdAt])
+}
+
+model FeedPost {
+  id        String   @id @default(uuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId  String
+  author    User     @relation("FeedPosts", fields: [authorId], references: [id], onDelete: Cascade)
+
+  comments  FeedComment[]
+  likes     FeedLike[]
+
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+model FeedComment {
+  id        String   @id @default(uuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  postId    String
+  post      FeedPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  authorId  String
+  author    User     @relation("FeedComments", fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([authorId])
+}
+
+model FeedLike {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  postId    String
+  post      FeedPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  userId    String
+  user      User     @relation("FeedLikes", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
 }

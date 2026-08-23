@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
+import { useUser } from "./UserProvider";
 import { 
   LayoutDashboard, 
   FolderOpen, 
@@ -21,23 +22,16 @@ import {
   Sun,
   ChevronLeft,
   Zap,
-  Bell
+  Bell,
+  AlarmClock,
+  Rss
 } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
-  const [user, setUser] = useState<{fullName: string, role: string} | null>(null);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) {
-      try {
-        setUser(JSON.parse(stored));
-      } catch (e) {}
-    }
-  }, []);
+  const { user } = useUser();
 
   const userRole = (user?.role || "student").toLowerCase();
 
@@ -90,22 +84,23 @@ export default function Sidebar() {
       title: "Main",
       items: [
         { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+        { label: "Profile", href: "/profile", icon: UserCircle },
+        { label: "U-SkillMap", href: "/skillmap", icon: Layers },
+        { label: "U-Resume", href: "/resume", icon: FileText },
+      ]
+    },
+    {
+      title: "Work & Collaboration",
+      items: [
         { label: "Projects", href: "/projects", icon: FolderOpen },
         { label: "Teams", href: "/teams", icon: Users },
         { label: "Opportunities", href: "/opportunities", icon: Briefcase },
       ]
     },
     {
-      title: "Career Tools",
-      items: [
-        { label: "Profile", href: "/profile", icon: UserCircle },
-        { label: "U-Resume", href: "/resume", icon: FileText },
-        { label: "U-SkillMap", href: "/skillmap", icon: Layers },
-      ]
-    },
-    {
       title: "Community",
       items: [
+        { label: "Community Feed", href: "/feed", icon: Rss },
         { label: "Leaderboard", href: "/leaderboard", icon: Trophy },
         { label: "Mentors", href: "/mentors", icon: GraduationCap },
       ]
@@ -206,7 +201,7 @@ export default function Sidebar() {
         ))}
       </div>
 
-      <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between">
+      <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col gap-4">
         <div className="flex items-center gap-3 overflow-hidden">
           <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm shadow-blue-600/20">
             {user?.fullName?.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'U'}
@@ -219,11 +214,11 @@ export default function Sidebar() {
           </div>
         </div>
         
-        <div className="flex items-center gap-1 shrink-0">
-        <div className="relative" ref={notifRef}>
+        <div className="flex items-center justify-between gap-1 w-full shrink-0 mt-2">
+        <div className="relative flex-1" ref={notifRef}>
           <button 
             onClick={() => setShowNotifPanel(!showNotifPanel)}
-            className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors relative"
+            className="w-full flex justify-center p-2 text-slate-500 hover:text-blue-600 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors relative"
             title="Notifications"
           >
             <Bell className="w-4 h-4" />
@@ -246,25 +241,43 @@ export default function Sidebar() {
                 {notifications.length === 0 ? (
                   <div className="p-6 text-center text-sm text-slate-500">No notifications yet.</div>
                 ) : (
-                  notifications.slice(0, 10).map((n) => (
-                    <Link
-                      key={n.id}
-                      href={n.link || '#'}
-                      onClick={() => setShowNotifPanel(false)}
-                      className={`block p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${
-                        !n.read ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''
-                      }`}
-                    >
-                      <div className="flex items-start gap-2">
-                        {!n.read && <span className="mt-1.5 w-2 h-2 bg-blue-500 rounded-full shrink-0"></span>}
-                        <div className={!n.read ? '' : 'ml-4'}>
-                          <div className="text-sm font-semibold text-slate-900 dark:text-white">{n.title}</div>
-                          <div className="text-xs text-slate-500 mt-0.5 line-clamp-2">{n.message}</div>
-                          <div className="text-[10px] text-slate-400 mt-1">{new Date(n.createdAt).toLocaleDateString()}</div>
+                  notifications.slice(0, 10).map((n) => {
+                    const getNotifProps = (type: string) => {
+                      switch (type) {
+                        case 'daily_reminder': return { icon: AlarmClock, color: 'text-purple-500', bg: 'bg-purple-100 dark:bg-purple-500/20' };
+                        case 'team_joined': return { icon: Users, color: 'text-emerald-500', bg: 'bg-emerald-100 dark:bg-emerald-500/20' };
+                        case 'new_message': return { icon: MessageSquare, color: 'text-blue-500', bg: 'bg-blue-100 dark:bg-blue-500/20' };
+                        default: return { icon: Bell, color: 'text-slate-500', bg: 'bg-slate-100 dark:bg-slate-800' };
+                      }
+                    };
+                    const NProps = getNotifProps(n.type);
+                    const NIcon = NProps.icon;
+
+                    return (
+                      <Link
+                        key={n.id}
+                        href={n.link || '#'}
+                        onClick={() => setShowNotifPanel(false)}
+                        className={`block p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${
+                          !n.read ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''
+                        }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={`p-2 rounded-full shrink-0 ${NProps.bg}`}>
+                            <NIcon className={`w-4 h-4 ${NProps.color}`} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm font-semibold text-slate-900 dark:text-white flex items-center justify-between">
+                              <span className="truncate pr-2">{n.title}</span>
+                              {!n.read && <span className="w-2 h-2 bg-blue-500 rounded-full shrink-0"></span>}
+                            </div>
+                            <div className="text-xs text-slate-500 mt-0.5 line-clamp-2">{n.message}</div>
+                            <div className="text-[10px] text-slate-400 mt-1.5 font-medium">{new Date(n.createdAt).toLocaleDateString()}</div>
+                          </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))
+                      </Link>
+                    );
+                  })
                 )}
               </div>
             </div>
@@ -272,7 +285,7 @@ export default function Sidebar() {
         </div>
           <button 
             onClick={toggleTheme}
-            className="p-1.5 text-slate-500 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+            className="flex-1 flex justify-center p-2 text-slate-500 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
           >
             {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
@@ -285,7 +298,7 @@ export default function Sidebar() {
               localStorage.removeItem("user");
               window.location.href = "/login";
             }}
-            className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+            className="flex-1 flex justify-center p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
           >
             <LogOut className="w-4 h-4" />
           </button>

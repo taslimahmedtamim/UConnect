@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useUser } from "./UserProvider";
 import {
   LayoutDashboard,
   FolderOpen,
@@ -18,20 +19,14 @@ import {
   GraduationCap,
   HelpCircle,
   LogOut,
-  Zap
+  Zap,
+  Rss
 } from "lucide-react";
 
 export default function MobileNav() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState<{ fullName: string; role: string } | null>(null);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) {
-      try { setUser(JSON.parse(stored)); } catch (e) {}
-    }
-  }, []);
+  const { user } = useUser();
 
   // Close menu on route change
   useEffect(() => {
@@ -62,12 +57,13 @@ export default function MobileNav() {
 
   const navItems = [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { label: "Profile", href: "/profile", icon: UserCircle },
+    { label: "U-SkillMap", href: "/skillmap", icon: Layers },
+    { label: "U-Resume", href: "/resume", icon: FileText },
     { label: "Projects", href: "/projects", icon: FolderOpen },
     { label: "Teams", href: "/teams", icon: Users },
     { label: "Opportunities", href: "/opportunities", icon: Briefcase },
-    { label: "Profile", href: "/profile", icon: UserCircle },
-    { label: "U-Resume", href: "/resume", icon: FileText },
-    { label: "U-SkillMap", href: "/skillmap", icon: Layers },
+    { label: "Community Feed", href: "/feed", icon: Rss },
     { label: "Leaderboard", href: "/leaderboard", icon: Trophy },
     { label: "Mentors", href: "/mentors", icon: GraduationCap },
     { label: "Messages", href: "/messages", icon: MessageSquare },

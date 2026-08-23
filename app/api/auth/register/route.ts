@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 import prisma from '@/lib/db';
 import jwt from 'jsonwebtoken';
+import { getJwtSecret } from '@/lib/auth';
 
 export async function POST(req: Request) {
   try {
@@ -80,12 +81,13 @@ export async function POST(req: Request) {
       });
     }
 
-    const secret = process.env.JWT_SECRET || 'fallback_secret';
+    const secret = getJwtSecret();
     
+    // Short-lived access token (15 minutes — matches cookie maxAge)
     const accessToken = jwt.sign(
       { id: user.id, role: user.role, email: user.email },
       secret,
-      { expiresIn: '7d' }
+      { expiresIn: '15m' }
     );
 
     const refreshToken = jwt.sign(
