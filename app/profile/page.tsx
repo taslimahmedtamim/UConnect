@@ -9,6 +9,7 @@ import {
 import CareerProgressCard from "@/components/profile/CareerProgressCard";
 import AICareerInsights from "@/components/profile/AICareerInsights";
 import ProfileGitHubStats from "@/components/profile/ProfileGitHubStats";
+import LearningHeatmap from "@/components/profile/LearningHeatmap";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -458,6 +459,13 @@ export default function ProfilePage() {
         {!isEditing && (
           <div className="w-full">
             <CareerProgressCard user={user} />
+          </div>
+        )}
+
+        {/* LEARNING HEATMAP */}
+        {!isEditing && (
+          <div className="w-full">
+            <LearningHeatmap activityLog={user?.activityLog || {}} />
           </div>
         )}
 

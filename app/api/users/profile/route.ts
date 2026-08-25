@@ -28,6 +28,7 @@ export async function GET(req: Request) {
         certificates: true,
         projects: true,
         userRoadmap: true,
+        activityLog: true,
         createdAt: true,
       }
     });

@@ -101,7 +101,7 @@ export default function SkillRadarChart({ userSkills }: Props) {
       </div>
 
       <div className="relative w-full flex justify-center items-center overflow-visible py-2">
-        <svg width={size} height={size} className="overflow-visible">
+        <svg viewBox={`0 0 ${size} ${size}`} className="w-full max-w-[320px] h-auto overflow-visible">
           <defs>
             <radialGradient id="radarGradient" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.5" />

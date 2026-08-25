@@ -19,7 +19,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-full w-full">
       {showSidebar && <Sidebar />}
-      <div className={`flex-1 min-w-0 overflow-x-hidden ${showSidebar ? 'md:ml-64 pt-16 md:pt-0' : 'pt-16'}`}>
+      <div className={`flex-1 min-w-0 overflow-x-hidden pb-20 md:pb-0 ${showSidebar ? 'md:ml-64 pt-16 md:pt-0' : 'pt-16'}`}>
         {children}
       </div>
     </div>

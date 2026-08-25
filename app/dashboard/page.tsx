@@ -22,11 +22,13 @@ import {
 } from "lucide-react";
 import { useUser } from "@/components/UserProvider";
 import CareerProgressCard from "@/components/profile/CareerProgressCard";
+import LearningHeatmap from "@/components/profile/LearningHeatmap";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { user, loading: userLoading } = useUser();
   const [dailyGoalCompleted, setDailyGoalCompleted] = useState(false);
+  const [activityLog, setActivityLog] = useState<Record<string, number>>({});
   const [projects, setProjects] = useState<any[]>([]);
   const [teamCount, setTeamCount] = useState(0);
   const [activeJobsCount, setActiveJobsCount] = useState(0);
@@ -50,6 +52,15 @@ export default function DashboardPage() {
     const fetchData = async () => {
       try {
         setLoadingStats(true);
+        // Initialize activity log if available
+        if ((user as any).activityLog) {
+          setActivityLog((user as any).activityLog);
+          const today = new Date().toISOString().split('T')[0];
+          if ((user as any).activityLog[today]) {
+            setDailyGoalCompleted(true);
+          }
+        }
+
         // Fetch projects
         const projRes = await fetch("/api/projects");
         const projData = await projRes.json();
@@ -195,6 +206,19 @@ export default function DashboardPage() {
     }
   };
 
+  const handleCheckIn = async () => {
+    try {
+      const res = await fetch('/api/users/activity', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        setActivityLog(data.activityLog);
+        setDailyGoalCompleted(true);
+      }
+    } catch (error) {
+      console.error("Failed to check in:", error);
+    }
+  };
+
   if (userLoading || !user) {
     return (
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 flex justify-center items-center h-64">
@@ -224,7 +248,7 @@ export default function DashboardPage() {
           </div>
           <p className="text-slate-500 dark:text-slate-400">Welcome back, {user.fullName.split(' ')[0]}. Here is your career progress.</p>
         </div>
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-xl text-white shadow-lg min-w-[300px]">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-xl text-white shadow-lg w-full md:min-w-[300px]">
           <div className="flex justify-between items-center mb-2">
             <span className="text-blue-100 text-sm font-medium uppercase tracking-wider">Target Role</span>
             <Target className="w-5 h-5 text-blue-200" />
@@ -265,7 +289,7 @@ export default function DashboardPage() {
             </div>
           ) : (
             <button 
-              onClick={() => setDailyGoalCompleted(true)}
+              onClick={handleCheckIn}
               className="w-full md:w-auto px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg transition-colors shadow-lg shadow-purple-600/20 flex items-center justify-center gap-2"
             >
               <CheckCircle2 className="w-4 h-4" />
@@ -316,6 +340,10 @@ export default function DashboardPage() {
             <span className="text-xs text-slate-500">{activeJobsCount} Active</span>
           </div>
         </div>
+      </div>
+
+      <div className="w-full">
+        <LearningHeatmap activityLog={activityLog} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

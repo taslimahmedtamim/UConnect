@@ -25,6 +25,7 @@ model User {
   profileImage       String?
   experience         Json     @default("[]") // Array of experience objects
   certificates       Json     @default("[]") // Array of certificate objects
+  activityLog        Json     @default("{}") // Object mapping date strings to activity count
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
