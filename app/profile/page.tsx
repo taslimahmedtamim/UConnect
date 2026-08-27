@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { 
   UserCircle, GraduationCap, Code, Save, Plus, X, 
-  MapPin, Edit3, Briefcase, Award, ShieldCheck, Link as LinkIcon, Target, Globe, Trash2, FileText
+  MapPin, Edit3, Briefcase, Award, ShieldCheck, Link as LinkIcon, Target, Globe, Trash2, FileText, Users
 } from "lucide-react";
 import CareerProgressCard from "@/components/profile/CareerProgressCard";
 import AICareerInsights from "@/components/profile/AICareerInsights";
 import ProfileGitHubStats from "@/components/profile/ProfileGitHubStats";
 import LearningHeatmap from "@/components/profile/LearningHeatmap";
+import SkillRadarChart from "@/components/profile/SkillRadarChart";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -34,6 +35,8 @@ export default function ProfilePage() {
     certificates: [] as any[],
     projects: [] as any[],
     userRoadmap: null as any,
+    ownedTeams: [] as any[],
+    memberTeams: [] as any[],
   });
 
   // Modal states for adding experience and certificates
@@ -76,6 +79,8 @@ export default function ProfilePage() {
           certificates: data.user.certificates || [],
           projects: data.user.projects || [],
           userRoadmap: data.user.userRoadmap || null,
+          ownedTeams: data.user.ownedTeams || [],
+          memberTeams: data.user.memberTeams || [],
         });
       } catch (error) {
         console.error(error);
@@ -123,11 +128,9 @@ export default function ProfilePage() {
 
   const handleAddCertificate = () => {
     if (newCert.name && newCert.issuer) {
-      // Generate a mock blockchain transaction ID if not provided
-      const txId = newCert.txId || '0x' + Math.random().toString(16).substring(2, 10) + Math.random().toString(16).substring(2, 10);
       setFormData({
         ...formData,
-        certificates: [...formData.certificates, { ...newCert, txId, isVerified: true }]
+        certificates: [...formData.certificates, { ...newCert, isVerified: false }]
       });
       setNewCert({ name: "", issuer: "", date: "", txId: "", imageUrl: "", isVerified: false });
       setShowCertModal(false);
@@ -182,7 +185,7 @@ export default function ProfilePage() {
           setNewCert(prev => ({ ...prev, imageUrl: data.url }));
         }
       } else {
-        alert('Upload failed: ' + data.message);
+        alert('Upload failed: ' + (data.message || data.error));
       }
     } catch (err) {
       console.error(err);
@@ -269,38 +272,49 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6">
-      
-      {/* Floating Action Buttons */}
-      <div className="fixed bottom-8 right-8 z-50 flex gap-4">
-        {!isEditing ? (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-full font-bold shadow-lg transition-all hover:scale-105"
-          >
-            <Edit3 className="w-5 h-5" />
-            Edit Profile
-          </button>
-        ) : (
-          <button
-            onClick={async () => {
-              await handleSave();
-              setIsEditing(false);
-            }}
-            disabled={saving}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-bold shadow-lg shadow-blue-600/30 transition-all hover:scale-105 disabled:opacity-50"
-          >
-            <Save className="w-5 h-5" />
-            {saving ? "Saving..." : "Save Profile"}
-          </button>
-        )}
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-20">
+      {/* HERO BANNER - A massive, premium gradient header */}
+      <div className="relative h-64 sm:h-80 w-full overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800" />
+        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob" />
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000" />
       </div>
 
-      <div className="space-y-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative -mt-32 sm:-mt-40 z-10">
         
-        {/* HERO SECTION */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-8 flex items-start gap-6 relative">
+        {/* Floating Action Buttons */}
+        <div className="fixed bottom-8 right-8 z-50 flex gap-4">
+          {!isEditing ? (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-full font-bold shadow-lg transition-all hover:scale-105"
+            >
+              <Edit3 className="w-5 h-5" />
+              Edit Profile
+            </button>
+          ) : (
+            <button
+              onClick={async () => {
+                await handleSave();
+                setIsEditing(false);
+              }}
+              disabled={saving}
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-bold shadow-lg shadow-blue-600/30 transition-all hover:scale-105 disabled:opacity-50"
+            >
+              <Save className="w-5 h-5" />
+              {saving ? "Saving..." : "Save Profile"}
+            </button>
+          )}
+        </div>
+
+        <div className="space-y-8">
           
+          {/* HERO SECTION */}
+          <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-white/50 dark:border-slate-700/50 p-6 sm:p-10 flex flex-col md:flex-row items-center gap-8 relative mb-4">
+          
+          {/* Avatar & Info Wrapper */}
+          <div className="flex flex-col sm:flex-row items-center gap-6 flex-1 w-full">
           {/* Avatar */}
           <div className="relative shrink-0">
             {formData.profileImage ? (
@@ -322,13 +336,13 @@ export default function ProfilePage() {
             )}
 
             {/* Verified Checkmark */}
-            <div className="absolute bottom-1 right-1 w-8 h-8 bg-emerald-500 rounded-full border-4 border-white dark:border-slate-900 flex items-center justify-center">
-              <ShieldCheck className="w-4 h-4 text-white" />
+            <div className="absolute -bottom-3 -right-3 w-12 h-12 bg-emerald-500 rounded-xl shadow-lg border-4 border-white dark:border-slate-900 flex items-center justify-center rotate-3 group-hover:rotate-12 transition-transform">
+              <ShieldCheck className="w-6 h-6 text-white" />
             </div>
           </div>
 
           {/* User Details */}
-          <div className="flex-1 pt-2 relative">
+          <div className="flex-1 pt-2 md:pt-0 pb-2 relative">
 
             <div className="flex items-center gap-3 mb-2">
               {isEditing && (
@@ -453,28 +467,84 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
+          </div>
+
+          {/* Skill Radar Chart */}
+          {!isEditing && formData.skills.length > 0 && user?.role !== 'recruiter' && (
+            <div className="w-full md:w-72 shrink-0 border-t md:border-t-0 md:border-l border-slate-200 dark:border-slate-800 pt-6 md:pt-0 md:pl-8 flex flex-col items-center justify-center">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Skill Map</h3>
+              <SkillRadarChart 
+                skills={formData.skills.map((s: any) => typeof s === 'string' ? s : s.name)} 
+                title={formData.title}
+                target={formData.userRoadmap?.careerGoal}
+              />
+            </div>
+          )}
         </div>
 
+        {/* RECRUITER CTA */}
+        {!isEditing && user?.role === 'recruiter' && (
+          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl shadow-lg p-8 flex flex-col md:flex-row items-center justify-between text-white">
+            <div>
+              <h2 className="text-2xl font-bold mb-2 flex items-center gap-2"><Target className="w-6 h-6" /> Talent Acquisition Hub</h2>
+              <p className="text-blue-100 max-w-xl">You are currently in Recruiter Mode. Ready to discover top talent for your company? Post an opportunity or browse our talent pool to find the perfect match.</p>
+            </div>
+            <div className="mt-6 md:mt-0 flex gap-4 shrink-0">
+              <button onClick={() => router.push('/opportunities')} className="px-6 py-3 bg-white text-blue-700 hover:bg-blue-50 font-bold rounded-xl shadow-md transition-all">Post a Job</button>
+            </div>
+          </div>
+        )}
+
         {/* PROGRESS CARD */}
-        {!isEditing && (
+        {!isEditing && user?.role !== 'recruiter' && (
           <div className="w-full">
             <CareerProgressCard user={user} />
           </div>
         )}
 
         {/* LEARNING HEATMAP */}
-        {!isEditing && (
+        {!isEditing && user?.role !== 'recruiter' && (
           <div className="w-full">
             <LearningHeatmap activityLog={user?.activityLog || {}} />
           </div>
         )}
 
         {/* GITHUB STATS */}
-        {!isEditing && formData.githubUsername && (
+        {!isEditing && formData.githubUsername && user?.role !== 'recruiter' && (
           <ProfileGitHubStats 
             username={formData.githubUsername} 
             onSyncSkills={handleSyncGitHubSkills}
+            compact={true}
           />
+        )}
+
+        {/* MY TEAMS SECTION */}
+        {(!isEditing && (formData.ownedTeams.length > 0 || formData.memberTeams.length > 0)) && (
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+              <Users className="w-5 h-5 text-indigo-500" /> My Teams
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {formData.ownedTeams.map((team: any) => (
+                <div key={`owned-${team.id}`} className="bg-indigo-50 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-800/30 rounded-2xl p-5 flex flex-col hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors cursor-pointer" onClick={() => router.push(`/teams/${team.id}`)}>
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-bold text-slate-900 dark:text-white truncate">{team.name}</h3>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-900/40 px-2 py-0.5 rounded">Owner</span>
+                  </div>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mt-auto">{team.description}</p>
+                </div>
+              ))}
+              {formData.memberTeams.filter((mTeam: any) => !formData.ownedTeams.some((oTeam: any) => oTeam.id === mTeam.id)).map((team: any) => (
+                <div key={`member-${team.id}`} className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 flex flex-col hover:border-blue-300 dark:hover:border-blue-700 transition-colors cursor-pointer" onClick={() => router.push(`/teams/${team.id}`)}>
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-bold text-slate-900 dark:text-white truncate">{team.name}</h3>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded">Member</span>
+                  </div>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mt-auto">{team.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
         {/* ABOUT SECTION */}
@@ -651,6 +721,7 @@ export default function ProfilePage() {
         </div>
 
         {/* PROJECTS SECTION */}
+        {user?.role !== 'recruiter' && (
         <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -700,8 +771,10 @@ export default function ProfilePage() {
             )}
           </div>
         </div>
+        )}
 
         {/* BLOCKCHAIN CERTIFICATES SECTION */}
+        {user?.role !== 'recruiter' && (
         <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -716,39 +789,44 @@ export default function ProfilePage() {
             )}
           </div>
 
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {formData.certificates.map((cert: any, index: number) => (
-              <div key={index} className="flex gap-4 border-b border-slate-100 dark:border-slate-800 pb-6 last:border-0 last:pb-0 relative group">
-                <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center shrink-0">
-                  <Award className="w-6 h-6 text-amber-500" />
+              <div key={index} className="flex flex-col bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 relative group hover:border-amber-300 dark:hover:border-amber-700/50 transition-colors">
+                <div className="flex gap-4 mb-4">
+                  <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-xl flex items-center justify-center shrink-0 shadow-sm border border-slate-100 dark:border-slate-700">
+                    <Award className="w-6 h-6 text-amber-500" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-slate-900 dark:text-white line-clamp-1 pr-6">{cert.name}</h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">{cert.issuer}</p>
+                    <p className="text-xs text-slate-500 mt-1">Issued {cert.date}</p>
+                  </div>
                 </div>
-                <div className="flex-1 pr-8">
-                  <h3 className="font-bold text-slate-900 dark:text-white">{cert.name}</h3>
-                  <p className="text-sm text-slate-800 dark:text-slate-200">{cert.issuer}</p>
-                  <p className="text-xs text-slate-500 mb-3">Issued {cert.date}</p>
-                  
-                  {/* Blockchain Verified Badge */}
-                  {cert.isVerified && (
-                    <div className="inline-flex flex-col items-start bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-900/50 rounded-lg p-3 w-full mt-2">
-                      <div className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-semibold text-xs uppercase tracking-wider mb-1">
-                        <ShieldCheck className="w-4 h-4" /> Blockchain Verified
-                      </div>
-                      <div className="flex items-center gap-1.5 text-xs text-slate-500 font-mono break-all bg-white dark:bg-slate-900 p-2 rounded w-full border border-slate-100 dark:border-slate-800">
-                        <LinkIcon className="w-3 h-3 shrink-0" />
-                        TxID: {cert.txId}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                {cert.imageUrl && (
-                  <div className="ml-4 shrink-0 pr-8">
-                    <img src={cert.imageUrl} alt={cert.name} className="w-32 h-24 object-cover rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm hover:scale-105 transition-transform" />
+                
+                {/* Blockchain Verified Badge */}
+                {cert.isVerified && (
+                  <div className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-semibold text-xs uppercase tracking-wider mb-3">
+                    <ShieldCheck className="w-4 h-4" /> Blockchain Verified
                   </div>
                 )}
+                
+                {cert.imageUrl && cert.imageUrl.toLowerCase().endsWith('.pdf') ? (
+                  <a href={cert.imageUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full h-32 bg-slate-100 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors group/pdf">
+                    <div className="flex flex-col items-center text-slate-400 group-hover/pdf:text-blue-500 transition-colors">
+                      <FileText className="w-8 h-8 mb-2" />
+                      <span className="text-xs font-bold uppercase tracking-wider">View PDF</span>
+                    </div>
+                  </a>
+                ) : cert.imageUrl ? (
+                  <a href={cert.imageUrl} target="_blank" rel="noopener noreferrer" className="w-full h-32 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 block">
+                    <img src={cert.imageUrl} alt={cert.name} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
+                  </a>
+                ) : null}
+
                 {isEditing && (
                   <button
                     onClick={() => handleRemoveCertificate(index)}
-                    className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity bg-red-50 dark:bg-red-900/30 rounded-full"
+                    className="absolute top-2 right-2 p-2 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity bg-white dark:bg-slate-900 rounded-full shadow-sm border border-slate-200 dark:border-slate-700"
                     title="Remove Certificate"
                   >
                     <X className="w-4 h-4" />
@@ -757,13 +835,14 @@ export default function ProfilePage() {
               </div>
             ))}
             {formData.certificates.length === 0 && (
-              <p className="text-sm text-slate-500 italic">No certifications added yet.</p>
+              <p className="text-sm text-slate-500 italic col-span-2">No certifications added yet.</p>
             )}
           </div>
         </div>
+        )}
 
         {/* AI CAREER INSIGHTS SECTION */}
-        {!isEditing && (
+        {!isEditing && user?.role !== 'recruiter' && (
           <div className="mt-8">
             <AICareerInsights user={user} />
           </div>
@@ -807,7 +886,7 @@ export default function ProfilePage() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white dark:bg-slate-900 rounded-xl p-6 w-full max-w-md shadow-xl border border-slate-200 dark:border-slate-800">
             <h3 className="text-lg font-bold mb-4 dark:text-white flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-emerald-500" /> Add Verified Certificate
+              <Award className="w-5 h-5 text-blue-500" /> Add Certificate
             </h3>
             <div className="space-y-4">
               <div>
@@ -823,32 +902,28 @@ export default function ProfilePage() {
                 <input type="text" value={newCert.date} onChange={e => setNewCert({...newCert, date: e.target.value})} className="w-full p-2 border rounded-md dark:bg-slate-800 dark:border-slate-700 dark:text-white" placeholder="e.g. Aug 2026" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-500 mb-1">Upload Certificate Image</label>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Upload Certificate (Image or PDF)</label>
                 <input 
                   type="file" 
-                  accept="image/*"
+                  accept="image/*,application/pdf"
                   onChange={(e) => handleFileUpload(e, 'certificate')} 
                   className="w-full p-2 border rounded-md dark:bg-slate-800 dark:border-slate-700 dark:text-white text-sm" 
                 />
-                {newCert.imageUrl && <p className="text-xs text-emerald-500 mt-1">✓ Image ready for upload</p>}
+                {newCert.imageUrl && <p className="text-xs text-emerald-500 mt-1">✓ File ready for upload</p>}
               </div>
             </div>
-            <div className="mt-4 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
-              <p className="text-xs text-slate-500 flex items-start gap-2">
-                <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-500 mt-0.5" />
-                This certificate will be automatically minted on the testnet and receive a unique transaction hash for verification.
-              </p>
-            </div>
+            
             <div className="flex justify-end gap-2 mt-6">
               <button onClick={() => setShowCertModal(false)} className="px-4 py-2 text-sm text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md">Cancel</button>
               <button onClick={handleAddCertificate} className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2">
-                Mint to Blockchain
+                Add Certificate
               </button>
             </div>
           </div>
         </div>
       )}
 
+      </div>
     </div>
   );
 }

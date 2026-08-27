@@ -17,9 +17,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'File size exceeds 2MB limit', code: 'FILE_TOO_LARGE' }, { status: 400 });
     }
 
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
     if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json({ error: 'Invalid file type. Only JPG, PNG, and WEBP are allowed.', code: 'INVALID_FILE_TYPE' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid file type. Only JPG, PNG, WEBP, and PDF are allowed.', code: 'INVALID_FILE_TYPE' }, { status: 400 });
     }
 
     const bytes = await file.arrayBuffer();

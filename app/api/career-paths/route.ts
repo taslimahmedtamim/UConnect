@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     const user = await getUserFromRequest(req);
     if (!user) return unauthorizedResponse();
 
-    // Only non-students (admins/teachers) can create career paths
+    // Only non-students (admins/mentors) can create career paths
     if (user.role === 'student') return NextResponse.json({ success: false, message: 'Insufficient permissions' }, { status: 403 });
 
     const data = await req.json();

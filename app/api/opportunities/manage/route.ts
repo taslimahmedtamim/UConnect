@@ -7,7 +7,7 @@ export async function GET(req: Request) {
     const user = await getUserFromRequest(req);
     if (!user) return unauthorizedResponse();
 
-    // Only allow recruiters/teachers to manage opportunities
+    // Only allow recruiters/mentors to manage opportunities
     if (user.role === 'student') {
       return NextResponse.json({ success: false, message: 'Forbidden' }, { status: 403 });
     }

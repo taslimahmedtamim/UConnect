@@ -14,11 +14,13 @@ type Question = {
 export default function AIQuizModal({
   isOpen,
   onClose,
-  topic
+  topic,
+  onComplete
 }: {
   isOpen: boolean;
   onClose: () => void;
   topic: string;
+  onComplete?: (score: number, total: number) => void;
 }) {
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -88,7 +90,7 @@ export default function AIQuizModal({
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm">
-      <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
+      <div className="w-full max-w-lg max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
           <div className="flex items-center gap-3">
             <Sparkles className="w-5 h-5 text-amber-300" />
@@ -102,7 +104,7 @@ export default function AIQuizModal({
           </button>
         </div>
 
-        <div className="p-4 sm:p-6 min-h-[300px] flex flex-col">
+        <div className="p-4 sm:p-6 min-h-[300px] flex flex-col overflow-y-auto">
           {loading ? (
             <div className="flex-1 flex flex-col items-center justify-center text-slate-500 gap-4">
               <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
@@ -117,7 +119,13 @@ export default function AIQuizModal({
               <p className="text-lg text-slate-600 dark:text-slate-300">
                 You scored <span className="font-bold text-blue-600 dark:text-blue-400">{score}</span> out of {questions.length}
               </p>
-              <button onClick={onClose} className="mt-4 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-md w-full sm:w-auto">
+              <button 
+                onClick={() => {
+                  onComplete?.(score, questions.length);
+                  onClose();
+                }} 
+                className="mt-4 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-md w-full sm:w-auto"
+              >
                 Finish & Close
               </button>
             </div>
@@ -137,14 +145,14 @@ export default function AIQuizModal({
                   const isSelected = selectedOption === idx;
                   const isCorrect = idx === questions[currentQuestion].correctAnswerIndex;
                   
-                  let optClass = "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-blue-400";
+                  let optClass = "bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-800 transition-all shadow-sm";
                   
                   if (showAnswer) {
-                    if (isCorrect) optClass = "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-500 text-emerald-800 dark:text-emerald-300 font-medium";
-                    else if (isSelected && !isCorrect) optClass = "bg-rose-50 dark:bg-rose-900/30 border-rose-500 text-rose-800 dark:text-rose-300 font-medium";
-                    else optClass = "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-600 opacity-50 cursor-not-allowed";
+                    if (isCorrect) optClass = "bg-emerald-50 dark:bg-emerald-900/40 border-emerald-500 text-emerald-900 dark:text-emerald-300 font-bold ring-1 ring-emerald-500 shadow-sm";
+                    else if (isSelected && !isCorrect) optClass = "bg-rose-50 dark:bg-rose-900/40 border-rose-500 text-rose-900 dark:text-rose-300 font-bold ring-1 ring-rose-500 shadow-sm";
+                    else optClass = "bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800/50 text-slate-400 dark:text-slate-600 opacity-60 cursor-not-allowed";
                   } else if (isSelected) {
-                    optClass = "bg-blue-50 dark:bg-blue-900/30 border-blue-500 text-blue-800 dark:text-blue-300 font-medium ring-1 ring-blue-500";
+                    optClass = "bg-blue-50 dark:bg-blue-900/40 border-blue-600 dark:border-blue-500 text-blue-900 dark:text-blue-300 font-bold ring-2 ring-blue-600 dark:ring-blue-500 shadow-sm";
                   }
 
                   return (

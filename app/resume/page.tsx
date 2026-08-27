@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { 
   Sparkles, Download, Plus, X, Edit3, Briefcase, GraduationCap, 
   Code, Award, Globe, Link as LinkIcon, User, CheckCircle2, AlertCircle, ChevronDown, ChevronUp,
-  Shield, Code2, MapPin, Phone, Mail, Wand2
+  Shield, Code2, MapPin, Phone, Mail, Wand2, Save
 } from "lucide-react";
 
 const GithubIcon = ({ className }: { className?: string }) => (
@@ -23,6 +23,8 @@ const LinkedinIcon = ({ className }: { className?: string }) => (
 export default function ResumeBuilderPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
   
   // Section Visibility Toggles
   const [visibleSections, setVisibleSections] = useState({
@@ -132,6 +134,39 @@ export default function ResumeBuilderPage() {
 
     fetchProfile();
   }, [router]);
+
+  const handleSaveProfile = async () => {
+    setSaving(true);
+    setSaveSuccess(false);
+    try {
+      const payload = {
+        title: resumeData.headline,
+        bio: resumeData.summary,
+        location: resumeData.address,
+        githubUsername: resumeData.github,
+        skills: resumeData.skills,
+        experience: resumeData.experience,
+        // Map resume 'certifications' (array of strings) back to the expected format if possible, 
+        // or leave them out if they don't match the DB schema. The DB expects objects for certificates.
+        // For simplicity, we just save the fields that map cleanly.
+      };
+
+      const res = await fetch("/api/users/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 3000);
+      }
+    } catch (error) {
+      console.error("Failed to save profile", error);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   // Handle Input Changes
   const handleInputChange = (field: string, value: string) => {
@@ -273,6 +308,8 @@ export default function ResumeBuilderPage() {
     }
   };
 
+
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
@@ -311,7 +348,14 @@ export default function ResumeBuilderPage() {
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">U-Resume Builder</h1>
           <p className="text-sm text-slate-500">AI-powered resume builder</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
+          <button 
+            onClick={handleSaveProfile}
+            disabled={saving}
+            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition-all shadow-sm shadow-emerald-600/20 disabled:opacity-70"
+          >
+            <Save className="w-4 h-4" /> {saving ? "Saving..." : saveSuccess ? "Saved!" : "Save Profile"}
+          </button>
           <button 
             onClick={() => setScanModalOpen(true)}
             className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white px-4 py-2 rounded-lg font-medium transition-all shadow-sm"

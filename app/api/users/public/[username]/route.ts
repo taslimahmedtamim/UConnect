@@ -34,7 +34,46 @@ export async function GET(req: Request, { params }: { params: Promise<{ username
             name: true,
             description: true,
             requiredSkills: true,
-            members: { select: { id: true } }
+            members: { select: { id: true } },
+            projects: {
+              select: {
+                id: true,
+                title: true,
+                description: true,
+                tags: true,
+                likes: true,
+                views: true,
+                repoUrl: true,
+                demoUrl: true,
+                createdAt: true,
+                isPrivate: true
+              },
+              where: { isPrivate: false }
+            }
+          }
+        },
+        memberTeams: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            requiredSkills: true,
+            members: { select: { id: true } },
+            projects: {
+              select: {
+                id: true,
+                title: true,
+                description: true,
+                tags: true,
+                likes: true,
+                views: true,
+                repoUrl: true,
+                demoUrl: true,
+                createdAt: true,
+                isPrivate: true
+              },
+              where: { isPrivate: false }
+            }
           }
         },
         projects: {
@@ -47,8 +86,10 @@ export async function GET(req: Request, { params }: { params: Promise<{ username
             views: true,
             repoUrl: true,
             demoUrl: true,
-            createdAt: true
+            createdAt: true,
+            isPrivate: true
           },
+          where: { isPrivate: false },
           orderBy: { createdAt: 'desc' }
         }
         // Don't select sensitive info like email, passwordHash, etc.
@@ -59,7 +100,29 @@ export async function GET(req: Request, { params }: { params: Promise<{ username
       return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, user });
+    const allProjectsMap = new Map();
+    if (user.projects) {
+      user.projects.forEach((p: any) => allProjectsMap.set(p.id, p));
+    }
+    if (user.ownedTeams) {
+      user.ownedTeams.forEach((t: any) => {
+        if (t.projects) t.projects.forEach((p: any) => allProjectsMap.set(p.id, p));
+      });
+    }
+    if (user.memberTeams) {
+      user.memberTeams.forEach((t: any) => {
+        if (t.projects) t.projects.forEach((p: any) => allProjectsMap.set(p.id, p));
+      });
+    }
+
+    const combinedProjects = Array.from(allProjectsMap.values()).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+    const formattedUser = {
+      ...user,
+      projects: combinedProjects
+    };
+
+    return NextResponse.json({ success: true, user: formattedUser });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });

@@ -32,6 +32,8 @@ export async function POST(req: Request) {
     const user = await getUserFromRequest(req);
     if (!user) return unauthorizedResponse();
 
+
+
     const { name, description, requiredSkills } = await req.json();
 
     if (!name || !description) {
@@ -43,6 +45,7 @@ export async function POST(req: Request) {
         name,
         description,
         requiredSkills: requiredSkills || [],
+        assistantIds: [],
         ownerId: user.id,
         members: {
           connect: { id: user.id } // Owner is inherently a member

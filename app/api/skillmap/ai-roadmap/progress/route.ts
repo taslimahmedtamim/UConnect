@@ -13,11 +13,18 @@ export async function PATCH(req: Request) {
     const user = await getUserFromRequest(req);
     if (!user) return unauthorizedResponse();
 
-    const { completedTasks } = await req.json();
+    const { completedTasks, completedPhases = [] } = await req.json();
 
     if (!Array.isArray(completedTasks)) {
       return NextResponse.json(
         { success: false, message: 'completedTasks must be an array of task IDs' },
+        { status: 400 }
+      );
+    }
+
+    if (!Array.isArray(completedPhases)) {
+      return NextResponse.json(
+        { success: false, message: 'completedPhases must be an array of numbers' },
         { status: 400 }
       );
     }
@@ -65,6 +72,7 @@ export async function PATCH(req: Request) {
     const updatedProgress = {
       ...existingProgress,
       completedTasks,
+      completedPhases,
       learningStreak,
       lastLearningDate: today,
     };

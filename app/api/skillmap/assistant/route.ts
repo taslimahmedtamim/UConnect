@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
+import { getFlashModel, hasApiKey } from '@/lib/ai';
 
 export async function POST(req: Request) {
   try {
@@ -13,16 +13,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, message: 'Invalid input' }, { status: 400 });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
+    if (!hasApiKey()) {
       return NextResponse.json({ success: false, message: 'API key missing' }, { status: 500 });
     }
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });
+    const model = getFlashModel();
 
-    // Format chat history for Gemini
-    const history = messages.slice(0, -1).map(msg => ({
+    // Format chat history for Gemini. Skip the initial UI greeting to maintain alternating user/model roles.
+    let chatHistory = messages.slice(0, -1);
+    if (chatHistory.length > 0 && chatHistory[0].role === 'assistant' && chatHistory[0].content.includes('AI Learning Assistant')) {
+      chatHistory = chatHistory.slice(1);
+    }
+
+    const history = chatHistory.map((msg: any) => ({
       role: msg.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: msg.content }],
     }));
@@ -31,7 +34,11 @@ export async function POST(req: Request) {
       history: [
         {
           role: 'user',
-          parts: [{ text: `You are an AI Learning Assistant for a student. The student is currently studying: "${topic}". Keep your answers concise, encouraging, and highly relevant to this topic. Use simple markdown formatting.` }]
+          parts: [{ text: `You are an AI Learning Assistant for a student. The student is currently studying the following topic: "${topic}". 
+
+CRITICAL INSTRUCTION: If the student asks you to "explain this simply", "give a code example", "give a use case", or asks any other question using pronouns like "this" or "it", you MUST assume they are asking about the topic "${topic}". Do NOT ask them what they want you to explain. Just directly explain the topic "${topic}".
+
+Keep your answers concise, encouraging, and highly relevant. Use simple markdown formatting.` }]
         },
         {
           role: 'model',

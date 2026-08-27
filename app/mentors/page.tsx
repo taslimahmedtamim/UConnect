@@ -45,7 +45,7 @@ export default function MentorsPage() {
   const [selectedMentorToBook, setSelectedMentorToBook] = useState<any | null>(null);
   const [showBecomeMentorModal, setShowBecomeMentorModal] = useState(false);
   const { user } = useUser();
-  const isEducator = user?.role === 'teacher' || user?.role === 'mentor';
+  const isEducator = user?.role === 'mentor' || user?.role === 'admin';
   const [activeTab, setActiveTab] = useState<'directory' | 'sessions'>('directory');
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
+import { getFlashModel, hasApiKey } from '@/lib/ai';
 
 export async function POST(req: Request) {
   try {
@@ -13,13 +13,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, message: 'Text to improve is required' }, { status: 400 });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
+    if (!hasApiKey()) {
       return NextResponse.json({ success: false, message: 'Gemini API Key missing' }, { status: 500 });
     }
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });
+    const model = getFlashModel();
 
     let prompt = `You are an expert Resume Writer and Career Coach. Rewrite the following text to make it more professional, impactful, and action-oriented.`;
 

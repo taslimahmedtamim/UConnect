@@ -110,6 +110,18 @@ export async function GET(req: Request) {
       }
     }
 
+    // Top Projects
+    const topProjects = await prisma.project.findMany({
+      where: { isPrivate: false },
+      orderBy: { likes: 'desc' },
+      take: 20,
+      include: {
+        author: {
+          select: { fullName: true, username: true, profileImage: true, badge: true }
+        }
+      }
+    });
+
     return NextResponse.json({
       success: true,
       leaderboards: {
@@ -118,6 +130,7 @@ export async function GET(req: Request) {
         endorsements: endorsementLeaderboard,
         projects: projectsLeaderboard
       },
+      topProjects,
       currentUserRank
     });
   } catch (error: any) {

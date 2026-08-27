@@ -5,8 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { 
   ArrowLeft, Terminal, Layout, Clock, 
-  CheckCircle2, Circle, GitBranch, Globe, 
-  Edit3, ThumbsUp, Eye, Target, Share2, Users 
+  CheckCircle2, Circle, GitBranch, Globe, Lock,
+  Edit3, ThumbsUp, ThumbsDown, Eye, Target, Share2, Users 
 } from "lucide-react";
 import { useUser } from "@/components/UserProvider";
 import GitHubStatsDetailed from "@/components/projects/GitHubStatsDetailed";
@@ -24,32 +24,102 @@ export default function ProjectDetailsPage() {
   const [saving, setSaving] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [newTaskDeadline, setNewTaskDeadline] = useState("");
+  const [hasLiked, setHasLiked] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     fetchProject();
+    
+    const interval = setInterval(() => {
+      fetchProject(true);
+    }, 3000);
+    return () => clearInterval(interval);
   }, [params.id]);
 
-  const fetchProject = async () => {
+  const fetchProject = async (silent = false) => {
     try {
+      if (!silent) setLoading(true);
       const res = await fetch(`/api/projects/${params.id}`);
       const data = await res.json();
       if (data.success) {
         setProject(data.project);
-        setRepoUrl(data.project.repoUrl || "");
-        setDemoUrl(data.project.demoUrl || "");
-      } else {
+        if (!silent) {
+          setRepoUrl(data.project.repoUrl || "");
+          setDemoUrl(data.project.demoUrl || "");
+        }
+      } else if (!silent) {
         router.push("/projects");
       }
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
+    }
+  };
+
+  const handleLike = async () => {
+    if (!project) return;
+    const previousProject = { ...project };
+    setProject({ ...project, likes: project.likes + 1 });
+    try {
+      const res = await fetch(`/api/projects/${params.id}/like`, { method: 'POST' });
+      if (!res.ok) throw new Error("Failed to like");
+    } catch (e) {
+      setProject(previousProject);
+    }
+  };
+
+  const handleDislike = async () => {
+    if (!project || project.likes <= 0) return;
+    const previousProject = { ...project };
+    setProject({ ...project, likes: project.likes - 1 });
+    try {
+      const res = await fetch(`/api/projects/${params.id}/dislike`, { method: 'POST' });
+      if (!res.ok) throw new Error("Failed to dislike");
+    } catch (e) {
+      setProject(previousProject);
+    }
+  };
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleTogglePrivacy = async () => {
+    if (!project) return;
+    const previousProject = { ...project };
+    setProject({ ...project, isPrivate: !project.isPrivate });
+    try {
+      const res = await fetch(`/api/projects/${params.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isPrivate: !project.isPrivate })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setProject(data.project);
+      } else {
+        setProject(previousProject);
+      }
+    } catch (error) {
+      setProject(previousProject);
     }
   };
 
   const isAuthor = user?.id === project?.authorId;
+  const isTeamOwner = project?.team && project.team.ownerId === user?.id;
   const isTeamMember = project?.team && (project.team.ownerId === user?.id || project.team.members.some((m: any) => m.id === user?.id));
-  const canEdit = isAuthor || isTeamMember;
+  const isAssistant = project?.team && Array.isArray(project.team.assistantIds) && project.team.assistantIds.includes(user?.id);
+  const isMentorMember = project?.team && (
+    (project.team.owner?.id === user?.id && project.team.owner?.role === 'mentor') || 
+    project.team.members.some((m: any) => m.id === user?.id && m.role === 'mentor')
+  );
+  
+  const canEdit = isAuthor || isTeamMember; // Allows updating status if assignee
+  const canManageTasks = project?.team ? (isTeamOwner || isAssistant || isMentorMember) : isAuthor;
+  const canRejudge = project?.team ? isTeamMember : isAuthor;
 
   const updateFeatureStatus = async (index: number, newStatus: string) => {
     if (!canEdit || !project.features) return;
@@ -82,10 +152,27 @@ export default function ProjectDetailsPage() {
     }
   };
 
-  const reviewTask = async (index: number, rating: 'bad'|'good'|'excellent') => {
-    if (!isAuthor || !project.features || !project.team) return;
+  const reviewTask = async (index: number, rating: 'bad'|'good'|'excellent'|'reject', isRejudge: boolean = false) => {
+    if (!(isTeamMember || canManageTasks) || !project.features || !project.team) return;
 
     const feature = project.features[index];
+
+    if (rating === 'reject') {
+      const updatedFeatures = [...project.features];
+      updatedFeatures[index].status = 'in-review';
+      updatedFeatures[index].pendingFeedback = null;
+      try {
+        const res = await fetch(`/api/projects/${params.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ features: updatedFeatures })
+        });
+        const data = await res.json();
+        if (data.success) setProject(data.project);
+      } catch (error) {}
+      return;
+    }
+
     const assignees = feature.assignees || (feature.assigneeId ? [{ id: feature.assigneeId, name: feature.assigneeName }] : []);
     if (assignees.length === 0) return;
 
@@ -93,17 +180,19 @@ export default function ProjectDetailsPage() {
     if (rating === 'bad') points = -1;
     if (rating === 'excellent') points = 5;
 
-    // Award points to all assignees
-    try {
-      await Promise.all(assignees.map((assignee: any) => 
-        fetch(`/api/teams/${project.team.id}/points`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ receiverId: assignee.id, points })
-        }).then(res => res.json())
-      ));
-    } catch (e) {
-      alert("Failed to award points to some members");
+    // Award points to all assignees only if not rejudging
+    if (!isRejudge) {
+      try {
+        await Promise.all(assignees.map((assignee: any) => 
+          fetch(`/api/teams/${project.team.id}/points`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ receiverId: assignee.id, points })
+          }).then(res => res.json())
+        ));
+      } catch (e) {
+        alert("Failed to award points to some members");
+      }
     }
 
     // Update feature
@@ -111,6 +200,7 @@ export default function ProjectDetailsPage() {
     updatedFeatures[index].status = 'completed';
     updatedFeatures[index].completed = true;
     updatedFeatures[index].feedback = rating;
+    updatedFeatures[index].pendingFeedback = null;
 
     try {
       const res = await fetch(`/api/projects/${params.id}`, {
@@ -121,7 +211,11 @@ export default function ProjectDetailsPage() {
       const data = await res.json();
       if (data.success) {
         setProject(data.project);
-        alert(`Task reviewed! ${feature.assigneeName} received ${points > 0 ? '+'+points : points} points.`);
+        if (isRejudge) {
+          alert(`Task rejudged to ${rating}.`);
+        } else {
+          alert(`Task reviewed! Assignees received ${points > 0 ? '+'+points : points} points.`);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -129,7 +223,7 @@ export default function ProjectDetailsPage() {
   };
 
   const assignFeature = async (index: number, assigneeId: string, assigneeName: string) => {
-    if (!canEdit || !project.features) return;
+    if (!canManageTasks || !project.features) return;
     
     const updatedFeatures = [...project.features];
     let assignees = updatedFeatures[index].assignees || [];
@@ -198,7 +292,7 @@ export default function ProjectDetailsPage() {
   };
 
   const addTask = async () => {
-    if (!canEdit || !newTaskTitle.trim()) return;
+    if (!canManageTasks || !newTaskTitle.trim()) return;
 
     const updatedFeatures = [
       ...(project.features || []), 
@@ -264,6 +358,16 @@ export default function ProjectDetailsPage() {
                     {project.difficulty}
                   </span>
                 )}
+                {canEdit && (
+                  <button onClick={handleTogglePrivacy} className="px-3 py-1 bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 text-sm font-medium rounded-full border border-slate-200 dark:border-slate-700 flex items-center gap-1 transition-colors" title="Click to toggle privacy">
+                    {project.isPrivate ? <><Lock className="w-3.5 h-3.5" /> Private</> : <><Globe className="w-3.5 h-3.5" /> Public</>}
+                  </button>
+                )}
+                {!canEdit && project.isPrivate && (
+                  <span className="px-3 py-1 bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 text-sm font-medium rounded-full border border-slate-200 dark:border-slate-700 flex items-center gap-1">
+                    <Lock className="w-3.5 h-3.5" /> Private
+                  </span>
+                )}
               </div>
               <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-4 leading-tight">
                 {project.title}
@@ -289,22 +393,36 @@ export default function ProjectDetailsPage() {
             {/* Quick Actions / Stats */}
             <div className="flex flex-col gap-3 min-w-[200px]">
               <div className="flex justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-                <div className="text-center">
-                  <div className="text-xl font-bold text-slate-900 dark:text-white flex items-center justify-center gap-2">
-                    <ThumbsUp className="w-5 h-5 text-blue-500" /> {project.likes}
+                <div className="text-center flex-1">
+                  <div className="text-xl font-bold text-slate-900 dark:text-white flex items-center justify-center gap-4">
+                    <button onClick={handleLike} className="hover:text-blue-500 transition-colors group cursor-pointer">
+                      <ThumbsUp className="w-5 h-5 text-blue-500 transition-transform group-hover:scale-110" />
+                    </button>
+                    <span>{project.likes}</span>
+                    <button onClick={handleDislike} className="hover:text-red-500 transition-colors group cursor-pointer">
+                      <ThumbsDown className="w-5 h-5 text-red-500 transition-transform group-hover:scale-110" />
+                    </button>
                   </div>
-                  <div className="text-xs text-slate-500 uppercase font-semibold mt-1">Likes</div>
-                </div>
-                <div className="w-px bg-slate-200 dark:bg-slate-700 mx-4"></div>
-                <div className="text-center">
-                  <div className="text-xl font-bold text-slate-900 dark:text-white flex items-center justify-center gap-2">
-                    <Eye className="w-5 h-5 text-indigo-500" /> {project.views}
-                  </div>
-                  <div className="text-xs text-slate-500 uppercase font-semibold mt-1">Views</div>
+                  <div className="text-[10px] text-slate-500 uppercase font-bold mt-1">Likes</div>
                 </div>
               </div>
-              <button className="w-full flex items-center justify-center gap-2 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-medium rounded-xl transition-colors">
-                <Share2 className="w-5 h-5" /> Share Project
+              <button 
+                onClick={handleShare}
+                className={`w-full flex items-center justify-center gap-2 py-2.5 font-medium rounded-xl transition-all ${
+                  copied 
+                    ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20' 
+                    : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white'
+                }`}
+              >
+                {copied ? (
+                  <>
+                    <CheckCircle2 className="w-5 h-5" /> Copied!
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="w-5 h-5" /> Share Project
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -330,7 +448,7 @@ export default function ProjectDetailsPage() {
                   </h3>
                 </div>
 
-                {canEdit && (
+                {canManageTasks && (
                   <div className="flex gap-2 mb-6">
                     <input 
                       value={newTaskTitle}
@@ -369,7 +487,7 @@ export default function ProjectDetailsPage() {
                           <div className="mt-0.5">
                             {feature.status === 'completed' || feature.completed ? (
                               <CheckCircle2 className="w-6 h-6 text-emerald-500" />
-                            ) : feature.status === 'in-review' ? (
+                            ) : feature.status === 'in-review' || feature.status === 'pending-approval' ? (
                               <Clock className="w-6 h-6 text-amber-500" />
                             ) : (
                               <Circle className="w-6 h-6 text-slate-300 dark:text-slate-600" />
@@ -387,27 +505,34 @@ export default function ProjectDetailsPage() {
                         
                         {/* Task Workflow Actions */}
                         <div className="flex items-center gap-3">
-                          {feature.status === 'in-review' ? (
-                            isAuthor ? (
-                              <div className="flex gap-2">
-                                <button onClick={() => reviewTask(index, 'bad')} className="px-2 py-1 text-xs font-bold bg-red-100 text-red-700 rounded hover:bg-red-200">Bad (-1)</button>
-                                <button onClick={() => reviewTask(index, 'good')} className="px-2 py-1 text-xs font-bold bg-blue-100 text-blue-700 rounded hover:bg-blue-200">Good (+1)</button>
-                                <button onClick={() => reviewTask(index, 'excellent')} className="px-2 py-1 text-xs font-bold bg-amber-100 text-amber-700 rounded hover:bg-amber-200">Excellent (+5)</button>
+                          {(() => {
+                            const isAssignee = (feature.assignees && feature.assignees.some((a: any) => a.id === user?.id)) || feature.assigneeId === user?.id;
+                            
+                            return feature.status === 'in-review' ? (
+                              (isTeamMember || canManageTasks) ? (
+                                <div className="flex gap-2 items-center">
+                                  <span className="text-xs text-slate-500 font-medium">Rate:</span>
+                                  <button onClick={() => reviewTask(index, 'bad')} className="px-2 py-1 text-xs font-bold bg-red-100 text-red-700 rounded hover:bg-red-200">Bad</button>
+                                  <button onClick={() => reviewTask(index, 'good')} className="px-2 py-1 text-xs font-bold bg-blue-100 text-blue-700 rounded hover:bg-blue-200">Good</button>
+                                  <button onClick={() => reviewTask(index, 'excellent')} className="px-2 py-1 text-xs font-bold bg-amber-100 text-amber-700 rounded hover:bg-amber-200">Excellent</button>
+                                </div>
+                              ) : (
+                                <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded">In Review (Waiting for ratings)</span>
+                              )
+                            ) : (feature.status === 'completed' || feature.completed) ? (
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded flex items-center gap-1">
+                                  Done {feature.feedback && `(${feature.feedback})`}
+                                </span>
                               </div>
                             ) : (
-                              <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded">In Review</span>
-                            )
-                          ) : (feature.status === 'completed' || feature.completed) ? (
-                            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded flex items-center gap-1">
-                              Done {feature.feedback && `(${feature.feedback})`}
-                            </span>
-                          ) : (
-                            ((feature.assignees && feature.assignees.some((a: any) => a.id === user?.id)) || feature.assigneeId === user?.id) && (
-                              <button onClick={() => updateFeatureStatus(index, 'in-review')} className="text-xs font-bold bg-slate-900 text-white px-3 py-1.5 rounded-lg hover:bg-slate-800">
-                                Submit for Review
-                              </button>
-                            )
-                          )}
+                              isAssignee && (
+                                <button onClick={() => updateFeatureStatus(index, 'in-review')} className="text-xs font-bold bg-slate-900 text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 flex items-center gap-1">
+                                  <CheckCircle2 className="w-4 h-4" /> Done
+                                </button>
+                              )
+                            );
+                          })()}
                         </div>
                         
                         {/* Task Assignment (Only if team project) */}
@@ -419,7 +544,7 @@ export default function ProjectDetailsPage() {
                                 </span>
                               ))}
                               <select
-                                disabled={!canEdit}
+                                disabled={!canManageTasks}
                                 value=""
                                 onChange={(e) => {
                                   const assigneeId = e.target.value;
@@ -483,7 +608,7 @@ export default function ProjectDetailsPage() {
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Project Links</h3>
-                {isAuthor && !editingUrls && (
+                {canManageTasks && !editingUrls && (
                   <button onClick={() => setEditingUrls(true)} className="text-xs flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium">
                     <Edit3 className="w-3 h-3" /> Edit Links
                   </button>

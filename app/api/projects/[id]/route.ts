@@ -21,8 +21,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
         },
         team: {
           include: {
-            members: { select: { id: true, fullName: true, profileImage: true } },
-            owner: { select: { id: true, fullName: true, profileImage: true } }
+            members: { select: { id: true, fullName: true, profileImage: true, role: true } },
+            owner: { select: { id: true, fullName: true, profileImage: true, role: true } }
           }
         }
       }
@@ -70,6 +70,39 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     if (data.features !== undefined) {
       updateData.features = data.features;
       
+      // Notify newly assigned users
+      try {
+        const oldFeatures = Array.isArray(project.features) ? project.features : [];
+        const newFeatures = Array.isArray(data.features) ? data.features : [];
+        const notificationsToCreate: any[] = [];
+        
+        newFeatures.forEach((newF: any, index: number) => {
+          const oldF: any = oldFeatures[index];
+          const newAssignees = newF.assignees || (newF.assigneeId ? [{ id: newF.assigneeId }] : []);
+          const oldAssignees = oldF ? (oldF.assignees || (oldF.assigneeId ? [{ id: oldF.assigneeId }] : [])) : [];
+          
+          newAssignees.forEach((nA: any) => {
+            if (!oldAssignees.some((oA: any) => oA.id === nA.id) && nA.id !== user.id) {
+              notificationsToCreate.push({
+                userId: nA.id,
+                type: 'task_assigned',
+                title: 'New Task Assigned 📋',
+                message: `You have been assigned to: "${newF.title}" in ${project.title}`,
+                link: `/projects/${project.id}`
+              });
+            }
+          });
+        });
+        
+        if (notificationsToCreate.length > 0) {
+          await prisma.notification.createMany({
+            data: notificationsToCreate
+          });
+        }
+      } catch (e) {
+        console.error("Failed to send task assignment notifications", e);
+      }
+      
       // Auto-calculate progress if features are provided
       if (Array.isArray(data.features) && data.features.length > 0) {
         const total = data.features.length;
@@ -88,6 +121,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     
     if (data.status !== undefined) updateData.status = data.status;
     if (data.progress !== undefined) updateData.progress = data.progress;
+    if (data.isPrivate !== undefined) updateData.isPrivate = Boolean(data.isPrivate);
 
     const updatedProject = await prisma.project.update({
       where: { id },

@@ -1,13 +1,10 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { getFlashLargeModel, hasApiKey } from '@/lib/ai';
 import { getResumeScanPrompt } from '@/lib/prompts';
-
-// Initialize Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 export async function POST(req: Request) {
   try {
-    if (!process.env.GEMINI_API_KEY) {
+    if (!hasApiKey()) {
       return NextResponse.json(
         { message: 'GEMINI_API_KEY is not configured in the environment variables.' },
         { status: 500 }
@@ -24,8 +21,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Initialize the model - 3.5-flash supports PDF inline data natively
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' });
+    const model = getFlashLargeModel();
 
     let promptParts: any[] = [];
     const basePromptText = `You are an expert technical recruiter and an advanced ATS (Applicant Tracking System). Analyze the provided resume against the target job title: "${targetJobTitle}".

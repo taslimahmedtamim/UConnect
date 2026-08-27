@@ -8,7 +8,20 @@ export async function GET(req: Request) {
     const query = (searchParams.get('q') || '').toLowerCase().trim();
     const category = (searchParams.get('category') || '').trim();
 
+    const user = await getUserFromRequest(req);
+    const userId = user?.id;
+
     const projects = await prisma.project.findMany({
+      where: {
+        OR: [
+          { isPrivate: false },
+          ...(userId ? [
+            { authorId: userId },
+            { team: { ownerId: userId } },
+            { team: { members: { some: { id: userId } } } }
+          ] : [])
+        ]
+      },
       orderBy: [
         { featured: 'desc' },
         { likes: 'desc' },
@@ -61,7 +74,7 @@ export async function POST(req: Request) {
     const { 
       title, description, category, tags, repoUrl, demoUrl, rating, 
       lookingForContributors, status, progress, features, 
-      skillsDemonstrated, difficulty, estimatedDuration 
+      skillsDemonstrated, difficulty, estimatedDuration, isPrivate
     } = data;
 
     if (!title || !description) {
@@ -88,6 +101,7 @@ export async function POST(req: Request) {
         skillsDemonstrated: Array.isArray(skillsDemonstrated) ? skillsDemonstrated : [],
         difficulty: difficulty || null,
         estimatedDuration: estimatedDuration || null,
+        isPrivate: !!isPrivate,
         authorId: user.id
       },
       include: {

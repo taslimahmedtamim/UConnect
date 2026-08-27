@@ -59,6 +59,11 @@ export default function RegisterPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to send OTP");
 
+      if (data.isDev && data.devOtp) {
+        alert(`[DEV MODE] SMTP not configured. Your OTP is: ${data.devOtp}`);
+        setOtp(data.devOtp);
+      }
+
       setStep(2);
     } catch (err: any) {
       setError(err.message);
@@ -211,7 +216,7 @@ export default function RegisterPage() {
               <div>
                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ml-1">I am a...</label>
                 <div className="grid grid-cols-3 gap-3">
-                  {['student', 'teacher', 'recruiter'].map((role) => (
+                  {['student', 'mentor', 'recruiter'].map((role) => (
                     <label key={role} className="relative flex flex-col items-center justify-center p-3 border border-slate-200 dark:border-slate-700/80 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50/50 dark:has-[:checked]:bg-blue-500/10 has-[:checked]:shadow-sm">
                       <input 
                         type="radio" 

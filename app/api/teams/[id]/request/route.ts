@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { getGenAI, hasApiKey } from '@/lib/ai';
 import { getTeamMatchPrompt } from '@/lib/prompts';
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -34,10 +34,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     let aiScore = 50;
     let aiFeedback = "AI Matchmaking skipped (No API Key)";
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (apiKey) {
+    if (hasApiKey()) {
       try {
-        const ai = new GoogleGenerativeAI(apiKey);
+        const ai = getGenAI();
         const requiredSkills = team.requiredSkills as string[];
         const userSkills = user.skills as string[];
         

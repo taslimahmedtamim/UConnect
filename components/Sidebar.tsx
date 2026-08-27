@@ -108,13 +108,12 @@ export default function Sidebar() {
     {
       title: "Support",
       items: [
-        { label: "Messages", href: "/messages", icon: MessageSquare },
         { label: "Help Board", href: "/help", icon: HelpCircle },
       ]
     }
   ];
 
-  if (userRole === 'teacher' || userRole === 'mentor') {
+  if (userRole === 'mentor') {
     navGroups = [
       {
         title: "Mentorship",
@@ -140,14 +139,21 @@ export default function Sidebar() {
           { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
           { label: "Opportunities", href: "/opportunities", icon: Briefcase },
           { label: "Projects", href: "/projects", icon: FolderOpen },
+          { label: "Teams", href: "/teams", icon: Users },
           { label: "Leaderboard", href: "/leaderboard", icon: Trophy },
+        ]
+      },
+      {
+        title: "Community",
+        items: [
+          { label: "Community Feed", href: "/feed", icon: Rss },
+          { label: "Mentors", href: "/mentors", icon: GraduationCap },
         ]
       },
       {
         title: "Account",
         items: [
           { label: "Profile", href: "/profile", icon: UserCircle },
-          { label: "Messages", href: "/messages", icon: MessageSquare },
         ]
       }
     ];

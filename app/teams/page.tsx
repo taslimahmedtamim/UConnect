@@ -10,7 +10,7 @@ export default function TeamsPage() {
   const [teams, setTeams] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [filterMode, setFilterMode] = useState<"all" | "matches">("all");
+  const [filterMode, setFilterMode] = useState<"all" | "matches" | "my_teams">("all");
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -28,7 +28,10 @@ export default function TeamsPage() {
             const matchPercent = Math.round((overlap.length / reqSkills.length) * 100);
             const missing = reqSkills.filter((s: string) => !user.skills.includes(s));
             
-            return { ...t, matchPercent, missing };
+            const isOwner = t.ownerId === user.id;
+            const isMember = isOwner || (t.members && t.members.some((m: any) => m.id === user.id));
+            
+            return { ...t, matchPercent, missing, isMember, isOwner };
           });
           
           setTeams(processedTeams);
@@ -49,6 +52,10 @@ export default function TeamsPage() {
 
   if (filterMode === "matches") {
     filteredTeams = filteredTeams.filter(t => t.matchPercent > 0).sort((a, b) => b.matchPercent - a.matchPercent);
+  } else if (filterMode === "my_teams") {
+    filteredTeams = filteredTeams.filter(t => t.isMember);
+  } else {
+    filteredTeams = filteredTeams.sort((a, b) => (b.isMember ? 1 : 0) - (a.isMember ? 1 : 0));
   }
 
   return (
@@ -61,12 +68,14 @@ export default function TeamsPage() {
           <p className="text-slate-500 dark:text-slate-400 mt-2">Find your ideal team, combine your skills, and build amazing projects together.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Link 
-            href="/teams/create" 
-            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap"
-          >
-            <Plus className="w-5 h-5" /> Create a Team
-          </Link>
+          {user && (
+            <Link 
+              href="/teams/create" 
+              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap"
+            >
+              <Plus className="w-5 h-5" /> Create a Team
+            </Link>
+          )}
         </div>
       </div>
 
@@ -82,6 +91,12 @@ export default function TeamsPage() {
           />
         </div>
         <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-1">
+          <button 
+            onClick={() => setFilterMode("my_teams")}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${filterMode === "my_teams" ? "bg-white dark:bg-slate-700 shadow-sm text-blue-600 dark:text-blue-400" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"}`}
+          >
+            <Users className="w-4 h-4" /> My Teams
+          </button>
           <button 
             onClick={() => setFilterMode("all")}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${filterMode === "all" ? "bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"}`}
@@ -112,7 +127,14 @@ export default function TeamsPage() {
           {filteredTeams.map((team) => (
             <div key={team.id} className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow flex flex-col h-full relative overflow-hidden">
               <div className="flex justify-between items-start mb-4 gap-4">
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white line-clamp-1">{team.name}</h2>
+                <div className="flex flex-col gap-2">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-white line-clamp-1">{team.name}</h2>
+                  {team.isMember && (
+                    <span className="inline-flex w-fit items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                      <Users className="w-3.5 h-3.5" /> My Team
+                    </span>
+                  )}
+                </div>
                 {user && (
                   <div className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap border ${
                     team.matchPercent >= 80 ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:border-emerald-800' :

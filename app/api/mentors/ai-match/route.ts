@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { getGenAI, hasApiKey } from '@/lib/ai';
 
 export async function GET(req: Request) {
   try {
@@ -37,11 +37,10 @@ export async function GET(req: Request) {
       };
     });
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (apiKey) {
+    if (hasApiKey()) {
       try {
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });
+        const genAI = getGenAI();
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 
         const prompt = `
 You are an expert AI talent & mentorship matcher.

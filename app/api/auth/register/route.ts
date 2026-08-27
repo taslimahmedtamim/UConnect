@@ -66,16 +66,16 @@ export async function POST(req: Request) {
       }
     });
 
-    if (role.toLowerCase() === 'teacher') {
+    if (role.toLowerCase() === 'mentor') {
       await prisma.mentorProfile.create({
         data: {
           userId: user.id,
-          title: "Educator / Teacher",
+          title: "Educator / Mentor",
           company: "University",
           expertise: ["Education", "Software Engineering"],
           experienceYears: 5,
           availability: "Flexible",
-          bio: "I am a teacher here to guide students.",
+          bio: "I am a mentor here to guide students.",
           featured: true
         }
       });

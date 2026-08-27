@@ -119,12 +119,18 @@ export default function UserTable({ users }: UserTableProps) {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    user.role === 'admin' 
-                      ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400' 
-                      : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                  <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full capitalize ${
+                    user.email === 'admin@uconnect.com'
+                      ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-lg shadow-purple-500/30 border border-purple-400/50'
+                      : user.role === 'admin' 
+                        ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 border border-purple-200 dark:border-purple-800/50'
+                        : user.role === 'recruiter'
+                          ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50'
+                          : user.role === 'mentor'
+                            ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50'
+                            : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50'
                   }`}>
-                    {user.role}
+                    {user.email === 'admin@uconnect.com' ? 'Super Admin' : user.role}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
@@ -153,7 +159,9 @@ export default function UserTable({ users }: UserTableProps) {
                             <UserX className="w-4 h-4" /> Remove Admin
                           </button>
                         ) : (
-                          <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">Super Admin</span>
+                          <span className="text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-indigo-400 mr-2">
+                            Owner
+                          </span>
                         )}
                         
                         {user.email !== 'admin@uconnect.com' && (

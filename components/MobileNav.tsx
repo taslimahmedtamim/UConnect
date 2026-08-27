@@ -66,7 +66,6 @@ export default function MobileNav() {
     { label: "Community Feed", href: "/feed", icon: Rss },
     { label: "Leaderboard", href: "/leaderboard", icon: Trophy },
     { label: "Mentors", href: "/mentors", icon: GraduationCap },
-    { label: "Messages", href: "/messages", icon: MessageSquare },
     { label: "Help Board", href: "/help", icon: HelpCircle },
   ];
 
@@ -75,7 +74,7 @@ export default function MobileNav() {
     { label: "Home", href: "/dashboard", icon: LayoutDashboard },
     { label: "Projects", href: "/projects", icon: FolderOpen },
     { label: "Jobs", href: "/opportunities", icon: Briefcase },
-    { label: "Messages", href: "/messages", icon: MessageSquare },
+    { label: "Teams", href: "/teams", icon: Users },
     { label: "More", href: "#menu", icon: Menu, isMenuToggle: true },
   ];
 

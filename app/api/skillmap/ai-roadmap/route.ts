@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { hasApiKey, getGenAI } from '@/lib/ai';
 
 export async function GET(req: Request) {
   try {
@@ -65,13 +66,15 @@ export async function POST(req: Request) {
       requiredSkillsList = userCareer.careerPath.skills.map(cps => `${cps.skill.name} (Required: ${cps.importance}/5)`).join(', ');
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (apiKey) {
-      try {
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });
+    if (!hasApiKey()) {
+      return NextResponse.json({ success: false, message: 'Gemini API Key missing' }, { status: 500 });
+    }
 
-        const prompt = `
+    try {
+      const genAI = getGenAI();
+      const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });
+
+      const prompt = `
 You are an elite career mentor and AI tech coach.
 Generate a highly sequential, adaptive multi-phase learning roadmap for a student transitioning to "${targetRole}".
 
@@ -123,56 +126,53 @@ Provide your response strictly in raw JSON (no markdown formatting, no \`\`\`jso
 
 Make sure 'readinessScore' is an integer 0-100 reflecting how close they are to the goal based on current skills.
 For 'actionItems', use a unique 'taskId' (string). 
-Make 'resourceUrl' SPECIFIC, FREE, and real (e.g., freeCodeCamp, official docs).
+Make 'resourceUrl' SPECIFIC, FREE, and real. You MUST prioritize up-to-date official documentation and free video playlists (e.g., YouTube tutorials, freeCodeCamp courses).
 `;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        let text = response.text().trim();
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      let text = response.text().trim();
 
-        if (text.startsWith('```json')) {
-          text = text.replace(/^```json/, '').replace(/```$/, '').trim();
-        } else if (text.startsWith('```')) {
-          text = text.replace(/^```/, '').replace(/```$/, '').trim();
-        }
-
-        const parsed = JSON.parse(text);
-
-        // Save to DB
-        const savedRoadmap = await prisma.userRoadmap.upsert({
-          where: { userId: user.id },
-          update: {
-            careerGoal: targetRole,
-            currentLevel: currentLevel || 'Unknown',
-            learningTime: learningTime || 'Unknown',
-            learningGoal: learningGoal || 'Unknown',
-            roadmapData: parsed,
-            // Keep existing progressData or initialize
-          },
-          create: {
-            userId: user.id,
-            careerGoal: targetRole,
-            currentLevel: currentLevel || 'Unknown',
-            learningTime: learningTime || 'Unknown',
-            learningGoal: learningGoal || 'Unknown',
-            roadmapData: parsed,
-            progressData: {
-              completedTasks: [],
-              completedProjects: [],
-              learningStreak: 0,
-              lastLearningDate: null
-            }
-          }
-        });
-
-        return NextResponse.json({ success: true, roadmap: savedRoadmap });
-      } catch (aiErr: any) {
-        console.warn('Gemini AI Roadmap Error:', aiErr.message);
-        return NextResponse.json({ success: false, message: 'AI generation failed: ' + aiErr.message }, { status: 500 });
+      if (text.startsWith('```json')) {
+        text = text.replace(/^```json/, '').replace(/```$/, '').trim();
+      } else if (text.startsWith('```')) {
+        text = text.replace(/^```/, '').replace(/```$/, '').trim();
       }
-    }
 
-    return NextResponse.json({ success: false, message: 'Gemini API Key missing' }, { status: 500 });
+      const parsed = JSON.parse(text);
+
+      // Save to DB
+      const savedRoadmap = await prisma.userRoadmap.upsert({
+        where: { userId: user.id },
+        update: {
+          careerGoal: targetRole,
+          currentLevel: currentLevel || 'Unknown',
+          learningTime: learningTime || 'Unknown',
+          learningGoal: learningGoal || 'Unknown',
+          roadmapData: parsed,
+          // Keep existing progressData or initialize
+        },
+        create: {
+          userId: user.id,
+          careerGoal: targetRole,
+          currentLevel: currentLevel || 'Unknown',
+          learningTime: learningTime || 'Unknown',
+          learningGoal: learningGoal || 'Unknown',
+          roadmapData: parsed,
+          progressData: {
+            completedTasks: [],
+            completedProjects: [],
+            learningStreak: 0,
+            lastLearningDate: null
+          }
+        }
+      });
+
+      return NextResponse.json({ success: true, roadmap: savedRoadmap });
+    } catch (aiErr: any) {
+      console.warn('Gemini AI Roadmap Error:', aiErr.message);
+      return NextResponse.json({ success: false, message: 'AI generation failed: ' + aiErr.message }, { status: 500 });
+    }
 
   } catch (error: any) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });

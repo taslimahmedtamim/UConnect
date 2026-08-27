@@ -51,6 +51,7 @@ export async function POST(req: Request) {
       });
     } else {
       console.log(`[DEV MODE] OTP for ${email} is: ${otp}`);
+      return NextResponse.json({ success: true, message: 'OTP generated (Dev Mode)', isDev: true, devOtp: otp });
     }
 
     return NextResponse.json({ success: true, message: 'OTP sent successfully' });

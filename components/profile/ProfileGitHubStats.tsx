@@ -15,7 +15,7 @@ interface UserStats {
   top_languages?: string[];
 }
 
-export default function ProfileGitHubStats({ username, onSyncSkills }: { username: string, onSyncSkills?: (languages: string[]) => void }) {
+export default function ProfileGitHubStats({ username, onSyncSkills, compact = false }: { username: string, onSyncSkills?: (languages: string[]) => void, compact?: boolean }) {
   const [stats, setStats] = useState<UserStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -73,7 +73,8 @@ export default function ProfileGitHubStats({ username, onSyncSkills }: { usernam
         </div>
       </div>
       
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10 mb-6">
+      {!compact && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10 mb-6">
         <div className="bg-slate-800/50 dark:bg-slate-900/50 rounded-xl p-4 border border-slate-700/50 flex flex-col items-center justify-center text-center">
           <BookOpen className="w-5 h-5 text-emerald-400 mb-2" />
           <span className="text-2xl font-black text-white">{stats.public_repos}</span>
@@ -98,9 +99,10 @@ export default function ProfileGitHubStats({ username, onSyncSkills }: { usernam
           <span className="text-xs text-slate-400 uppercase font-bold tracking-wider mt-1">Gists</span>
         </div>
       </div>
+      )}
 
       {stats.top_languages && stats.top_languages.length > 0 && (
-        <div className="relative z-10 mt-6 pt-6 border-t border-slate-700/50">
+        <div className={`relative z-10 ${compact ? 'mt-2' : 'mt-6 pt-6 border-t border-slate-700/50'}`}>
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider">Top Languages</h3>
             {onSyncSkills && (

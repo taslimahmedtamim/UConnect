@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { getFlashModel, hasApiKey } from '@/lib/ai';
 
 export async function GET(req: Request) {
   try {
@@ -25,13 +25,11 @@ export async function GET(req: Request) {
       return NextResponse.json({ success: false, message: 'Profile not found' }, { status: 404 });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
+    if (!hasApiKey()) {
       return NextResponse.json({ success: false, message: 'Gemini API Key missing' }, { status: 500 });
     }
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });
+    const model = getFlashModel();
 
     const targetRole = fullProfile.userRoadmap?.careerGoal || fullProfile.title || "Software Engineer";
 

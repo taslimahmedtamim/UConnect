@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { getFlashModel, hasApiKey } from '@/lib/ai';
 import { getResumeGeneratePrompt } from '@/lib/prompts';
 
 export async function POST(req: Request) {
@@ -8,9 +8,7 @@ export async function POST(req: Request) {
     const user = await getUserFromRequest(req);
     if (!user) return unauthorizedResponse();
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    
-    if (!apiKey) {
+    if (!hasApiKey()) {
       // Fallback if no API key is provided
       const fallbackResume = `
 # ${user.fullName}
@@ -28,8 +26,6 @@ ${(user.skills as string[]) && (user.skills as string[]).length > 0 ? (user.skil
       return NextResponse.json({ success: true, resume: fallbackResume });
     }
 
-    const ai = new GoogleGenerativeAI(apiKey);
-    
     const prompt = getResumeGeneratePrompt(
       user.fullName,
       user.email,
@@ -43,7 +39,7 @@ ${(user.skills as string[]) && (user.skills as string[]).length > 0 ? (user.skil
       console.warn('[AI_TOKEN_WARNING] Resume generate prompt exceeds 2000 tokens.');
     }
 
-    const model = ai.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });
+    const model = getFlashModel();
     const response = await model.generateContent(prompt);
     const resumeContent = response.response.text();
 

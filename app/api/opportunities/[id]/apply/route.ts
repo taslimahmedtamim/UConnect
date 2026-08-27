@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+import { getFlashLargeModel, hasApiKey } from '@/lib/ai';
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -21,7 +19,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       return NextResponse.json({ success: false, message: 'Opportunity not found' }, { status: 404 });
     }
 
-    // Check if already applied
+    // Check if already applied (we'll update it instead of blocking)
     const existingApplication = await prisma.opportunityApplication.findUnique({
       where: {
         opportunityId_studentId: {
@@ -30,10 +28,6 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         }
       }
     });
-
-    if (existingApplication) {
-      return NextResponse.json({ success: false, message: 'You have already applied for this opportunity.' }, { status: 400 });
-    }
 
     const bodyText = await req.text();
     let customResumeText = "";
@@ -73,7 +67,7 @@ Requirements: ${Array.isArray(opportunity.requirements) ? opportunity.requiremen
     `.trim();
 
     // AI Evaluation
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' });
+    const model = getFlashLargeModel();
     const promptText = `You are an expert technical recruiter and ATS. Evaluate the following candidate profile against the job opportunity details.
 Provide a match score out of 100, and a short 2-3 sentence feedback explaining why they are a good or bad fit.
 
@@ -117,7 +111,7 @@ ${jobDescription}`
     let aiScore = 50;
     let aiFeedback = "Automated AI evaluation could not complete. Application submitted manually.";
 
-    if (process.env.GEMINI_API_KEY) {
+    if (hasApiKey()) {
       try {
         const result = await model.generateContent(promptParts);
         const text = result.response.text();
@@ -137,16 +131,28 @@ ${jobDescription}`
       }
     }
 
-    // Save Application
-    const application = await prisma.opportunityApplication.create({
-      data: {
-        opportunityId,
-        studentId: user.id,
-        aiScore,
-        aiFeedback,
-        status: 'pending'
-      }
-    });
+    // Save or Update Application
+    let application;
+    if (existingApplication) {
+      application = await prisma.opportunityApplication.update({
+        where: { id: existingApplication.id },
+        data: {
+          aiScore,
+          aiFeedback,
+          status: 'pending'
+        }
+      });
+    } else {
+      application = await prisma.opportunityApplication.create({
+        data: {
+          opportunityId,
+          studentId: user.id,
+          aiScore,
+          aiFeedback,
+          status: 'pending'
+        }
+      });
+    }
 
     return NextResponse.json({ success: true, message: 'Application submitted successfully!', application }, { status: 201 });
 

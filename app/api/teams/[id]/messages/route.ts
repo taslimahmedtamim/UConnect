@@ -4,25 +4,48 @@ import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const user = await getUserFromRequest(req);
+    if (!user) return unauthorizedResponse();
+
     const { id: teamId } = await params;
-    
-    // In a real app we'd verify the user via session/token
-    // For now, we will trust the client or maybe pass a user ID, but GET is fine.
-    
+
+    // Verify membership or ownership
+    const team = await prisma.team.findUnique({
+      where: { id: teamId },
+      include: { members: { select: { id: true } } }
+    });
+
+    if (!team) {
+      return NextResponse.json({ success: false, message: 'Team not found' }, { status: 404 });
+    }
+
+    const isMember = team.members.some(m => m.id === user.id);
+    const isOwner = team.ownerId === user.id;
+
+    if (!isMember && !isOwner) {
+      return NextResponse.json({ success: false, message: 'Not authorized to view messages' }, { status: 403 });
+    }
+
     const messages = await prisma.message.findMany({
       where: { teamId },
       include: {
         sender: {
-          select: { id: true, fullName: true, profileImage: true }
+          select: {
+            id: true,
+            fullName: true,
+            username: true,
+            profileImage: true,
+            role: true
+          }
         }
       },
-      orderBy: { createdAt: 'asc' }
+      orderBy: { createdAt: 'asc' },
+      take: 100 // Fetch last 100 messages for now
     });
 
     return NextResponse.json({ success: true, messages });
   } catch (error: any) {
-    console.error('Error fetching team messages:', error);
-    return NextResponse.json({ success: false, message: 'Failed to fetch messages.' }, { status: 500 });
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }
 
@@ -32,45 +55,50 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     if (!user) return unauthorizedResponse();
 
     const { id: teamId } = await params;
-    const { content, senderId } = await req.json();
+    const body = await req.json();
 
-    if (!content || !senderId) {
-      return NextResponse.json({ success: false, message: 'Missing content or senderId' }, { status: 400 });
+    if (!body.content || !body.content.trim()) {
+      return NextResponse.json({ success: false, message: 'Message content is required' }, { status: 400 });
     }
 
-    // Verify team exists and sender is a member/owner
+    // Verify membership or ownership
     const team = await prisma.team.findUnique({
       where: { id: teamId },
-      include: { owner: true, members: true }
+      include: { members: { select: { id: true } } }
     });
 
     if (!team) {
       return NextResponse.json({ success: false, message: 'Team not found' }, { status: 404 });
     }
 
-    const isOwner = team.owner.id === senderId;
-    const isMember = team.members.some(m => m.id === senderId);
+    const isMember = team.members.some(m => m.id === user.id);
+    const isOwner = team.ownerId === user.id;
 
-    if (!isOwner && !isMember) {
-      return NextResponse.json({ success: false, message: 'You are not a member of this team' }, { status: 403 });
+    if (!isMember && !isOwner) {
+      return NextResponse.json({ success: false, message: 'Not authorized to send messages' }, { status: 403 });
     }
 
     const message = await prisma.message.create({
       data: {
-        content,
-        senderId,
-        teamId
+        content: body.content.trim(),
+        teamId,
+        senderId: user.id
       },
       include: {
         sender: {
-          select: { id: true, fullName: true, profileImage: true }
+          select: {
+            id: true,
+            fullName: true,
+            username: true,
+            profileImage: true,
+            role: true
+          }
         }
       }
     });
 
     return NextResponse.json({ success: true, message });
   } catch (error: any) {
-    console.error('Error sending team message:', error);
-    return NextResponse.json({ success: false, message: 'Failed to send message.' }, { status: 500 });
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }

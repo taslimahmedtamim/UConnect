@@ -21,9 +21,15 @@ export async function GET(req: Request) {
           }
         },
         applications: {
-          select: {
-            studentId: true,
-            aiScore: true
+          include: {
+            student: {
+              select: {
+                id: true,
+                fullName: true,
+                university: true,
+                department: true,
+              }
+            }
           }
         }
       }
@@ -43,10 +49,10 @@ export async function POST(req: Request) {
     const user = await getUserFromRequest(req);
     if (!user) return unauthorizedResponse();
 
-    // Only teachers or recruiters can post opportunities
+    // Only mentors or recruiters can post opportunities
     if (user.role === 'student') {
       return NextResponse.json(
-        { success: false, message: 'Only recruiters and teachers can post opportunities.' },
+        { success: false, message: 'Only recruiters and mentors can post opportunities.' },
         { status: 403 }
       );
     }

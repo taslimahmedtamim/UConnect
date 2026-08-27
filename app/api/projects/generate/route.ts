@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+import { getFlashLargeModel } from '@/lib/ai';
 
 export async function POST(req: Request) {
   try {
@@ -11,7 +9,7 @@ export async function POST(req: Request) {
 
     const { prompt } = await req.json();
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' });
+    const model = getFlashLargeModel();
     
     const basePrompt = `You are an expert career and project advisor. The user wants to build a project with this idea/goal: "${prompt}".
     Generate a highly practical, portfolio-worthy project.

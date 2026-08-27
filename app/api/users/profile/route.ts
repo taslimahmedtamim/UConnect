@@ -29,11 +29,39 @@ export async function GET(req: Request) {
         projects: true,
         userRoadmap: true,
         activityLog: true,
+        ownedTeams: {
+          include: { projects: true }
+        },
+        memberTeams: {
+          include: { projects: true }
+        },
         createdAt: true,
       }
     });
 
-    return NextResponse.json({ success: true, user: fullProfile });
+    const allProjectsMap = new Map();
+    if (fullProfile?.projects) {
+      fullProfile.projects.forEach((p: any) => allProjectsMap.set(p.id, p));
+    }
+    if (fullProfile?.ownedTeams) {
+      fullProfile.ownedTeams.forEach((t: any) => {
+        if (t.projects) t.projects.forEach((p: any) => allProjectsMap.set(p.id, p));
+      });
+    }
+    if (fullProfile?.memberTeams) {
+      fullProfile.memberTeams.forEach((t: any) => {
+        if (t.projects) t.projects.forEach((p: any) => allProjectsMap.set(p.id, p));
+      });
+    }
+
+    const combinedProjects = Array.from(allProjectsMap.values()).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+    const formattedProfile = {
+      ...fullProfile,
+      projects: combinedProjects
+    };
+
+    return NextResponse.json({ success: true, user: formattedProfile });
   } catch (error: any) {
     console.error("Profile API Error:", error);
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
@@ -104,6 +132,8 @@ export async function PUT(req: Request) {
         certificates: true,
         projects: true,
         userRoadmap: true,
+        ownedTeams: true,
+        memberTeams: true,
       }
     });
 

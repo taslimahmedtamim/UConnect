@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { MessageSquare, X, Send, Sparkles, Loader2, Minimize2, Maximize2 } from "lucide-react";
+import { MessageSquare, X, Send, Sparkles, Loader2, Minimize2, Maximize2, GripHorizontal } from "lucide-react";
 import { useUser } from "@/components/UserProvider";
 import ReactMarkdown from "react-markdown";
 
@@ -15,6 +15,71 @@ export default function GlobalAIAssistant() {
     { role: "model", content: "Hi! I'm UConnect AI. How can I help you with your career goals today?" }
   ]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Dragging logic
+  const [position, setPosition] = useState<{ x: number, y: number } | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef<{ x: number, y: number, posX: number, posY: number } | null>(null);
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    // Only drag on left click
+    if (e.button !== 0) return;
+    
+    // Prevent dragging if clicking an interactive element that shouldn't initiate drag
+    const eventTarget = e.target as HTMLElement;
+    if (eventTarget.closest('.no-drag')) return;
+
+    const target = e.currentTarget as HTMLElement;
+    // Get the parent container's rect to know where we currently are
+    const container = target.closest('.ai-draggable-container') || target;
+    const rect = container.getBoundingClientRect();
+    
+    dragStart.current = {
+      x: e.clientX,
+      y: e.clientY,
+      posX: position ? position.x : rect.left,
+      posY: position ? position.y : rect.top,
+    };
+    target.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!dragStart.current) return;
+    const dx = e.clientX - dragStart.current.x;
+    const dy = e.clientY - dragStart.current.y;
+    
+    if (!isDragging && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
+      setIsDragging(true);
+    }
+    
+    if (isDragging || Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+      // Constrain to window bounds roughly
+      const newX = Math.max(0, Math.min(window.innerWidth - 60, dragStart.current.posX + dx));
+      const newY = Math.max(0, Math.min(window.innerHeight - 60, dragStart.current.posY + dy));
+      setPosition({ x: newX, y: newY });
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    if (dragStart.current) {
+      const target = e.currentTarget as HTMLElement;
+      if (target.hasPointerCapture(e.pointerId)) {
+        target.releasePointerCapture(e.pointerId);
+      }
+      dragStart.current = null;
+      // Use setTimeout to allow click events to fire and check if dragging happened
+      setTimeout(() => setIsDragging(false), 50);
+    }
+  };
+
+  const handleOpen = (e: React.MouseEvent) => {
+    if (isDragging) {
+      e.stopPropagation();
+      e.preventDefault();
+      return;
+    }
+    setIsOpen(true);
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -50,11 +115,20 @@ export default function GlobalAIAssistant() {
     }
   };
 
+  // Determine positioning classes/styles
+  const positionStyle = position ? { left: position.x, top: position.y, right: 'auto', bottom: 'auto' } : {};
+  const positionClasses = position ? '' : 'right-6 bottom-6';
+
   if (!isOpen) {
     return (
       <button 
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 p-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-xl hover:shadow-2xl transition-all z-50 flex items-center justify-center group"
+        onClick={handleOpen}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        className={`ai-draggable-container fixed p-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-xl hover:shadow-2xl transition-all z-[60] flex items-center justify-center group cursor-grab active:cursor-grabbing ${positionClasses}`}
+        style={{ ...positionStyle, transition: isDragging ? 'none' : undefined }}
       >
         <Sparkles className="w-6 h-6 group-hover:scale-110 transition-transform" />
       </button>
@@ -62,20 +136,30 @@ export default function GlobalAIAssistant() {
   }
 
   return (
-    <div className={`fixed right-6 bottom-6 z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-300 flex flex-col overflow-hidden ${
-      isMinimized ? 'w-72 h-14 rounded-t-xl rounded-b-none' : 'w-[350px] sm:w-[400px] h-[500px] max-h-[80vh] rounded-2xl'
-    }`}>
-      {/* Header */}
-      <div className="bg-indigo-600 text-white p-3 flex justify-between items-center shrink-0 cursor-pointer" onClick={() => isMinimized && setIsMinimized(false)}>
-        <div className="flex items-center gap-2 font-semibold">
+    <div 
+      className={`ai-draggable-container fixed z-[60] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden ${positionClasses} ${
+        isMinimized ? 'w-72 h-14 rounded-xl' : 'w-[350px] sm:w-[400px] h-[500px] max-h-[80vh] rounded-2xl'
+      }`}
+      style={{ ...positionStyle, transition: isDragging ? 'none' : 'height 0.3s, width 0.3s' }}
+    >
+      {/* Header (Draggable) */}
+      <div 
+        className="bg-indigo-600 text-white p-3 flex justify-between items-center shrink-0 cursor-grab active:cursor-grabbing select-none"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+      >
+        <div className="flex items-center gap-2 font-semibold" onClick={() => !isDragging && isMinimized && setIsMinimized(false)}>
+          <GripHorizontal className="w-4 h-4 text-indigo-300 mr-1" />
           <Sparkles className="w-5 h-5" />
           <span>Ask UConnect AI</span>
         </div>
         <div className="flex items-center gap-1">
-          <button onClick={(e) => { e.stopPropagation(); setIsMinimized(!isMinimized); }} className="p-1 hover:bg-indigo-700 rounded transition-colors">
+          <button onClick={(e) => { e.stopPropagation(); if(!isDragging) setIsMinimized(!isMinimized); }} className="no-drag p-1 hover:bg-indigo-700 rounded transition-colors z-10 cursor-pointer">
             {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
           </button>
-          <button onClick={(e) => { e.stopPropagation(); setIsOpen(false); }} className="p-1 hover:bg-indigo-700 rounded transition-colors">
+          <button onClick={(e) => { e.stopPropagation(); if(!isDragging) setIsOpen(false); }} className="no-drag p-1 hover:bg-indigo-700 rounded transition-colors z-10 cursor-pointer">
             <X className="w-4 h-4" />
           </button>
         </div>

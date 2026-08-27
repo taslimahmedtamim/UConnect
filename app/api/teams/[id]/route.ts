@@ -8,11 +8,11 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     const team = await prisma.team.findUnique({
       where: { id },
       include: {
-        owner: { select: { id: true, fullName: true, email: true } },
-        members: { select: { id: true, fullName: true, email: true, bio: true, skills: true } },
+        owner: { select: { id: true, fullName: true, email: true, role: true } },
+        members: { select: { id: true, fullName: true, email: true, bio: true, skills: true, role: true } },
         joinRequests: {
           include: {
-            user: { select: { id: true, fullName: true, email: true, bio: true, skills: true } }
+            user: { select: { id: true, fullName: true, email: true, bio: true, skills: true, role: true } }
           }
         },
         projects: true

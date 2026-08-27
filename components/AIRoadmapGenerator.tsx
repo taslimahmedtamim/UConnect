@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, Calendar, CheckSquare, Square, Rocket, BookOpen, Clock, Target, CheckCircle2, Award, PlayCircle, BarChart3, TrendingUp, Zap, HelpCircle, Plus } from 'lucide-react';
+import { Sparkles, Calendar, CheckSquare, Square, Rocket, BookOpen, Clock, Target, CheckCircle2, Award, PlayCircle, BarChart3, TrendingUp, Zap, HelpCircle, Plus, Lock, Loader2 } from 'lucide-react';
 import SkillAssessmentModal, { AssessmentData } from './skillmap/SkillAssessmentModal';
 import AILearningAssistant from './skillmap/AILearningAssistant';
 import AIQuizModal from './skillmap/AIQuizModal';
@@ -13,10 +13,11 @@ export default function AIRoadmapGenerator() {
   const [loading, setLoading] = useState(false);
   const [roadmap, setRoadmap] = useState<any | null>(null);
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
+  const [completedPhases, setCompletedPhases] = useState<number[]>([]);
   const [isAssessmentOpen, setIsAssessmentOpen] = useState(false);
   const [claiming, setClaiming] = useState(false);
   const [assistantTopic, setAssistantTopic] = useState<string | null>(null);
-  const [quizTopic, setQuizTopic] = useState<string | null>(null);
+  const [quizTopic, setQuizTopic] = useState<{ topic: string, phaseIndex: number, isExam: boolean, taskId?: string } | null>(null);
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -30,6 +31,7 @@ export default function AIRoadmapGenerator() {
       if (data.success && data.roadmap) {
         setRoadmap(data.roadmap.roadmapData);
         setCompletedTasks(data.roadmap.progressData?.completedTasks || []);
+        setCompletedPhases(data.roadmap.progressData?.completedPhases || []);
       }
     } catch (e) {
       console.error("Failed to load existing roadmap", e);
@@ -48,6 +50,7 @@ export default function AIRoadmapGenerator() {
       if (json.success) {
         setRoadmap(json.roadmap.roadmapData);
         setCompletedTasks(json.roadmap.progressData?.completedTasks || []);
+        setCompletedPhases(json.roadmap.progressData?.completedPhases || []);
         setIsAssessmentOpen(false);
       } else {
         alert(json.message || 'Failed to generate AI roadmap');
@@ -64,7 +67,7 @@ export default function AIRoadmapGenerator() {
    * Persists the completed tasks array to the database.
    * Debounced to avoid spamming the API on rapid toggling.
    */
-  const persistProgress = (tasks: string[]) => {
+  const persistProgress = (tasks: string[], phases: number[]) => {
     if (saveTimerRef.current) {
       clearTimeout(saveTimerRef.current);
     }
@@ -73,7 +76,7 @@ export default function AIRoadmapGenerator() {
         await fetch('/api/skillmap/ai-roadmap/progress', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ completedTasks: tasks }),
+          body: JSON.stringify({ completedTasks: tasks, completedPhases: phases }),
         });
       } catch (e) {
         console.error('Failed to save progress:', e);
@@ -81,13 +84,12 @@ export default function AIRoadmapGenerator() {
     }, 500); // 500ms debounce
   };
 
-  const toggleTask = (taskId: string) => {
-    const nextCompleted = completedTasks.includes(taskId)
-      ? completedTasks.filter(id => id !== taskId)
-      : [...completedTasks, taskId];
-    
-    setCompletedTasks(nextCompleted);
-    persistProgress(nextCompleted);
+  const uncheckTask = (taskId: string) => {
+    if (completedTasks.includes(taskId)) {
+      const nextCompleted = completedTasks.filter(id => id !== taskId);
+      setCompletedTasks(nextCompleted);
+      persistProgress(nextCompleted, completedPhases);
+    }
   };
 
   const addProjectToResume = async (project: any) => {
@@ -147,30 +149,80 @@ export default function AIRoadmapGenerator() {
     }
   };
 
-  const addSkillToProfile = async (taskName: string) => {
+  const addPhaseSkillsToProfile = async (skillsToAdd: string[]) => {
+    if (!skillsToAdd || skillsToAdd.length === 0) return;
     try {
+      setClaiming(true);
       const profileRes = await fetch('/api/users/profile');
       const profileData = await profileRes.json();
       if (profileData.success) {
-        const currentSkills = profileData.user.skills || [];
-        const exists = currentSkills.some((s: any) => typeof s === 'string' ? s === taskName : s.name === taskName);
-        if (!exists) {
-          currentSkills.push({ name: taskName, level: 'Intermediate', source: 'U-SkillMap Task' });
+        let currentSkills = profileData.user.skills || [];
+        let addedCount = 0;
+        
+        for (const skill of skillsToAdd) {
+          const exists = currentSkills.some((s: any) => typeof s === 'string' ? s === skill : s.name === skill);
+          if (!exists) {
+            currentSkills.push({ name: skill, level: 'Intermediate', source: 'U-SkillMap Phase' });
+            addedCount++;
+          }
+        }
+        
+        if (addedCount > 0) {
           const updateRes = await fetch('/api/users/profile', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...profileData.user, skills: currentSkills })
           });
           if (updateRes.ok) {
-            alert(`✅ "${taskName}" added to your Profile & Resume!`);
+            alert(`✅ ${addedCount} skills added to your Profile!`);
           }
         } else {
-          alert('This skill is already on your profile!');
+          alert('These skills are already on your profile!');
         }
       }
     } catch (e) {
       console.error(e);
-      alert('Error adding skill.');
+      alert('Error adding skills.');
+    } finally {
+      setClaiming(false);
+    }
+  };
+
+  const claimCertificate = async () => {
+    try {
+      setClaiming(true);
+      const profileRes = await fetch('/api/users/profile');
+      const profileData = await profileRes.json();
+      if (profileData.success) {
+        const currentCerts = profileData.user.certificates || [];
+        const certName = `${roadmap.careerGoal} Master`;
+        const exists = currentCerts.some((c: any) => c.name === certName);
+        if (!exists) {
+          const txId = '0x' + Math.random().toString(16).substring(2, 10) + Math.random().toString(16).substring(2, 10);
+          currentCerts.push({ 
+            name: certName, 
+            issuer: 'UConnect AI', 
+            date: new Date().toLocaleDateString(),
+            isVerified: true,
+            txId
+          });
+          const updateRes = await fetch('/api/users/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...profileData.user, certificates: currentCerts })
+          });
+          if (updateRes.ok) {
+            alert(`🎉 Certificate "${certName}" added to your Profile!`);
+          }
+        } else {
+          alert('You have already claimed this certificate!');
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Error claiming certificate.');
+    } finally {
+      setClaiming(false);
     }
   };
 
@@ -217,69 +269,64 @@ export default function AIRoadmapGenerator() {
   }
 
   const progress = calculateProgress();
+  const baseReadiness = roadmap.readinessScore || 0;
+  const currentReadiness = Math.round(baseReadiness + ((100 - baseReadiness) * (progress / 100)));
 
   return (
     <div className="space-y-8">
       {/* Top Dashboard Header */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-blue-500/10 to-transparent rounded-bl-full pointer-events-none" />
-          
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-xs font-bold mb-4">
-              <Target className="w-3.5 h-3.5" /> Target Career
-            </div>
-            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{roadmap.careerGoal}</h2>
-            
-            <div className="flex items-center gap-6 mt-6">
-              <div>
-                <div className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Overall Progress</div>
-                <div className="flex items-end gap-2">
-                  <span className="text-4xl font-black text-blue-600 dark:text-blue-400 leading-none">{progress}%</span>
-                </div>
-              </div>
-              <div className="w-px h-12 bg-slate-200 dark:bg-slate-800" />
-              <div>
-                <div className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Tasks Completed</div>
-                <div className="flex items-end gap-2">
-                  <span className="text-2xl font-bold text-slate-900 dark:text-white leading-none">{completedTasks.length}</span>
-                </div>
-              </div>
-            </div>
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-blue-500/10 via-indigo-500/5 to-transparent rounded-bl-full pointer-events-none" />
+        
+        <div className="flex-1">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-xs font-bold mb-4">
+            <Target className="w-3.5 h-3.5" /> Target Career
           </div>
-
-          <div className="mt-8">
-            <div className="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-              <div className="h-full bg-blue-600 rounded-full transition-all duration-1000 ease-out" style={{ width: `${progress}%` }} />
-            </div>
-          </div>
+          <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-2">{roadmap.careerGoal}</h2>
+          <p className="text-slate-500 dark:text-slate-400 max-w-2xl">
+            Complete the interactive curriculum below to master the skills required for this career path.
+          </p>
         </div>
 
-        <div className="bg-slate-900 rounded-3xl p-6 sm:p-8 flex flex-col shadow-xl text-white">
-          <div className="flex items-center gap-2 text-blue-400 text-sm font-bold mb-6 uppercase tracking-wider">
-            <BarChart3 className="w-4 h-4" /> Gap Analysis
-          </div>
-          
-          <div className="flex-1 flex flex-col justify-center items-center text-center">
-            <div className="relative">
-              <svg className="w-32 h-32 transform -rotate-90">
-                <circle cx="64" cy="64" r="56" className="stroke-slate-800" strokeWidth="12" fill="none" />
-                <circle 
-                  cx="64" cy="64" r="56" 
-                  className="stroke-blue-500" strokeWidth="12" fill="none" 
-                  strokeDasharray="351" strokeDashoffset={351 - (351 * (roadmap.readinessScore || 0)) / 100}
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-3xl font-black">{roadmap.readinessScore || 0}%</span>
-              </div>
+        <div className="w-full md:w-auto shrink-0 flex items-center gap-6 bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700/50">
+          <div>
+            <div className="text-xs text-slate-500 dark:text-slate-400 font-bold mb-1 uppercase tracking-wider">Overall Progress</div>
+            <div className="flex items-end gap-2">
+              <span className="text-4xl font-black text-blue-600 dark:text-blue-400 leading-none">{progress}%</span>
             </div>
-            <div className="mt-4 font-bold text-lg">Job Readiness</div>
-            <p className="text-xs text-slate-400 mt-2">Based on your existing skills vs required skills.</p>
+          </div>
+          <div className="w-px h-12 bg-slate-200 dark:bg-slate-700" />
+          <div>
+            <div className="text-xs text-slate-500 dark:text-slate-400 font-bold mb-1 uppercase tracking-wider">Tasks Done</div>
+            <div className="flex items-end gap-2">
+              <span className="text-2xl font-bold text-slate-900 dark:text-white leading-none">{completedTasks.length}</span>
+            </div>
           </div>
         </div>
       </div>
+
+      {progress === 100 && (
+        <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-8 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-bl-full pointer-events-none" />
+          <div className="flex items-center gap-6 relative z-10">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl backdrop-blur-sm flex items-center justify-center shrink-0">
+              <Award className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-black tracking-tight mb-1">Path Completed!</h3>
+              <p className="text-emerald-50">You have successfully mastered all the skills in this roadmap.</p>
+            </div>
+          </div>
+          <button 
+            onClick={claimCertificate}
+            disabled={claiming}
+            className="px-6 py-3 bg-white text-emerald-600 hover:bg-emerald-50 font-bold rounded-xl shadow-lg transition-all flex items-center gap-2 relative z-10 disabled:opacity-75"
+          >
+            {claiming ? <Loader2 className="w-5 h-5 animate-spin" /> : <Award className="w-5 h-5" />}
+            Claim Verified Certificate
+          </button>
+        </div>
+      )}
 
       {/* Skill Gaps Breakdown */}
       {roadmap.skillGaps && roadmap.skillGaps.length > 0 && (
@@ -370,13 +417,24 @@ export default function AIRoadmapGenerator() {
             const phaseTotal = phaseTasks.length;
             const isPhaseComplete = phaseTotal > 0 && phaseCompleted === phaseTotal;
 
+            const isPhaseUnlocked = index === 0 || (
+              roadmap.roadmap[index - 1]?.actionItems?.every((t: any) => completedTasks.includes(t.taskId))
+            );
+
             return (
               <div
                 key={index}
-                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm overflow-hidden relative"
+                className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm overflow-hidden relative transition-all ${!isPhaseUnlocked ? 'opacity-60 grayscale-[50%] pointer-events-none' : ''}`}
               >
+                {!isPhaseUnlocked && (
+                  <div className="absolute inset-0 bg-slate-900/5 backdrop-blur-[2px] z-10 flex items-center justify-center">
+                    <div className="bg-white dark:bg-slate-800 px-4 py-2 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 flex items-center gap-2 font-bold text-slate-500">
+                      <Lock className="w-5 h-5" /> Phase Locked
+                    </div>
+                  </div>
+                )}
                 {isPhaseComplete && (
-                  <div className="absolute top-0 right-0 w-16 h-16 bg-emerald-500/10 rounded-bl-full flex items-start justify-end p-3">
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-emerald-500/10 rounded-bl-full flex items-start justify-end p-3 z-20">
                     <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                   </div>
                 )}
@@ -402,12 +460,16 @@ export default function AIRoadmapGenerator() {
                         </span>
                       ))}
                     </div>
-                    <button 
-                      onClick={() => setQuizTopic(phase.title)}
-                      className="mt-2 text-[10px] font-bold px-3 py-1.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50 rounded-lg transition-colors flex items-center gap-1.5"
-                    >
-                      <Sparkles className="w-3 h-3" /> Test your knowledge
-                    </button>
+                    <div className="flex items-center gap-2 mt-2">
+                      {isPhaseComplete && phase.skillsToFocus?.length > 0 && (
+                        <button 
+                          onClick={() => addPhaseSkillsToProfile(phase.skillsToFocus)}
+                          className="text-[10px] font-bold px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 rounded-lg transition-colors flex items-center gap-1.5"
+                        >
+                          <Plus className="w-3 h-3" /> Add Phase Skills
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -425,7 +487,7 @@ export default function AIRoadmapGenerator() {
                             : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50 hover:border-blue-300 dark:hover:border-blue-700'
                         }`}
                       >
-                        <button onClick={() => toggleTask(item.taskId)} className="mt-1 sm:mt-0 shrink-0 hover:scale-110 transition-transform focus:outline-none">
+                        <button onClick={() => isChecked ? uncheckTask(item.taskId) : setQuizTopic({ topic: item.task, phaseIndex: index, isExam: true, taskId: item.taskId })} className="mt-1 sm:mt-0 shrink-0 hover:scale-110 transition-transform focus:outline-none">
                           {isChecked ? (
                             <CheckCircle2 className="w-6 h-6 text-emerald-500" />
                           ) : (
@@ -454,21 +516,24 @@ export default function AIRoadmapGenerator() {
                           </div>
                         </div>
 
-                        <div className="flex gap-2">
-                          <button 
-                            onClick={() => setAssistantTopic(typeof item === 'string' ? item : item.task)}
-                            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-blue-600 hover:border-blue-300 transition-colors shadow-sm shrink-0"
+                        <div className="flex flex-col sm:flex-row gap-2 shrink-0">
+                          <button
+                            onClick={() => setAssistantTopic(item.task)}
+                            className="flex items-center justify-center gap-2 px-3 py-1.5 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                           >
-                            <HelpCircle className="w-3.5 h-3.5 text-blue-500" /> Ask AI
+                            <HelpCircle className="w-4 h-4 text-blue-500" /> Ask AI
                           </button>
-                          
-                          {isChecked && (
-                            <button 
-                              onClick={() => addSkillToProfile(typeof item === 'string' ? item : item.task)}
-                              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-emerald-200 dark:border-emerald-900/50 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors shadow-sm shrink-0"
+                          {!isChecked ? (
+                            <button
+                              onClick={() => setQuizTopic({ topic: item.task, phaseIndex: index, isExam: true, taskId: item.taskId })}
+                              className="flex items-center justify-center gap-2 px-3 py-1.5 text-xs font-bold rounded-xl bg-amber-500 text-white hover:bg-amber-600 transition-colors shadow-sm"
                             >
-                              <Plus className="w-3.5 h-3.5" /> Add to Profile
+                              <Award className="w-4 h-4" /> Take Exam
                             </button>
+                          ) : (
+                            <div className="flex items-center justify-center gap-2 px-3 py-1.5 text-xs font-bold rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                              <CheckCircle2 className="w-4 h-4" /> Passed
+                            </div>
                           )}
                         </div>
                       </div>
@@ -530,7 +595,28 @@ export default function AIRoadmapGenerator() {
       <AIQuizModal
         isOpen={!!quizTopic}
         onClose={() => setQuizTopic(null)}
-        topic={quizTopic || ''}
+        topic={quizTopic?.topic || ''}
+        onComplete={(score, total) => {
+          if (quizTopic?.isExam) {
+            const percentage = score / total;
+            if (percentage >= 0.6) {
+              if (quizTopic.taskId) {
+                if (!completedTasks.includes(quizTopic.taskId)) {
+                  const nextCompleted = [...completedTasks, quizTopic.taskId];
+                  setCompletedTasks(nextCompleted);
+                  persistProgress(nextCompleted, completedPhases);
+                  setTimeout(() => {
+                    alert("🎉 Passed! Task marked as completed.");
+                  }, 300);
+                }
+              }
+            } else {
+              setTimeout(() => {
+                alert(`You scored ${Math.round(percentage * 100)}%. You need 60% to pass. Keep studying!`);
+              }, 300);
+            }
+          }
+        }}
       />
     </div>
   );

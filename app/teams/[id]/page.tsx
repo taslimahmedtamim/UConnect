@@ -6,6 +6,7 @@ import { Users, Code, CheckCircle, XCircle, BrainCircuit, Sparkles, MessageSquar
 import TeamAnnouncements from "@/components/TeamAnnouncements";
 import TeamLeaderboard from "@/components/TeamLeaderboard";
 import TeamProjects from "@/components/TeamProjects";
+import TeamMessages from "@/components/TeamMessages";
 
 export default function TeamDetailsPage() {
   const router = useRouter();
@@ -107,6 +108,25 @@ export default function TeamDetailsPage() {
     }
   };
 
+  const toggleAssistant = async (memberId: string, isAssistant: boolean) => {
+    try {
+      const res = await fetch(`/api/teams/${id}/assistants`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ memberId, action: isAssistant ? 'remove' : 'add' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setTeam((prev: any) => ({ ...prev, assistantIds: data.assistantIds }));
+      } else {
+        alert(data.message || 'Failed to update assistant status');
+      }
+    } catch (e: any) {
+      alert(e.message || 'An error occurred');
+      console.error(e);
+    }
+  };
+
   if (loading) return <div className="text-center py-20 text-slate-500">Loading team...</div>;
   if (!team) return <div className="text-center py-20 text-slate-500">Team not found.</div>;
 
@@ -144,13 +164,9 @@ export default function TeamDetailsPage() {
         )}
 
         {/* Action Button for Non-Owners */}
-        {!isOwner && (
+        {!isOwner && !isMember && (
           <div className="mt-10 pt-8 border-t border-slate-100 dark:border-slate-800">
-            {isMember ? (
-              <div className="inline-flex items-center gap-2 text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400 px-6 py-3 rounded-xl font-medium">
-                <CheckCircle className="w-5 h-5" /> You are a member of this team
-              </div>
-            ) : hasRequested ? (
+            {hasRequested ? (
               <div className="inline-flex items-center gap-2 text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400 px-6 py-3 rounded-xl font-medium">
                 <BrainCircuit className="w-5 h-5" /> Join Request Pending (AI Analyzed)
               </div>
@@ -187,10 +203,46 @@ export default function TeamDetailsPage() {
         >
           Leaderboard 🏆
         </button>
+        {(isOwner || isMember) && (
+          <button 
+            onClick={() => setActiveTab("messages")}
+            className={`px-4 py-3 font-semibold text-sm border-b-2 transition-colors whitespace-nowrap flex items-center gap-2 ${activeTab === 'messages' ? 'border-indigo-500 text-indigo-600 dark:border-indigo-500 dark:text-indigo-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700'}`}
+          >
+            <MessageSquare className="w-4 h-4" /> Messages
+          </button>
+        )}
       </div>
 
       {activeTab === "overview" && (
         <>
+          {/* Members List */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Team Members</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {team.members.map((member: any) => {
+                const isAssistant = team.assistantIds?.includes(member.id);
+                return (
+                  <div key={member.id} className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                    <div>
+                      <p className="font-bold text-slate-900 dark:text-white">{member.fullName}</p>
+                      {isAssistant && <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold ml-2">Assistant</span>}
+                      {member.role === 'mentor' && <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold ml-2">Mentor</span>}
+                      {member.id === team.owner.id && <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-semibold ml-2">Owner</span>}
+                    </div>
+                    {isOwner && member.id !== team.owner.id && (
+                      <button 
+                        onClick={() => toggleAssistant(member.id, isAssistant)}
+                        className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${isAssistant ? 'bg-red-50 text-red-600 hover:bg-red-100' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                      >
+                        {isAssistant ? 'Remove Assistant' : 'Make Assistant'}
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Owner Management Area */}
           {isOwner && team.joinRequests && team.joinRequests.length > 0 && (
             <div className="mb-8">
@@ -280,6 +332,12 @@ export default function TeamDetailsPage() {
 
       {activeTab === "leaderboard" && (
         <TeamLeaderboard team={team} teamId={id as string} currentUser={currentUser} />
+      )}
+
+      {activeTab === "messages" && (isOwner || isMember) && (
+        <div className="max-w-4xl mx-auto">
+          <TeamMessages teamId={id as string} currentUser={currentUser} />
+        </div>
       )}
 
     </div>

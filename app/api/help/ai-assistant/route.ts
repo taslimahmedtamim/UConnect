@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { getFlashModel, hasApiKey } from '@/lib/ai';
 
 export async function POST(req: Request) {
   try {
@@ -15,11 +15,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, message: 'Title and content required' }, { status: 400 });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (apiKey) {
+    if (hasApiKey()) {
       try {
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });
+        const model = getFlashModel();
 
         const prompt = `
 You are an expert technical lead and senior debugging coach AI for UConnect.

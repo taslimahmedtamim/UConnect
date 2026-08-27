@@ -51,6 +51,7 @@ model User {
   userRoadmap                UserRoadmap?
   notifications              Notification[]
   projectComments            ProjectComment[] @relation("ProjectComments")
+  projectLikes               ProjectLike[]  @relation("ProjectLikes")
   feedPosts                  FeedPost[]     @relation("FeedPosts")
   feedComments               FeedComment[]  @relation("FeedComments")
   feedLikes                  FeedLike[]     @relation("FeedLikes")
@@ -71,6 +72,7 @@ model Project {
   featured    Boolean  @default(false)
   status      String   @default("In Progress")
   progress    Int      @default(10)
+  isPrivate   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -86,6 +88,7 @@ model Project {
   team     Team?  @relation("TeamProjects", fields: [teamId], references: [id], onDelete: Cascade)
   
   comments ProjectComment[]
+  projectLikes ProjectLike[]
 
   @@index([authorId])
   @@index([teamId])
@@ -105,6 +108,21 @@ model ProjectComment {
 
   @@index([projectId])
   @@index([authorId])
+}
+
+model ProjectLike {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  userId    String
+  user      User     @relation("ProjectLikes", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+  @@index([projectId])
+  @@index([userId])
 }
 
 model Opportunity {
@@ -173,6 +191,7 @@ model Team {
   name           String
   description    String   @db.Text
   requiredSkills Json     @default("[]") // Array of strings
+  assistantIds   Json     @default("[]") // Array of user IDs
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 

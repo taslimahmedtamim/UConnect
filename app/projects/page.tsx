@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FolderOpen, Plus, Search, Filter, ThumbsUp, Eye, Sparkles, ExternalLink, GitBranch, Terminal } from "lucide-react";
+import { FolderOpen, Plus, Search, Filter, ThumbsUp, ThumbsDown, Eye, Sparkles, ExternalLink, GitBranch, Terminal, Lock } from "lucide-react";
 import { useUser } from "@/components/UserProvider";
 import AIProjectAssistant from "@/components/projects/AIProjectAssistant";
 import GitHubStatsBadge from "@/components/projects/GitHubStatsBadge";
@@ -28,11 +28,13 @@ export default function ProjectsPage() {
     skillsDemonstrated: "",
     features: [] as {title: string, completed: boolean}[],
     difficulty: "",
-    estimatedDuration: ""
+    estimatedDuration: "",
+    isPrivate: false
   });
 
-  const fetchProjects = async () => {
+  const fetchProjects = async (silent = false) => {
     try {
+      if (!silent) setLoading(true);
       const res = await fetch("/api/projects");
       const data = await res.json();
       if (data.success) {
@@ -41,13 +43,59 @@ export default function ProjectsPage() {
     } catch (error) {
       console.error("Failed to load projects", error);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchProjects();
+    const interval = setInterval(() => {
+      fetchProjects(true);
+    }, 3000);
+    return () => clearInterval(interval);
   }, []);
+
+  const handleLikeProject = async (e: React.MouseEvent, projectId: string, currentLikes: number) => {
+    e.preventDefault();
+    setProjects(prev => prev.map(p => p.id === projectId ? { ...p, likes: currentLikes + 1 } : p));
+    try {
+      const res = await fetch(`/api/projects/${projectId}/like`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setProjects(prev => prev.map(p => p.id === projectId ? { ...p, likes: currentLikes } : p));
+        if (data.message === 'Already liked') {
+          // It's fine, silently ignore or toggle it? The user clicked like again, maybe they meant to unlike?
+          // Since we have a dislike button, they should click that. Let's just tell them.
+          alert("You have already liked this project! Click thumbs down to unlike.");
+        }
+      } else {
+        // Sync with actual likes from server just in case
+        setProjects(prev => prev.map(p => p.id === projectId ? { ...p, likes: data.likes } : p));
+      }
+    } catch (err) {
+      setProjects(prev => prev.map(p => p.id === projectId ? { ...p, likes: currentLikes } : p));
+    }
+  };
+
+  const handleDislikeProject = async (e: React.MouseEvent, projectId: string, currentLikes: number) => {
+    e.preventDefault();
+    if (currentLikes <= 0) return;
+    setProjects(prev => prev.map(p => p.id === projectId ? { ...p, likes: currentLikes - 1 } : p));
+    try {
+      const res = await fetch(`/api/projects/${projectId}/dislike`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setProjects(prev => prev.map(p => p.id === projectId ? { ...p, likes: currentLikes } : p));
+        if (data.message === 'Not liked yet') {
+          alert("You haven't liked this project yet!");
+        }
+      } else {
+        setProjects(prev => prev.map(p => p.id === projectId ? { ...p, likes: data.likes } : p));
+      }
+    } catch (err) {
+      setProjects(prev => prev.map(p => p.id === projectId ? { ...p, likes: currentLikes } : p));
+    }
+  };
 
   const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,7 +113,7 @@ export default function ProjectsPage() {
 
       if (res.ok) {
         setIsModalOpen(false);
-        setFormData({ title: "", description: "", category: "Web Development", tags: "", repoUrl: "", demoUrl: "", lookingForContributors: false, progress: 10, status: "Planning", skillsDemonstrated: "", features: [], difficulty: "", estimatedDuration: "" });
+        setFormData({ title: "", description: "", category: "Web Development", tags: "", repoUrl: "", demoUrl: "", lookingForContributors: false, progress: 10, status: "Planning", skillsDemonstrated: "", features: [], difficulty: "", estimatedDuration: "", isPrivate: false });
         fetchProjects();
       } else {
         const err = await res.json();
@@ -174,6 +222,11 @@ export default function ProjectsPage() {
                   }`}>
                     {project.status || "In Progress"}
                   </span>
+                  {project.isPrivate && (
+                    <span className="inline-block px-2.5 py-1 bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 text-xs font-semibold rounded-md flex items-center gap-1">
+                      <Lock className="w-3 h-3" /> Private
+                    </span>
+                  )}
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
                   {project.title}
@@ -216,8 +269,15 @@ export default function ProjectsPage() {
 
               <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-3 text-slate-400 text-sm">
-                  <span className="flex items-center gap-1"><ThumbsUp className="w-4 h-4" /> {project.likes}</span>
-                  <span className="flex items-center gap-1"><Eye className="w-4 h-4" /> {project.views}</span>
+                  <div className="flex items-center gap-2">
+                    <button onClick={(e) => handleLikeProject(e, project.id, project.likes)} className="hover:text-blue-500 transition-colors">
+                      <ThumbsUp className="w-4 h-4" />
+                    </button>
+                    <span className="font-medium min-w-[1ch] text-center">{project.likes}</span>
+                    <button onClick={(e) => handleDislikeProject(e, project.id, project.likes)} className="hover:text-red-500 transition-colors">
+                      <ThumbsDown className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
                 <Link href={`/projects/${project.id}`} className="text-blue-600 dark:text-blue-400 text-sm font-semibold hover:underline">
                   View Details &rarr;
@@ -271,6 +331,17 @@ export default function ProjectsPage() {
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tech Stack (comma separated)</label>
                   <input type="text" value={formData.tags} onChange={e => setFormData({...formData, tags: e.target.value})} className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg" placeholder="React, Node.js, Prisma" />
+                </div>
+                <div className="flex items-center gap-3 py-2 border-t border-slate-200 dark:border-slate-800 mt-2">
+                  <label className="flex items-center cursor-pointer relative">
+                    <input type="checkbox" className="sr-only" checked={formData.isPrivate} onChange={(e) => setFormData({...formData, isPrivate: e.target.checked})} />
+                    <div className={`w-11 h-6 rounded-full transition-colors ${formData.isPrivate ? 'bg-blue-600' : 'bg-slate-300 dark:bg-slate-700'}`}></div>
+                    <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${formData.isPrivate ? 'translate-x-5' : 'translate-x-0'}`}></div>
+                  </label>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1"><Lock className="w-4 h-4" /> Private Project</span>
+                    <span className="text-xs text-slate-500">Only you and your team members can see this project.</span>
+                  </div>
                 </div>
               </form>
             </div>

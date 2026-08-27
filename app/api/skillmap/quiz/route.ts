@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
+import { getFlashModel, hasApiKey } from '@/lib/ai';
 
 export async function POST(req: Request) {
   try {
@@ -13,13 +13,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, message: 'Topic is required' }, { status: 400 });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
+    if (!hasApiKey()) {
       return NextResponse.json({ success: false, message: 'API key missing' }, { status: 500 });
     }
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });
+    const model = getFlashModel();
 
     const prompt = `
 Generate a short, 3-question multiple-choice quiz about "${topic}" to test a student's knowledge.
