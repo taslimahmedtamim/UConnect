@@ -117,7 +117,7 @@ export async function GET(req: Request) {
       take: 20,
       include: {
         author: {
-          select: { fullName: true, username: true, profileImage: true, badge: true }
+          select: { fullName: true, username: true, profileImage: true }
         }
       }
     });
