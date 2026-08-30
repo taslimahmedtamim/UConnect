@@ -26,17 +26,15 @@ export async function POST(req: Request) {
     // Create a Nodemailer transporter (or mock for dev)
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
       const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
+        service: 'gmail',
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
         },
       });
 
-      // Send the email with a strict 8-second timeout
-      const sendPromise = transporter.sendMail({
+      // Send the email and wait for it
+      await transporter.sendMail({
         from: `"UConnect" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: 'Your UConnect Verification Code',
@@ -51,12 +49,6 @@ export async function POST(req: Request) {
           </div>
         `,
       });
-
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('SMTP Connection Timeout: Railway might be blocking outgoing emails on this tier, or the App Password is invalid.')), 8000)
-      );
-
-      await Promise.race([sendPromise, timeoutPromise]);
     } else {
       console.log(`[DEV MODE] OTP for ${email} is: ${otp}`);
       return NextResponse.json({ success: true, message: 'OTP generated (Dev Mode)', isDev: true, devOtp: otp });

@@ -23,6 +23,7 @@ import {
 import { useUser } from "@/components/UserProvider";
 import CareerProgressCard from "@/components/profile/CareerProgressCard";
 import LearningHeatmap from "@/components/profile/LearningHeatmap";
+import AICareerInsights from "@/components/profile/AICareerInsights";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -508,7 +509,7 @@ export default function DashboardPage() {
 
         {/* Right Column: Teams & Stats */}
         <div className="space-y-6">
-
+          <AICareerInsights user={user} />
 
           {/* Recommended Teams */}
           <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
