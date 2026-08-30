@@ -31,7 +31,7 @@ export async function GET(req: Request) {
     // Calculate match score based on requiredSkills overlap
     const scoredTeams = teams.map(team => {
       let score = 0;
-      let matchedSkills = [];
+      let matchedSkills: string[] = [];
       const requiredSkills = Array.isArray(team.requiredSkills) ? team.requiredSkills.map((s: any) => String(s)) : [];
       
       if (requiredSkills.length > 0 && userSkills.length > 0) {

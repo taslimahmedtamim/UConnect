@@ -6,9 +6,11 @@ import { FolderOpen, Plus, Search, Filter, ThumbsUp, ThumbsDown, Eye, Sparkles, 
 import { useUser } from "@/components/UserProvider";
 import AIProjectAssistant from "@/components/projects/AIProjectAssistant";
 import GitHubStatsBadge from "@/components/projects/GitHubStatsBadge";
+import { useRouter } from "next/navigation";
 
 export default function ProjectsPage() {
   const { user } = useUser();
+  const router = useRouter();
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
