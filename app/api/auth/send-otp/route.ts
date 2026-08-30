@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import prisma from '@/lib/db';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   try {
@@ -23,21 +25,9 @@ export async function POST(req: Request) {
       },
     });
 
-    // Create a Nodemailer transporter (or mock for dev)
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-      const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false, // use STARTTLS
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
-
-      // Send the email and wait for it
-      await transporter.sendMail({
-        from: `"UConnect" <${process.env.EMAIL_USER}>`,
+    if (process.env.RESEND_API_KEY) {
+      const { data, error } = await resend.emails.send({
+        from: 'UConnect <onboarding@resend.dev>',
         to: email,
         subject: 'Your UConnect Verification Code',
         html: `
@@ -51,6 +41,10 @@ export async function POST(req: Request) {
           </div>
         `,
       });
+      
+      if (error) {
+        throw new Error(error.message);
+      }
     } else {
       console.log(`[DEV MODE] OTP for ${email} is: ${otp}`);
       return NextResponse.json({ success: true, message: 'OTP generated (Dev Mode)', isDev: true, devOtp: otp });
