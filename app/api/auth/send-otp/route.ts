@@ -35,22 +35,28 @@ export async function POST(req: Request) {
         },
       });
 
-      // Send the email
-      await transporter.sendMail({
-      from: `"UConnect" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: 'Your UConnect Verification Code',
-      html: `
-        <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
-          <h2 style="color: #2563eb;">UConnect Authentication</h2>
-          <p>Your one-time verification code is:</p>
-          <h1 style="font-size: 32px; letter-spacing: 4px; color: #1e293b; background: #f1f5f9; padding: 10px; display: inline-block; border-radius: 8px;">
-            ${otp}
-          </h1>
-          <p style="color: #64748b; font-size: 14px;">This code will expire in 10 minutes.</p>
-        </div>
-      `,
+      // Send the email with a strict 8-second timeout
+      const sendPromise = transporter.sendMail({
+        from: `"UConnect" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: 'Your UConnect Verification Code',
+        html: `
+          <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
+            <h2 style="color: #2563eb;">UConnect Authentication</h2>
+            <p>Your one-time verification code is:</p>
+            <h1 style="font-size: 32px; letter-spacing: 4px; color: #1e293b; background: #f1f5f9; padding: 10px; display: inline-block; border-radius: 8px;">
+              ${otp}
+            </h1>
+            <p style="color: #64748b; font-size: 14px;">This code will expire in 10 minutes.</p>
+          </div>
+        `,
       });
+
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('SMTP Connection Timeout: Railway might be blocking outgoing emails on this tier, or the App Password is invalid.')), 8000)
+      );
+
+      await Promise.race([sendPromise, timeoutPromise]);
     } else {
       console.log(`[DEV MODE] OTP for ${email} is: ${otp}`);
       return NextResponse.json({ success: true, message: 'OTP generated (Dev Mode)', isDev: true, devOtp: otp });

@@ -40,7 +40,7 @@ export async function POST(req: Request) {
         },
       });
 
-      await transporter.sendMail({
+      const sendPromise = transporter.sendMail({
         from: `"UConnect Security" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: 'UConnect Password Reset Code',
@@ -59,6 +59,12 @@ export async function POST(req: Request) {
           </div>
         `,
       });
+
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('SMTP Connection Timeout: Railway might be blocking outgoing emails on this tier, or the App Password is invalid.')), 8000)
+      );
+
+      await Promise.race([sendPromise, timeoutPromise]);
     } else {
       console.log(`[DEV MODE] Forgot Password OTP for ${email} is: ${otp}`);
       return NextResponse.json({ success: true, message: 'OTP generated (Dev Mode)', isDev: true, devOtp: otp });
