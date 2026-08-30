@@ -45,7 +45,7 @@ interface TrendingTag {
   count: number;
 }
 
-export default function CommunityFeedPage() {
+function CommunityFeedContent() {
   const { user } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -427,5 +427,13 @@ export default function CommunityFeedPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function CommunityFeedPage() {
+  return (
+    <React.Suspense fallback={<div className="flex justify-center py-20"><div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div></div>}>
+      <CommunityFeedContent />
+    </React.Suspense>
   );
 }
