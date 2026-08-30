@@ -16,7 +16,6 @@ import {
   Trophy,
   GraduationCap,
   MessageSquare,
-  HelpCircle,
   LogOut,
   Moon,
   Sun,
@@ -87,6 +86,7 @@ export default function Sidebar() {
         { label: "Profile", href: "/profile", icon: UserCircle },
         { label: "U-SkillMap", href: "/skillmap", icon: Layers },
         { label: "U-Resume", href: "/resume", icon: FileText },
+        { label: "Interviews", href: "/interviews", icon: MonitorPlay },
       ]
     },
     {
@@ -103,12 +103,6 @@ export default function Sidebar() {
         { label: "Community Feed", href: "/feed", icon: Rss },
         { label: "Leaderboard", href: "/leaderboard", icon: Trophy },
         { label: "Mentors", href: "/mentors", icon: GraduationCap },
-      ]
-    },
-    {
-      title: "Support",
-      items: [
-        { label: "Help Board", href: "/help", icon: HelpCircle },
       ]
     }
   ];

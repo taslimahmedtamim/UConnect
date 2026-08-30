@@ -55,6 +55,7 @@ model User {
   feedPosts                  FeedPost[]     @relation("FeedPosts")
   feedComments               FeedComment[]  @relation("FeedComments")
   feedLikes                  FeedLike[]     @relation("FeedLikes")
+  mockInterviews             MockInterview[]
 }
 
 model Project {
@@ -277,6 +278,7 @@ model UserSkill {
   skillId        String
   level          Int      @default(1) // 1..5
   endorsementCnt Int      @default(0)
+  verified       Boolean  @default(false)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -461,6 +463,7 @@ model Notification {
 model FeedPost {
   id        String   @id @default(uuid())
   content   String   @db.Text
+  postType  String   @default("General") // 'General', 'Help Needed', 'Project Showcase'
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -502,5 +505,21 @@ model FeedLike {
 
   @@unique([postId, userId])
   @@index([postId])
+  @@index([userId])
+}
+
+model MockInterview {
+  id           String   @id @default(uuid())
+  userId       String
+  targetRole   String
+  score        Int      @default(0)
+  feedback     Json     @default("{}") // Overall strengths, weaknesses, tips
+  qaHistory    Json     @default("[]") // Array of { question, answer, score, AI feedback }
+  completed    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
 }

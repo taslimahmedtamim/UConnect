@@ -116,20 +116,32 @@ export default function AIProjectAssistant({ onSelectIdea, onClose }: { onSelect
               </div>
 
               <div>
-                <h4 className="font-semibold text-slate-900 dark:text-white mb-2">Key Features</h4>
-                <ul className="list-disc pl-5 space-y-1 text-sm text-slate-600 dark:text-slate-400">
-                  {idea.features.map((feature: string, i: number) => (
-                    <li key={i}>{feature}</li>
+                <h4 className="font-semibold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-indigo-500" />
+                  Task Scaffolding
+                </h4>
+                <div className="space-y-3">
+                  {idea.tasks?.map((task: any, i: number) => (
+                    <div key={i} className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700">
+                      <div className="w-5 h-5 rounded border border-slate-300 dark:border-slate-600 shrink-0 mt-0.5 flex items-center justify-center bg-white dark:bg-slate-900" />
+                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{task.title}</span>
+                    </div>
                   ))}
-                </ul>
+                  {!idea.tasks && idea.features?.map((feature: string, i: number) => (
+                    <div key={i} className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700">
+                      <div className="w-5 h-5 rounded border border-slate-300 dark:border-slate-600 shrink-0 mt-0.5 flex items-center justify-center bg-white dark:bg-slate-900" />
+                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{feature}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div className="pt-4 flex gap-3">
                 <button 
                   onClick={() => onSelectIdea(idea)}
-                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20"
                 >
-                  Create Project <ArrowRight className="w-5 h-5" />
+                  <Sparkles className="w-5 h-5" /> Start This Project <ArrowRight className="w-5 h-5" />
                 </button>
                 <button 
                   onClick={() => setIdea(null)}

@@ -69,12 +69,20 @@ export default function TeamsPage() {
         </div>
         <div className="flex items-center gap-3">
           {user && (
-            <Link 
-              href="/teams/create" 
-              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap"
-            >
-              <Plus className="w-5 h-5" /> Create a Team
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link 
+                href="/teams/discover" 
+                className="flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-indigo-500 hover:from-pink-600 hover:to-indigo-600 shadow-lg shadow-pink-500/20 text-white px-5 py-2.5 rounded-lg font-bold transition-all hover:scale-105 whitespace-nowrap"
+              >
+                <Sparkles className="w-5 h-5" /> Discover Matches
+              </Link>
+              <Link 
+                href="/teams/create" 
+                className="flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 px-5 py-2.5 rounded-lg font-medium transition-colors whitespace-nowrap border border-slate-200 dark:border-slate-700"
+              >
+                <Plus className="w-5 h-5" /> Create a Team
+              </Link>
+            </div>
           )}
         </div>
       </div>
@@ -107,7 +115,7 @@ export default function TeamsPage() {
             onClick={() => setFilterMode("matches")}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${filterMode === "matches" ? "bg-white dark:bg-slate-700 shadow-sm text-blue-600 dark:text-blue-400" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"}`}
           >
-            <Sparkles className="w-4 h-4" /> My Matches
+            <Filter className="w-4 h-4" /> Recommended
           </button>
         </div>
       </div>

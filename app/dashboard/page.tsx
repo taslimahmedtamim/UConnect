@@ -39,9 +39,9 @@ export default function DashboardPage() {
   const [recommendedTeams, setRecommendedTeams] = useState<any[]>([]);
   const [loadingStats, setLoadingStats] = useState(true);
   
-  // AI Recommendation
-  const [aiRecommendation, setAiRecommendation] = useState<{ focus: string; recommendation: string; steps: string[] } | null>(null);
-  const [aiLoading, setAiLoading] = useState(false);
+  // Daily Mission
+  const [dailyMission, setDailyMission] = useState<{ title: string; description: string; actionLabel: string; actionUrl: string; type: string } | null>(null);
+  const [missionLoading, setMissionLoading] = useState(false);
 
   useEffect(() => {
     if (!userLoading && !user) {
@@ -144,24 +144,24 @@ export default function DashboardPage() {
           setRecommendedJobs(matches.slice(0, 3));
         }
         
-        // Cache / load AI Recommendation (with daily expiry)
-        const cachedAi = localStorage.getItem(`ai_rec_${user.id}`);
-        if (cachedAi) {
+        // Cache / load Daily Mission (with daily expiry)
+        const cachedMission = localStorage.getItem(`daily_mission_${user.id}`);
+        if (cachedMission) {
           try {
-            const parsed = JSON.parse(cachedAi);
+            const parsed = JSON.parse(cachedMission);
             const today = new Date().toISOString().split('T')[0];
             if (parsed.expiry === today && parsed.data) {
               // Cache is from today — use it
-              setAiRecommendation(parsed.data);
+              setDailyMission(parsed.data);
             } else {
               // Cache is stale — refresh from AI
-              generateAIRecommendation();
+              fetchDailyMission();
             }
           } catch {
-            generateAIRecommendation();
+            fetchDailyMission();
           }
         } else {
-          generateAIRecommendation();
+          fetchDailyMission();
         }
 
       } catch (error) {
@@ -174,65 +174,25 @@ export default function DashboardPage() {
     fetchData();
   }, [user]);
 
-  const generateAIRecommendation = async () => {
+  const fetchDailyMission = async () => {
     if (!user) return;
-    setAiLoading(true);
+    setMissionLoading(true);
     try {
-      const res = await fetch('/api/users/profile/insights');
+      const res = await fetch('/api/dashboard/mission');
       const data = await res.json();
 
-      if (data.success && data.insights) {
-        const insights = data.insights;
-        const rec = {
-          focus: insights.recommendations?.[0] || "Keep building your skills and projects.",
-          recommendation: insights.strengths?.length > 0
-            ? `Your strengths include ${insights.strengths.slice(0, 2).join(' and ')}. ${insights.weaknesses?.[0] ? `Consider improving: ${insights.weaknesses[0]}.` : ''}`
-            : `Focus on building your practical experience to increase your career readiness.`,
-          steps: insights.recommendations?.slice(0, 3) || [
-            "Complete your U-SkillMap assessment",
-            "Add a project to your portfolio",
-            "Update your resume"
-          ]
-        };
-        setAiRecommendation(rec);
-        // Cache with daily expiry
+      if (data.success && data.mission) {
+        setDailyMission(data.mission);
         const cacheData = {
-          data: rec,
-          expiry: new Date().toISOString().split('T')[0] // today's date as expiry key
+          data: data.mission,
+          expiry: new Date().toISOString().split('T')[0]
         };
-        localStorage.setItem(`ai_rec_${user.id}`, JSON.stringify(cacheData));
-      } else {
-        // Fallback if API fails
-        const rec = {
-          focus: user.userRoadmap ? `Complete your ${user.userRoadmap.careerGoal} milestone.` : "Set up your Career Goal in U-SkillMap.",
-          recommendation: `Your profile is strong in ${user.skills.slice(0,2).join(', ') || 'fundamentals'}. Focus on building your practical experience.`,
-          steps: user.userRoadmap ? [
-            "Complete one more module in your U-SkillMap",
-            "Create a project using your new skills",
-            "Update your U-Resume with the new project"
-          ] : [
-            "Take the U-SkillMap assessment",
-            "Add past projects to your portfolio",
-            "Update your resume"
-          ]
-        };
-        setAiRecommendation(rec);
+        localStorage.setItem(`daily_mission_${user.id}`, JSON.stringify(cacheData));
       }
     } catch (error) {
-      console.error("AI Recommendation error:", error);
-      // Graceful fallback
-      const rec = {
-        focus: "Keep building your skills and projects.",
-        recommendation: "Focus on completing your profile to get personalized AI insights.",
-        steps: [
-          "Take the U-SkillMap assessment",
-          "Add projects to your portfolio",
-          "Update your resume"
-        ]
-      };
-      setAiRecommendation(rec);
+      console.error("Daily Mission error:", error);
     } finally {
-      setAiLoading(false);
+      setMissionLoading(false);
     }
   };
 
@@ -449,6 +409,62 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Focus & AI */}
         <div className="lg:col-span-2 space-y-6">
+
+          {/* Today's Mission */}
+          <div className="relative overflow-hidden bg-gradient-to-br from-indigo-900 to-slate-900 rounded-xl border border-indigo-500/30 shadow-2xl p-1">
+            <div className="absolute inset-0 bg-blue-500/10 blur-3xl rounded-xl"></div>
+            <div className="relative bg-white dark:bg-slate-900 rounded-lg p-6 flex flex-col md:flex-row gap-6 items-center">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Today's Mission</span>
+                </div>
+                {missionLoading ? (
+                  <div className="animate-pulse space-y-3">
+                    <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded w-3/4"></div>
+                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-full"></div>
+                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-5/6"></div>
+                  </div>
+                ) : dailyMission ? (
+                  <>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{dailyMission.title}</h2>
+                    <p className="text-slate-600 dark:text-slate-300 mb-6">{dailyMission.description}</p>
+                    <div className="flex flex-wrap gap-3">
+                      <Link 
+                        href={dailyMission.actionUrl}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold shadow-lg shadow-blue-600/30 transition-all hover:-translate-y-0.5 flex items-center gap-2"
+                      >
+                        {dailyMission.actionLabel} <ArrowRight className="w-4 h-4" />
+                      </Link>
+                      <button 
+                        onClick={() => fetchDailyMission()}
+                        className="px-4 py-2.5 rounded-lg font-medium text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                      >
+                        Skip — Get Another
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div>
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Ready for your next challenge?</h2>
+                    <p className="text-slate-600 dark:text-slate-300 mb-4">Let AI analyze your profile and suggest the best next step.</p>
+                    <button 
+                      onClick={() => fetchDailyMission()}
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-bold transition-colors"
+                    >
+                      Generate Mission
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div className="hidden md:flex shrink-0 w-32 h-32 bg-indigo-50 dark:bg-indigo-900/20 rounded-full items-center justify-center border-4 border-white dark:border-slate-800 shadow-inner">
+                {dailyMission?.type === 'project' ? <FolderOpen className="w-12 h-12 text-indigo-500" /> :
+                 dailyMission?.type === 'team' ? <Users className="w-12 h-12 text-indigo-500" /> :
+                 dailyMission?.type === 'resume' ? <FileText className="w-12 h-12 text-indigo-500" /> :
+                 <Target className="w-12 h-12 text-indigo-500" />}
+              </div>
+            </div>
+          </div>
 
           {/* Recommended Jobs */}
           <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">

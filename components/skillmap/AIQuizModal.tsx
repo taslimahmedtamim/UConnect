@@ -29,6 +29,8 @@ export default function AIQuizModal({
   const [showAnswer, setShowAnswer] = useState(false);
   const [score, setScore] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
+  const [verificationResult, setVerificationResult] = useState<{ passed: boolean, message: string } | null>(null);
+  const [verifying, setVerifying] = useState(false);
 
   useEffect(() => {
     if (isOpen && topic) {
@@ -44,6 +46,8 @@ export default function AIQuizModal({
     setShowAnswer(false);
     setScore(0);
     setIsFinished(false);
+    setVerificationResult(null);
+    setVerifying(false);
 
     try {
       const res = await fetch('/api/skillmap/quiz', {
@@ -76,13 +80,31 @@ export default function AIQuizModal({
     setShowAnswer(true);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(c => c + 1);
       setSelectedOption(null);
       setShowAnswer(false);
     } else {
       setIsFinished(true);
+      
+      // Call verification API
+      setVerifying(true);
+      try {
+        const res = await fetch('/api/skills/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ skillName: topic, score, totalQuestions: questions.length })
+        });
+        const data = await res.json();
+        if (data.success) {
+          setVerificationResult({ passed: data.passed, message: data.message });
+        }
+      } catch (e) {
+        console.error("Verification failed", e);
+      } finally {
+        setVerifying(false);
+      }
     }
   };
 
@@ -119,6 +141,19 @@ export default function AIQuizModal({
               <p className="text-lg text-slate-600 dark:text-slate-300">
                 You scored <span className="font-bold text-blue-600 dark:text-blue-400">{score}</span> out of {questions.length}
               </p>
+              
+              {verifying && (
+                <div className="flex items-center gap-2 text-sm text-slate-500 mt-2">
+                  <Loader2 className="w-4 h-4 animate-spin" /> Verifying score...
+                </div>
+              )}
+              
+              {verificationResult && (
+                <div className={`mt-2 p-3 rounded-lg text-sm font-bold flex items-center gap-2 ${verificationResult.passed ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'}`}>
+                  {verificationResult.passed ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+                  {verificationResult.message}
+                </div>
+              )}
               <button 
                 onClick={() => {
                   onComplete?.(score, questions.length);

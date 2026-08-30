@@ -11,6 +11,8 @@ import AICareerInsights from "@/components/profile/AICareerInsights";
 import ProfileGitHubStats from "@/components/profile/ProfileGitHubStats";
 import LearningHeatmap from "@/components/profile/LearningHeatmap";
 import SkillRadarChart from "@/components/profile/SkillRadarChart";
+import AIQuizModal from "@/components/skillmap/AIQuizModal";
+import JourneyTimeline from "@/components/profile/JourneyTimeline";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -18,6 +20,8 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState<any>(null);
+  
+  const [quizTopic, setQuizTopic] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -46,50 +50,44 @@ export default function ProfilePage() {
   const [showCertModal, setShowCertModal] = useState(false);
   const [newCert, setNewCert] = useState({ name: "", issuer: "", date: "", txId: "", imageUrl: "", isVerified: false });
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const storedUser = localStorage.getItem("user");
-      if (!storedUser) { router.push("/login"); return; }
+  const fetchProfile = async () => {
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) { router.push("/login"); return; }
 
-      try {
-        const res = await fetch("/api/users/profile", {
-          // Cookies are automatically sent
-        });
-
-        if (!res.ok) {
-          router.push("/login");
-          return;
-        }
-
+    try {
+      const res = await fetch("/api/users/profile");
+      if (res.ok) {
         const data = await res.json();
         setUser(data.user);
-        setFormData({
+        setFormData((prev) => ({
+          ...prev,
           username: data.user.username || "",
           fullName: data.user.fullName || "",
           title: data.user.title || "",
           location: data.user.location || "",
-          profileImage: data.user.profileImage || "",
-          githubUsername: data.user.githubUsername || "",
           bio: data.user.bio || "",
           university: data.user.university || "",
           department: data.user.department || "",
           skills: data.user.skills || [],
-          newSkill: "",
+          githubUsername: data.user.githubUsername || "",
+          codeforcesUsername: data.user.codeforcesUsername || "",
+          profileImage: data.user.profileImage || "",
           experience: data.user.experience || [],
           certificates: data.user.certificates || [],
           projects: data.user.projects || [],
           userRoadmap: data.user.userRoadmap || null,
           ownedTeams: data.user.ownedTeams || [],
           memberTeams: data.user.memberTeams || [],
-        });
-      } catch (error) {
-        console.error(error);
-        router.push("/login");
-      } finally {
-        setLoading(false);
+        }));
       }
-    };
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchProfile();
   }, [router]);
 
@@ -567,279 +565,40 @@ export default function ProfilePage() {
           )}
         </div>
 
-        {/* EXPERIENCE SECTION */}
+        {/* JOURNEY SECTION */}
         <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-purple-500" /> Experience
-            </h2>
-            {isEditing && (
-              <div className="flex gap-3">
-                <button onClick={() => setShowExpModal(true)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-blue-600">
-                  <Plus className="w-6 h-6" />
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="space-y-6">
-            {formData.experience.map((exp: any, index: number) => (
-              <div key={index} className="flex gap-4 relative group">
-                <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center shrink-0">
-                  <Briefcase className="w-6 h-6 text-slate-400" />
-                </div>
-                <div className="flex-1 pr-8">
-                  <h3 className="font-bold text-slate-900 dark:text-white">{exp.title}</h3>
-                  <p className="text-sm text-slate-800 dark:text-slate-200">{exp.company}</p>
-                  <p className="text-xs text-slate-500 mb-2">{exp.duration}</p>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{exp.description}</p>
-                </div>
-                {isEditing && (
-                  <button
-                    onClick={() => handleRemoveExperience(index)}
-                    className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity bg-red-50 dark:bg-red-900/30 rounded-full"
-                    title="Remove Experience"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-            ))}
-            {formData.experience.length === 0 && (
-              <div className="text-center py-6">
-                <p className="text-sm text-slate-500 italic mb-4">Build your professional profile by adding internships, leadership roles, volunteer experience, or relevant organizational activities.</p>
-                {isEditing && (
-                  <button onClick={() => setShowExpModal(true)} className="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg text-sm font-bold">
-                    Add Experience
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* EDUCATION SECTION */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <GraduationCap className="w-5 h-5 text-blue-500" /> Education
-            </h2>
-          </div>
-          
-          <div className="flex gap-4">
-            <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center shrink-0">
-              <GraduationCap className="w-6 h-6 text-slate-400" />
+            <div>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Globe className="w-5 h-5 text-indigo-500" /> Career Journey
+              </h2>
+              <p className="text-sm text-slate-500 mt-1">Experiences, Projects, and Certifications</p>
             </div>
-            <div className="flex-1">
-              {isEditing ? (
-                <>
-                  <input
-                    type="text"
-                    value={formData.university}
-                    onChange={(e) => setFormData({ ...formData, university: e.target.value })}
-                    className="font-bold text-slate-900 dark:text-white bg-transparent border-b border-slate-300 dark:border-slate-700 focus:border-blue-500 outline-none w-full pb-1"
-                    placeholder="University Name"
-                  />
-                  <input
-                    type="text"
-                    value={formData.department}
-                    onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                    className="text-sm text-slate-600 dark:text-slate-300 mt-2 bg-transparent border-b border-slate-300 dark:border-slate-700 focus:border-blue-500 outline-none w-full pb-1"
-                    placeholder="Degree & Department"
-                  />
-                </>
-              ) : (
-                <>
-                  <h3 className="font-bold text-slate-900 dark:text-white">{formData.university || "University Name"}</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{formData.department || "Degree & Department"}</p>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* SKILLS SECTION */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Code className="w-5 h-5 text-emerald-500" /> Skills
-            </h2>
-          </div>
-          
-          <div className="flex flex-wrap gap-4">
-            {formData.skills.map((skill: any, i: number) => {
-              const isString = typeof skill === 'string';
-              const skillName = isString ? skill : skill.name;
-              const skillLevel = isString ? null : skill.level;
-              const skillSource = isString ? null : skill.source;
-
-              return (
-                <div 
-                  key={i} 
-                  className="group relative flex flex-col bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-3 min-w-[140px] transition-all hover:border-blue-300 dark:hover:border-blue-700"
-                >
-                  <span className="text-slate-900 dark:text-white font-bold">{skillName}</span>
-                  {skillLevel && <span className="text-xs text-blue-600 dark:text-blue-400 font-medium mt-1">{skillLevel}</span>}
-                  {skillSource && (
-                    <div className="text-[10px] text-slate-500 mt-2 flex items-center gap-1">
-                      <ShieldCheck className="w-3 h-3 text-emerald-500" /> {skillSource}
-                    </div>
-                  )}
-
-                  {isEditing && (
-                    <button
-                      onClick={() => handleRemoveSkill(skill)}
-                      className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-500 transition-all absolute top-2 right-2 p-1"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              );
-            })}
             
             {isEditing && (
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={formData.newSkill}
-                  onChange={(e) => setFormData({ ...formData, newSkill: e.target.value })}
-                  onKeyDown={(e) => e.key === 'Enter' && handleAddSkill()}
-                  className="px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-48"
-                  placeholder="Add a new skill..."
-                />
-                <button
-                  onClick={handleAddSkill}
-                  disabled={!formData.newSkill.trim()}
-                  className="px-4 py-3 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Add
+              <div className="flex gap-2">
+                <button onClick={() => setShowExpModal(true)} className="px-3 py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-600 rounded-lg text-xs font-bold transition-colors flex items-center gap-1">
+                  <Plus className="w-3.5 h-3.5" /> Experience
                 </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* PROJECTS SECTION */}
-        {user?.role !== 'recruiter' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Globe className="w-5 h-5 text-cyan-500" /> Featured Projects
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {formData.projects?.map((proj: any, idx: number) => (
-              <div key={idx} className="relative bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 hover:border-cyan-500/50 transition-colors group/proj">
-                {isEditing && (
-                  <button
-                    onClick={() => handleDeleteProject(proj.id, idx)}
-                    className="absolute top-2 right-2 p-2 opacity-0 group-hover/proj:opacity-100 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full transition-all"
-                    title="Delete Project"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
-                <h3 className="font-bold text-slate-900 dark:text-white mb-2 truncate pr-6">{proj.title}</h3>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 line-clamp-2">{proj.description}</p>
-                {proj.tags && Array.isArray(proj.tags) && (
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {proj.tags.slice(0, 3).map((tag: string, i: number) => (
-                      <span key={i} className="px-2 py-1 bg-white dark:bg-slate-900 text-[10px] font-bold text-slate-600 dark:text-slate-300 rounded border border-slate-200 dark:border-slate-700 uppercase tracking-wider">{tag}</span>
-                    ))}
-                    {proj.tags.length > 3 && <span className="px-2 py-1 bg-white dark:bg-slate-900 text-[10px] font-bold text-slate-500 rounded border border-slate-200 dark:border-slate-700">+{proj.tags.length - 3}</span>}
-                  </div>
-                )}
-                <div className="flex items-center gap-4 mt-auto">
-                  {proj.repoUrl && (
-                    <a href={proj.repoUrl} target="_blank" rel="noreferrer" className="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
-                      <LinkIcon className="w-3 h-3" /> View Repository
-                    </a>
-                  )}
-                  {!isEditing && (
-                    <button onClick={() => router.push('/resume')} className="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:underline flex items-center gap-1 ml-auto">
-                      <FileText className="w-3 h-3" /> Add to Resume
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-            {(!formData.projects || formData.projects.length === 0) && (
-              <div className="col-span-2 text-center py-6">
-                <p className="text-sm text-slate-500 italic mb-4">No projects yet. Build your first project and showcase it here.</p>
-              </div>
-            )}
-          </div>
-        </div>
-        )}
-
-        {/* BLOCKCHAIN CERTIFICATES SECTION */}
-        {user?.role !== 'recruiter' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              Licenses & Certifications
-            </h2>
-            {isEditing && (
-              <div className="flex gap-3">
-                <button onClick={() => setShowCertModal(true)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-blue-600">
-                  <Plus className="w-6 h-6" />
+                <button onClick={() => setShowCertModal(true)} className="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-lg text-xs font-bold transition-colors flex items-center gap-1">
+                  <Plus className="w-3.5 h-3.5" /> Certificate
                 </button>
               </div>
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {formData.certificates.map((cert: any, index: number) => (
-              <div key={index} className="flex flex-col bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 relative group hover:border-amber-300 dark:hover:border-amber-700/50 transition-colors">
-                <div className="flex gap-4 mb-4">
-                  <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-xl flex items-center justify-center shrink-0 shadow-sm border border-slate-100 dark:border-slate-700">
-                    <Award className="w-6 h-6 text-amber-500" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-slate-900 dark:text-white line-clamp-1 pr-6">{cert.name}</h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">{cert.issuer}</p>
-                    <p className="text-xs text-slate-500 mt-1">Issued {cert.date}</p>
-                  </div>
-                </div>
-                
-                {/* Blockchain Verified Badge */}
-                {cert.isVerified && (
-                  <div className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-semibold text-xs uppercase tracking-wider mb-3">
-                    <ShieldCheck className="w-4 h-4" /> Blockchain Verified
-                  </div>
-                )}
-                
-                {cert.imageUrl && cert.imageUrl.toLowerCase().endsWith('.pdf') ? (
-                  <a href={cert.imageUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full h-32 bg-slate-100 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors group/pdf">
-                    <div className="flex flex-col items-center text-slate-400 group-hover/pdf:text-blue-500 transition-colors">
-                      <FileText className="w-8 h-8 mb-2" />
-                      <span className="text-xs font-bold uppercase tracking-wider">View PDF</span>
-                    </div>
-                  </a>
-                ) : cert.imageUrl ? (
-                  <a href={cert.imageUrl} target="_blank" rel="noopener noreferrer" className="w-full h-32 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 block">
-                    <img src={cert.imageUrl} alt={cert.name} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
-                  </a>
-                ) : null}
-
-                {isEditing && (
-                  <button
-                    onClick={() => handleRemoveCertificate(index)}
-                    className="absolute top-2 right-2 p-2 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity bg-white dark:bg-slate-900 rounded-full shadow-sm border border-slate-200 dark:border-slate-700"
-                    title="Remove Certificate"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-            ))}
-            {formData.certificates.length === 0 && (
-              <p className="text-sm text-slate-500 italic col-span-2">No certifications added yet.</p>
-            )}
-          </div>
+          <JourneyTimeline 
+            experiences={formData.experience}
+            certificates={formData.certificates}
+            projects={formData.projects}
+            isEditing={isEditing}
+            onRemoveItem={(type, index) => {
+              if (type === 'experience') handleRemoveExperience(index);
+              if (type === 'certificate') handleRemoveCertificate(index);
+              if (type === 'project') handleDeleteProject(formData.projects[index].id, index);
+            }}
+          />
         </div>
-        )}
 
         {/* AI CAREER INSIGHTS SECTION */}
         {!isEditing && user?.role !== 'recruiter' && (
@@ -924,6 +683,14 @@ export default function ProfilePage() {
       )}
 
       </div>
+      <AIQuizModal 
+        isOpen={!!quizTopic}
+        onClose={() => setQuizTopic(null)}
+        topic={quizTopic || ''}
+        onComplete={(score, total) => {
+          fetchProfile(); // reload profile to see new verified badge
+        }}
+      />
     </div>
   );
 }

@@ -29,6 +29,13 @@ export async function GET(req: Request) {
         projects: true,
         userRoadmap: true,
         activityLog: true,
+        userSkills: {
+          select: {
+            skill: { select: { name: true } },
+            verified: true,
+            level: true
+          }
+        },
         ownedTeams: {
           include: { projects: true }
         },
@@ -132,6 +139,13 @@ export async function PUT(req: Request) {
         certificates: true,
         projects: true,
         userRoadmap: true,
+        userSkills: {
+          select: {
+            skill: { select: { name: true } },
+            verified: true,
+            level: true
+          }
+        },
         ownedTeams: true,
         memberTeams: true,
       }

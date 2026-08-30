@@ -127,21 +127,48 @@ export default function ProjectsPage() {
     }
   };
 
-  const handleAISelect = (idea: any) => {
-    setFormData({
-      ...formData,
-      title: idea.title,
-      description: idea.description,
-      tags: idea.recommendedStack.join(", "),
-      skillsDemonstrated: idea.skillsDemonstrated.join(", "),
-      status: "Planning",
-      progress: 0,
-      features: idea.features.map((f: string) => ({ title: f, completed: false })),
-      difficulty: idea.difficulty,
-      estimatedDuration: idea.estimatedDuration
-    });
-    setIsAIOpen(false);
-    setIsModalOpen(true);
+  const handleAISelect = async (idea: any) => {
+    setSubmitting(true);
+    try {
+      const payload = {
+        title: idea.title,
+        description: idea.description,
+        category: "AI Generated",
+        tags: idea.recommendedStack,
+        skillsDemonstrated: idea.skillsDemonstrated,
+        status: "Planning",
+        progress: 0,
+        features: idea.tasks ? idea.tasks : idea.features.map((f: string) => ({ title: f, completed: false })),
+        difficulty: idea.difficulty,
+        estimatedDuration: idea.estimatedDuration,
+        isPrivate: false,
+        lookingForContributors: false
+      };
+
+      const res = await fetch("/api/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        setIsAIOpen(false);
+        const data = await res.json();
+        if (data.project && data.project.id) {
+          router.push(`/projects/${data.project.id}`);
+        } else {
+          fetchProjects();
+        }
+      } else {
+        const err = await res.json();
+        alert(err.message || "Failed to start AI project");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error starting AI project");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (

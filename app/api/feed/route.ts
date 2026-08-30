@@ -7,7 +7,22 @@ export async function GET(req: Request) {
     const user = await getUserFromRequest(req);
     if (!user) return unauthorizedResponse();
 
+    const { searchParams } = new URL(req.url);
+    const filter = searchParams.get('filter');
+    const search = searchParams.get('q');
+
+    let whereClause: any = {};
+    if (filter === 'help') {
+      whereClause.postType = 'Help Needed';
+    }
+    if (search) {
+      whereClause.content = {
+        contains: search,
+      };
+    }
+
     const posts = await prisma.feedPost.findMany({
+      where: whereClause,
       orderBy: { createdAt: 'desc' },
       include: {
         author: {
@@ -32,12 +47,13 @@ export async function POST(req: Request) {
     const user = await getUserFromRequest(req);
     if (!user) return unauthorizedResponse();
 
-    const { content } = await req.json();
+    const { content, postType } = await req.json();
     if (!content) return NextResponse.json({ success: false, message: 'Content is required' }, { status: 400 });
 
     const post = await prisma.feedPost.create({
       data: {
         content,
+        postType: postType || 'General',
         authorId: user.id
       },
       include: {

@@ -506,9 +506,15 @@ export default function ProjectDetailsPage() {
                         {/* Task Workflow Actions */}
                         <div className="flex items-center gap-3">
                           {(() => {
-                            const isAssignee = (feature.assignees && feature.assignees.some((a: any) => a.id === user?.id)) || feature.assigneeId === user?.id;
+                            const isAssignee = (!project.team && isAuthor) || (feature.assignees && feature.assignees.some((a: any) => a.id === user?.id)) || feature.assigneeId === user?.id;
                             
-                            return feature.status === 'in-review' ? (
+                            return (feature.status === 'completed' || feature.completed || (!project.team && feature.status === 'in-review')) ? (
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded flex items-center gap-1">
+                                  Done {feature.feedback && `(${feature.feedback})`}
+                                </span>
+                              </div>
+                            ) : feature.status === 'in-review' ? (
                               (isTeamMember || canManageTasks) ? (
                                 <div className="flex gap-2 items-center">
                                   <span className="text-xs text-slate-500 font-medium">Rate:</span>
@@ -519,15 +525,9 @@ export default function ProjectDetailsPage() {
                               ) : (
                                 <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded">In Review (Waiting for ratings)</span>
                               )
-                            ) : (feature.status === 'completed' || feature.completed) ? (
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded flex items-center gap-1">
-                                  Done {feature.feedback && `(${feature.feedback})`}
-                                </span>
-                              </div>
                             ) : (
                               isAssignee && (
-                                <button onClick={() => updateFeatureStatus(index, 'in-review')} className="text-xs font-bold bg-slate-900 text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 flex items-center gap-1">
+                                <button onClick={() => updateFeatureStatus(index, !project.team ? 'completed' : 'in-review')} className="text-xs font-bold bg-slate-900 text-white px-3 py-1.5 rounded-lg hover:bg-slate-800 flex items-center gap-1">
                                   <CheckCircle2 className="w-4 h-4" /> Done
                                 </button>
                               )
