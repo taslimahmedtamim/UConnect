@@ -1,16 +1,13 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import bcrypt from 'bcryptjs';
+import { createClient } from '@/lib/supabase/server';
 import prisma from '@/lib/db';
-import jwt from 'jsonwebtoken';
-import { getJwtSecret } from '@/lib/auth';
 
 export async function POST(req: Request) {
   try {
-    const { email, password, fullName, role, otp } = await req.json();
+    const { email, password, fullName, role } = await req.json();
 
-    if (!email || !password || !fullName || !role || !otp) {
-      return NextResponse.json({ error: 'Missing required fields, including OTP', code: 'MISSING_FIELDS' }, { status: 400 });
+    if (!email || !password || !fullName || !role) {
+      return NextResponse.json({ error: 'Missing required fields', code: 'MISSING_FIELDS' }, { status: 400 });
     }
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -23,29 +20,33 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Email already exists', code: 'EMAIL_EXISTS' }, { status: 400 });
     }
 
-    // Verify OTP
-    const validOtp = await prisma.oTP.findFirst({
-      where: {
-        email,
-        code: otp,
-        expiresAt: { gt: new Date() }
+    const supabase = await createClient();
+
+    // Sign up with Supabase
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+          role: role,
+        }
       }
     });
 
-    if (!validOtp) {
-      return NextResponse.json({ error: 'Invalid or expired OTP', code: 'INVALID_OTP' }, { status: 400 });
+    if (authError) {
+      return NextResponse.json({ error: authError.message, code: 'AUTH_ERROR' }, { status: 400 });
     }
 
-    // Delete the OTP as it's been used
-    await prisma.oTP.delete({ where: { id: validOtp.id } });
-
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
+    if (!authData.user) {
+      return NextResponse.json({ error: 'Failed to create user in authentication provider', code: 'AUTH_ERROR' }, { status: 500 });
+    }
 
     const baseUsername = fullName.toLowerCase().replace(/[^a-z0-9_]/g, '').substring(0, 20) || 'user';
     let username = baseUsername;
     let isUnique = false;
     let counter = 0;
+    
     while (!isUnique) {
       const existing = await prisma.user.findUnique({ where: { username } });
       if (!existing) {
@@ -58,8 +59,8 @@ export async function POST(req: Request) {
 
     const user = await prisma.user.create({
       data: {
+        id: authData.user.id, // Store the Supabase Auth User ID in Prisma
         email,
-        passwordHash,
         fullName,
         username,
         role
@@ -81,40 +82,9 @@ export async function POST(req: Request) {
       });
     }
 
-    const secret = getJwtSecret();
-    
-    // Short-lived access token (15 minutes — matches cookie maxAge)
-    const accessToken = jwt.sign(
-      { id: user.id, role: user.role, email: user.email },
-      secret,
-      { expiresIn: '15m' }
-    );
-
-    const refreshToken = jwt.sign(
-      { id: user.id, role: user.role, email: user.email },
-      secret,
-      { expiresIn: '7d' }
-    );
-
-    const cookieStore = await cookies();
-    cookieStore.set('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 15 * 60, // 15 minutes
-      path: '/'
-    });
-
-    cookieStore.set('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60, // 7 days
-      path: '/'
-    });
-
     return NextResponse.json({
       success: true,
+      message: 'Registration successful. Please verify your email if required.',
       user: {
         id: user.id,
         email: user.email,

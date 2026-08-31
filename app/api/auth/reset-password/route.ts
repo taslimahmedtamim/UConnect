@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import prisma from '@/lib/db';
+import { createClient } from '@/lib/supabase/server';
 
 export async function POST(req: Request) {
   try {
@@ -15,36 +14,27 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Password must be at least 8 characters and include uppercase, lowercase, number, and special character' }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
-      return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
-    }
+    const supabase = await createClient();
 
-    // Verify OTP
-    const validOtp = await prisma.oTP.findFirst({
-      where: {
-        email,
-        code: otp,
-        expiresAt: { gt: new Date() }
-      }
+    // 1. Verify the OTP
+    const { error: verifyError } = await supabase.auth.verifyOtp({
+      email,
+      token: otp,
+      type: 'recovery',
     });
 
-    if (!validOtp) {
-      return NextResponse.json({ error: 'Invalid or expired OTP' }, { status: 400 });
+    if (verifyError) {
+      return NextResponse.json({ error: 'Invalid or expired OTP: ' + verifyError.message }, { status: 400 });
     }
 
-    // Hash new password
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(newPassword, salt);
+    // 2. Since verifyOtp logs the user in (creates a session), we can now update their password
+    const { error: updateError } = await supabase.auth.updateUser({
+      password: newPassword
+    });
 
-    // Update user password and delete OTP
-    await prisma.$transaction([
-      prisma.user.update({
-        where: { id: user.id },
-        data: { passwordHash }
-      }),
-      prisma.oTP.delete({ where: { id: validOtp.id } })
-    ]);
+    if (updateError) {
+      return NextResponse.json({ error: 'Failed to update password: ' + updateError.message }, { status: 400 });
+    }
 
     return NextResponse.json({ success: true, message: 'Password updated successfully' });
   } catch (error: any) {

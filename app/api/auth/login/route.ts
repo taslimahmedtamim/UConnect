@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import bcrypt from 'bcryptjs';
+import { createClient } from '@/lib/supabase/server';
 import prisma from '@/lib/db';
-import jwt from 'jsonwebtoken';
-import { getJwtSecret } from '@/lib/auth';
 
 // In-memory rate limiting map
 // Key: IP address, Value: { count: number, resetTime: number }
@@ -33,51 +30,27 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing credentials', code: 'MISSING_CREDENTIALS' }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
-      return NextResponse.json({ error: 'Invalid credentials', code: 'INVALID_CREDENTIALS' }, { status: 401 });
-    }
+    const supabase = await createClient();
 
-    const isMatch = await bcrypt.compare(password, user.passwordHash);
-    if (!isMatch) {
-      return NextResponse.json({ error: 'Invalid credentials', code: 'INVALID_CREDENTIALS' }, { status: 401 });
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (authError || !authData.user) {
+      return NextResponse.json({ error: authError?.message || 'Invalid credentials', code: 'INVALID_CREDENTIALS' }, { status: 401 });
     }
 
     // Reset rate limit on successful login
     rateLimitMap.delete(ip);
 
-    const secret = getJwtSecret();
-    
-    // Short-lived access token (15 minutes — matches cookie maxAge)
-    const accessToken = jwt.sign(
-      { id: user.id, role: user.role, email: user.email },
-      secret,
-      { expiresIn: '15m' }
-    );
+    // Fetch the enriched profile from Prisma DB
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      return NextResponse.json({ error: 'User profile not found in database', code: 'USER_NOT_FOUND' }, { status: 404 });
+    }
 
-    // Long-lived refresh token (7d)
-    const refreshToken = jwt.sign(
-      { id: user.id, role: user.role, email: user.email },
-      secret,
-      { expiresIn: '7d' }
-    );
-
-    const cookieStore = await cookies();
-    cookieStore.set('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 15 * 60, // 15 minutes
-      path: '/'
-    });
-
-    cookieStore.set('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60, // 7 days
-      path: '/'
-    });
+    // @supabase/ssr handles setting the session cookies automatically.
 
     return NextResponse.json({
       success: true,

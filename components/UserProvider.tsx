@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 export interface UserProfile {
   id: string;
@@ -44,26 +45,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchUser = async (isRetry = false) => {
+  const fetchUser = async () => {
     try {
       setLoading(true);
       setError(null);
       const res = await fetch("/api/users/profile");
       if (!res.ok) {
         if (res.status === 401) {
-          // If this is the first attempt, try to refresh the access token
-          if (!isRetry) {
-            try {
-              const refreshRes = await fetch("/api/auth/refresh", { method: "POST" });
-              if (refreshRes.ok) {
-                // Token refreshed — retry fetching user profile
-                return fetchUser(true);
-              }
-            } catch {
-              // Refresh failed — user is not logged in
-            }
-          }
-          // Not logged in (or refresh failed)
           setUser(null);
           if (typeof window !== 'undefined') {
             localStorage.removeItem("user");
@@ -84,7 +72,19 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    const supabase = createClient();
+    
     fetchUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+        fetchUser();
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (

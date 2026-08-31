@@ -21,23 +21,31 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+      const { createClient } = await import('@/lib/supabase/client');
+      const supabase = createClient();
+      
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || data.message || "Failed to login");
+      if (authError || !data.user) {
+        throw new Error(authError?.message || "Invalid login credentials");
       }
 
-      if (mode === 'admin' && data.user.role !== 'admin') {
+      // Now fetch the rich profile from our API
+      const res = await fetch("/api/users/profile");
+      const profileData = await res.json();
+
+      if (!res.ok) {
+        throw new Error(profileData.message || profileData.error || "Failed to load user profile");
+      }
+
+      if (mode === 'admin' && profileData.user.role !== 'admin') {
         throw new Error('Access denied. Admin privileges required.');
       }
 
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("user", JSON.stringify(profileData.user));
       
       if (mode === 'admin') {
         window.location.href = "/admin";

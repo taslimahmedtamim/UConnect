@@ -12,7 +12,6 @@ model User {
   username           String?  @unique // Unique searchable handle (lowercase, alphanumeric + underscores)
   fullName           String
   email              String   @unique
-  passwordHash       String
   role               String   @default("student")
   bio                String?
   university         String?
@@ -419,15 +418,6 @@ model HelpAnswer {
   @@index([authorId])
 }
 
-model OTP {
-  id        String   @id @default(uuid())
-  email     String
-  code      String
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-
-  @@index([email])
-}
 
 model UserRoadmap {
   id           String   @id @default(uuid())

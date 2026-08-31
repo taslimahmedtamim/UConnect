@@ -31,7 +31,7 @@ export default function RegisterPage() {
   };
   const strength = calculateStrength(password);
 
-  const handleSendOtp = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formData.email || !formData.fullName || !password || !confirmPassword) {
       setError("Please fill in all details before proceeding.");
@@ -50,20 +50,16 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      const res = await fetch("/api/auth/send-otp", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: formData.email }),
+        body: JSON.stringify({ ...formData, password }),
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to send OTP");
+      if (!res.ok) throw new Error(data.error || "Registration failed");
 
-      if (data.isDev && data.devOtp) {
-        alert(`[DEV MODE] SMTP not configured. Your OTP is: ${data.devOtp}`);
-        setOtp(data.devOtp);
-      }
-
+      // Registration successful! Now we just wait for email confirmation.
       setStep(2);
     } catch (err: any) {
       setError(err.message);
@@ -72,7 +68,7 @@ export default function RegisterPage() {
     }
   };
 
-  const handleVerifyAndRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleVerify = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!otp || otp.length !== 6) {
       setError("Please enter a valid 6-digit OTP.");
@@ -83,14 +79,14 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch("/api/auth/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, password, otp }),
+        body: JSON.stringify({ email: formData.email, otp, type: 'signup' }),
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Registration failed");
+      if (!res.ok) throw new Error(data.error || "Verification failed");
 
       localStorage.setItem("user", JSON.stringify(data.user));
       window.location.href = "/dashboard";
@@ -123,7 +119,7 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <form className="space-y-5" onSubmit={step === 1 ? handleSendOtp : handleVerifyAndRegister}>
+        <form className="space-y-5" onSubmit={step === 1 ? handleRegister : handleVerify}>
           {error && (
             <div className="p-4 bg-red-50/80 dark:bg-red-900/20 backdrop-blur-sm border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 text-sm rounded-xl text-center font-medium animate-in fade-in slide-in-from-top-2">
               {error}
