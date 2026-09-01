@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
-import { hasApiKey, getGenAI, extractJson } from '@/lib/ai';
+import { hasApiKey, getGenAI, extractJson, getFlashModel } from '@/lib/ai';
 
 export async function GET(req: Request) {
   try {

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
-import { getGenAI, hasApiKey, extractJson } from '@/lib/ai';
+import { getGenAI, hasApiKey, extractJson, getFlashModel } from '@/lib/ai';
 import { getTeamMatchPrompt } from '@/lib/prompts';
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
