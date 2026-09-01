@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
-import { getFlashLargeModel } from '@/lib/ai';
+import { getFlashLargeModel, extractJson } from '@/lib/ai';
 
 export async function POST(req: Request) {
   try {
@@ -33,15 +33,7 @@ export async function POST(req: Request) {
     
     let cleanJson = responseText.replace(/```json/gi, '').replace(/```/g, '').trim();
     
-    // Extract just the JSON part if there is any conversational text around it
-    const jsonStart = cleanJson.indexOf('{');
-    const jsonEnd = cleanJson.lastIndexOf('}');
-    
-    if (jsonStart !== -1 && jsonEnd !== -1) {
-      cleanJson = cleanJson.substring(jsonStart, jsonEnd + 1);
-    }
-    
-    const projectData = JSON.parse(cleanJson);
+    const projectData = extractJson(cleanJson);
 
     return NextResponse.json({ success: true, projectData });
   } catch (error: any) {

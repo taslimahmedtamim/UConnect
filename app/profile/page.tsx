@@ -431,7 +431,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Right Side: Skill Map Radar */}
-          {formData.skills.length > 0 && !isEditing && (
+          {!isEditing && (
             <div className="w-full md:w-[380px] shrink-0 flex flex-col items-center justify-center border-t md:border-t-0 md:border-l border-slate-800 pt-8 md:pt-0 md:pl-8">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-0 w-full text-center">Skill Map</h3>
               <div className="w-full h-[200px] -mt-4">

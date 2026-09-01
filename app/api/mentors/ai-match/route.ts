@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
-import { getGenAI, hasApiKey } from '@/lib/ai';
+import { getGenAI, hasApiKey, extractJson } from '@/lib/ai';
 
 export async function GET(req: Request) {
   try {
@@ -40,7 +40,7 @@ export async function GET(req: Request) {
     if (hasApiKey()) {
       try {
         const genAI = getGenAI();
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
+        const model = getFlashModel();
 
         const prompt = `
 You are an expert AI talent & mentorship matcher.
@@ -69,10 +69,7 @@ Select top 3 matching mentors and output strictly raw JSON (no markdown wrapping
 
         const result = await model.generateContent(prompt);
         let text = (await result.response).text().trim();
-        if (text.startsWith('```json')) text = text.replace(/^```json/, '').replace(/```$/, '').trim();
-        else if (text.startsWith('```')) text = text.replace(/^```/, '').replace(/```$/, '').trim();
-
-        const parsed = JSON.parse(text);
+        const parsed = extractJson(text);
 
         const aiMatches = (parsed.recommendations || []).map((rec: any) => {
           const found = allMentors.find(m => m.id === rec.mentorProfileId || m.userId === rec.mentorProfileId);

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
-import { hasApiKey, getGenAI } from '@/lib/ai';
+import { hasApiKey, getGenAI, extractJson } from '@/lib/ai';
 
 export async function GET(req: Request) {
   try {
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
 
     try {
       const genAI = getGenAI();
-      const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });
+      const model = getFlashModel();
 
       const prompt = `
 You are an elite career mentor and AI tech coach.
@@ -133,13 +133,7 @@ Make 'resourceUrl' SPECIFIC, FREE, and real. You MUST prioritize up-to-date offi
       const response = await result.response;
       let text = response.text().trim();
 
-      if (text.startsWith('```json')) {
-        text = text.replace(/^```json/, '').replace(/```$/, '').trim();
-      } else if (text.startsWith('```')) {
-        text = text.replace(/^```/, '').replace(/```$/, '').trim();
-      }
-
-      const parsed = JSON.parse(text);
+      const parsed = extractJson(text);
 
       // Save to DB
       const savedRoadmap = await prisma.userRoadmap.upsert({

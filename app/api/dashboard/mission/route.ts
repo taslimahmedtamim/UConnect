@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
-import { getFlashLargeModel } from '@/lib/ai';
+import { getFlashLargeModel, extractJson } from '@/lib/ai';
 import prisma from '@/lib/db';
 
 export async function GET(req: Request) {
@@ -57,10 +57,8 @@ export async function GET(req: Request) {
     let responseText = result.response.text();
     
     // Clean markdown formatting if AI still includes it
-    responseText = responseText.replace(/```json\n?/, '').replace(/```\n?$/, '').trim();
-    
     try {
-        const mission = JSON.parse(responseText);
+        const mission = extractJson(responseText);
         return NextResponse.json({ success: true, mission });
     } catch (parseError) {
         console.error("Failed to parse AI mission response:", responseText);

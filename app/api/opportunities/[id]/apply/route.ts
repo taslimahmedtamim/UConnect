@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
-import { getFlashLargeModel, hasApiKey } from '@/lib/ai';
+import { getFlashLargeModel, hasApiKey, extractJson } from '@/lib/ai';
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -115,13 +115,7 @@ ${jobDescription}`
       try {
         const result = await model.generateContent(promptParts);
         const text = result.response.text();
-        let cleanJson = text.trim();
-        if (cleanJson.startsWith('```json')) {
-          cleanJson = cleanJson.replace(/^```json/, '').replace(/```$/, '').trim();
-        } else if (cleanJson.startsWith('```')) {
-          cleanJson = cleanJson.replace(/^```/, '').replace(/```$/, '').trim();
-        }
-        const analysis = JSON.parse(cleanJson);
+        const analysis = extractJson(text);
         if (typeof analysis.score === 'number' && typeof analysis.feedback === 'string') {
           aiScore = analysis.score;
           aiFeedback = analysis.feedback;

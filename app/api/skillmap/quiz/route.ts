@@ -37,12 +37,15 @@ Provide the response strictly in raw JSON format (no markdown formatting, no \`\
     const response = await result.response;
     let text = response.text().trim();
 
-    if (text.startsWith('```json')) {
-      text = text.replace(/^```json/, '').replace(/```$/, '').trim();
-    } else if (text.startsWith('```')) {
-      text = text.replace(/^```/, '').replace(/```$/, '').trim();
+    // Find the first '[' and last ']' to extract just the JSON array
+    const startIdx = text.indexOf('[');
+    const endIdx = text.lastIndexOf(']');
+    
+    if (startIdx === -1 || endIdx === -1) {
+      throw new Error("No JSON array found in AI response");
     }
-
+    
+    text = text.substring(startIdx, endIdx + 1);
     const parsed = JSON.parse(text);
 
     return NextResponse.json({ success: true, quiz: parsed });

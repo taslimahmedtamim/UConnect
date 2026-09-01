@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getFlashLargeModel, hasApiKey } from '@/lib/ai';
+import { getFlashLargeModel, hasApiKey, extractJson } from '@/lib/ai';
 import { getResumeScanPrompt } from '@/lib/prompts';
 
 export async function POST(req: Request) {
@@ -66,14 +66,7 @@ Provide your analysis in the following strict JSON format (do not include markdo
     const text = response.text();
     
     // Parse the JSON response
-    let cleanJson = text.trim();
-    if (cleanJson.startsWith('```json')) {
-      cleanJson = cleanJson.replace(/^```json/, '').replace(/```$/, '').trim();
-    } else if (cleanJson.startsWith('```')) {
-      cleanJson = cleanJson.replace(/^```/, '').replace(/```$/, '').trim();
-    }
-
-    const analysis = JSON.parse(cleanJson);
+    const analysis = extractJson(text);
 
     // Validate Response Shape
     if (typeof analysis.score !== 'number' || !Array.isArray(analysis.gaps) || !Array.isArray(analysis.suggestions)) {

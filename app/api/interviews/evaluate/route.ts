@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
-import { getFlashLargeModel } from '@/lib/ai';
+import { getFlashLargeModel, extractJson } from '@/lib/ai';
 import prisma from '@/lib/db';
 
 export async function POST(req: Request) {
@@ -58,11 +58,9 @@ export async function POST(req: Request) {
 
     const result = await model.generateContent(prompt);
     let text = result.response.text();
-    text = text.replace(/```json\n?/, '').replace(/```\n?$/, '').trim();
-    
     let evaluation;
     try {
-      evaluation = JSON.parse(text);
+      evaluation = extractJson(text);
     } catch (e) {
       console.error("Failed to parse AI evaluation:", text);
       return NextResponse.json({ success: false, message: "Failed to evaluate answers. Please try again." }, { status: 500 });

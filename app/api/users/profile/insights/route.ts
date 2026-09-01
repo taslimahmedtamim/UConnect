@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
-import { getFlashModel, hasApiKey } from '@/lib/ai';
+import { getFlashModel, hasApiKey, extractJson } from '@/lib/ai';
 
 export async function GET(req: Request) {
   try {
@@ -59,13 +59,7 @@ Keep insights professional, encouraging, and highly specific to their actual dat
     const response = await result.response;
     let text = response.text().trim();
 
-    if (text.startsWith('```json')) {
-      text = text.replace(/^```json/, '').replace(/```$/, '').trim();
-    } else if (text.startsWith('```')) {
-      text = text.replace(/^```/, '').replace(/```$/, '').trim();
-    }
-
-    const parsed = JSON.parse(text);
+    const parsed = extractJson(text);
 
     return NextResponse.json({ success: true, insights: parsed });
 

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getUserFromRequest, unauthorizedResponse } from '@/lib/auth';
 import prisma from '@/lib/db';
-import { getGenAI, hasApiKey } from '@/lib/ai';
+import { getGenAI, hasApiKey, extractJson } from '@/lib/ai';
 import { getTeamMatchPrompt } from '@/lib/prompts';
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -53,14 +53,10 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
           console.warn('[AI_TOKEN_WARNING] Team match prompt exceeds 2000 tokens.');
         }
 
-        const model = ai.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });
+        const model = getFlashModel();
         const response = await model.generateContent(prompt);
         let jsonText = response.response.text() || "{}";
-        if (jsonText.startsWith('```json')) {
-          jsonText = jsonText.replace(/```json/g, '').replace(/```/g, '').trim();
-        }
-
-        const result = JSON.parse(jsonText);
+        const result = extractJson(jsonText);
         
         if (typeof result.score !== 'number' || typeof result.feedback !== 'string') {
           throw new Error("Invalid AI response shape");
